@@ -31,6 +31,42 @@
     },
     "pagination": {
       "showing": "Showing {from}-{to} of {count}"
+    },
+    "details": {
+      "title": "Order #{id}",
+      "close": "Close",
+      "alert_title": "Confirm Order Status",
+      "alert_message": "Please confirm the order status within 7 days of selecting the offer. If receipt is not confirmed or reason for non-receipt is explained within the specified period, creating new orders will be suspended until the current order status is updated.",
+      "info": {
+        "order_id": "Order ID",
+        "created_at": "Creation Date",
+        "delivery_date": "Expected Delivery Date",
+        "status": "Status"
+      },
+      "table": {
+        "item": "Item",
+        "qty": "Quantity",
+        "details": "Order Details",
+        "detail_link": "Details"
+      },
+      "offers_title": "Submitted Offers",
+      "offers": {
+        "supplier": "Supplier",
+        "address": "Supplier Address",
+        "total": "Total",
+        "total_tax": "Total including Tax",
+        "offer_date": "Offer Date",
+        "delivery": "Delivery",
+        "status": "Offer Status",
+        "free_delivery": "Free",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "closed": "Closed"
+      },
+      "filters": {
+        "price": "Price",
+        "delivery": "Delivery"
+      }
     }
   }
 }
