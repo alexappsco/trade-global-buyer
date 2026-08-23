@@ -53,9 +53,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
       color="primary"
       elevation={0}
       sx={{
-        bgcolor: "#FFFFFF ",
+        bgcolor: "#FFFFFF",
         boxShadow: "none",
-        borderBottom: "1px solid #1B83541A",
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
@@ -73,7 +72,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             component="img"
             src="/logo.png"
             alt="Trade Global"
-            sx={{ height: 36, marginInlineStart: { xs: 0, md: "40px" } }}
+            sx={{ height: 36, marginInlineStart: { xs: 0, md: "60px" } }}
           />
         </Box>
 
