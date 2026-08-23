@@ -1,0 +1,133 @@
+export interface Order {
+  id: string;
+  orderNumber: string;
+  title: string;
+  category: string;
+  classification: string;
+  deliveryDate: string;
+  creationDate: string;
+  status: 'open' | 'closed';
+}
+
+export const MOCK_ORDERS: Order[] = [
+  {
+    id: '1',
+    orderNumber: '1',
+    title: 'شاشات كمبيوتر',
+    category: 'أجهزة كمبيوتر',
+    classification: 'شاشات',
+    deliveryDate: '2026-04-10',
+    creationDate: '2025-11-10 09:30',
+    status: 'open',
+  },
+  {
+    id: '2',
+    orderNumber: '2',
+    title: 'شاشات كمبيوتر',
+    category: 'أجهزة كمبيوتر',
+    classification: 'شاشات',
+    deliveryDate: '2026-04-10',
+    creationDate: '2025-11-10 09:30',
+    status: 'closed',
+  },
+  {
+    id: '3',
+    orderNumber: '3',
+    title: 'شاشات كمبيوتر',
+    category: 'أجهزة كمبيوتر',
+    classification: 'شاشات',
+    deliveryDate: '2026-04-10',
+    creationDate: '2025-11-10 09:30',
+    status: 'open',
+  },
+  {
+    id: '4',
+    orderNumber: '4',
+    title: 'شاشات كمبيوتر',
+    category: 'أجهزة كمبيوتر',
+    classification: 'شاشات',
+    deliveryDate: '2026-04-10',
+    creationDate: '2025-11-10 09:30',
+    status: 'closed',
+  },
+  {
+    id: '5',
+    orderNumber: '5',
+    title: 'طابعة ليزر ملونة',
+    category: 'أجهزة كمبيوتر',
+    classification: 'طابعات',
+    deliveryDate: '2026-05-15',
+    creationDate: '2025-11-12 10:15',
+    status: 'open',
+  },
+  {
+    id: '6',
+    orderNumber: '6',
+    title: 'لوحة مفاتيح لاسلكية',
+    category: 'ملحقات',
+    classification: 'إكسسوارات',
+    deliveryDate: '2026-04-20',
+    creationDate: '2025-11-13 14:00',
+    status: 'closed',
+  },
+  {
+    id: '7',
+    orderNumber: '7',
+    title: 'هاتف ذكي برو',
+    category: 'هواتف وأجهزة لوحية',
+    classification: 'هواتف ذكية',
+    deliveryDate: '2026-06-01',
+    creationDate: '2025-11-15 11:30',
+    status: 'open',
+  },
+  {
+    id: '8',
+    orderNumber: '8',
+    title: 'سماعات بلوتوث',
+    category: 'ملحقات',
+    classification: 'صوتيات',
+    deliveryDate: '2026-04-18',
+    creationDate: '2025-11-16 16:45',
+    status: 'closed',
+  },
+  {
+    id: '9',
+    orderNumber: '9',
+    title: 'ذاكرة تخزين خارجية 2 تيرابايت',
+    category: 'أجهزة كمبيوتر',
+    classification: 'وحدات تخزين',
+    deliveryDate: '2026-04-30',
+    creationDate: '2025-11-17 08:00',
+    status: 'open',
+  },
+  {
+    id: '10',
+    orderNumber: '10',
+    title: 'شاحن سريع 65 واط',
+    category: 'ملحقات',
+    classification: 'شواحن',
+    deliveryDate: '2026-04-12',
+    creationDate: '2025-11-18 12:20',
+    status: 'open',
+  },
+  {
+    id: '11',
+    orderNumber: '11',
+    title: 'جهاز لوحي للرسم',
+    category: 'هواتف وأجهزة لوحية',
+    classification: 'أجهزة لوحية',
+    deliveryDate: '2026-05-10',
+    creationDate: '2025-11-20 09:00',
+    status: 'closed',
+  },
+  {
+    id: '12',
+    orderNumber: '12',
+    title: 'فأرة ألعاب لاسلكية',
+    category: 'ملحقات',
+    classification: 'إكسسوارات',
+    deliveryDate: '2026-04-25',
+    creationDate: '2025-11-22 15:30',
+    status: 'open',
+  },
+];
