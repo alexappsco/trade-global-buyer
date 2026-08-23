@@ -6,6 +6,25 @@
     "notifications": "Notifications",
     "support": "Support"
   },
+  "Profile": {
+    "edit_profile": "Edit Profile",
+    "account_info": "Account Information",
+    "member_since": "Member since {year}",
+    "save": "Save",
+    "cancel": "Cancel",
+    "fields": {
+      "name": "Name",
+      "company": "Company Name",
+      "phone": "Phone Number",
+      "email": "Email",
+      "sector": "Sector",
+      "tax_number": "Tax Number",
+      "commercial_record": "Commercial Record",
+      "company_address": "Company Address",
+      "city": "City",
+      "password": "Password"
+    }
+  },
   "Support": {
     "requests_title": "Requests",
     "form_title": "Send a request to technical support",

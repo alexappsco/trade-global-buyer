@@ -6,6 +6,25 @@
     "notifications": "الإشعارات",
     "support": "الدعم الفني"
   },
+  "Profile": {
+    "edit_profile": "تعديل الملف الشخصي",
+    "account_info": "معلومات الحساب",
+    "member_since": "عضو منذ {year}",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "fields": {
+      "name": "الاسم",
+      "company": "اسم الشركة",
+      "phone": "رقم الجوال",
+      "email": "البريد الإلكتروني",
+      "sector": "القطاع",
+      "tax_number": "الرقم الضريبي",
+      "commercial_record": "السجل التجاري",
+      "company_address": "عنوان الشركة",
+      "city": "المدينة",
+      "password": "كلمة المرور"
+    }
+  },
   "Support": {
     "requests_title": "الطلبات",
     "form_title": "ارسل طلب الي الدعم الفني",
