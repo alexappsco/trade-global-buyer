@@ -5,5 +5,44 @@
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "support": "الدعم الفني"
+  },
+  "Support": {
+    "requests_title": "الطلبات",
+    "form_title": "ارسل طلب الي الدعم الفني",
+    "form_hint": "يرجى توضيح المشكلة أو الاستفسار بالتفصيل لمساعدتنا في خدمتك بشكل أفضل.",
+    "view_requests": "عرض الطلبات",
+    "create_request": "إنشاء طلب",
+    "search": "بحث",
+    "filter": "فلتر",
+    "all_statuses": "كل الحالات",
+    "email_label": "البريد الالكتروني",
+    "email_placeholder": "نص تلميحي",
+    "details_label": "تفاصيل الطلب",
+    "details_placeholder": "النص المدخل",
+    "send": "ارسال",
+    "cancel": "الغاء",
+    "delete": "حذف",
+    "empty": "لا توجد طلبات مطابقة",
+    "email_required": "البريد الإلكتروني مطلوب",
+    "email_invalid": "صيغة البريد الإلكتروني غير صحيحة",
+    "details_required": "تفاصيل الطلب مطلوبة",
+    "created_success": "تم إرسال طلب الدعم بنجاح",
+    "deleted_success": "تم حذف الطلب",
+    "request_number": "رقم الطلب",
+    "request_date": "تاريخ الطلب",
+    "request_time": "وقت الطلب",
+    "request_status": "حالة الطلب",
+    "status": {
+      "under_review": "تحت المراجعة",
+      "in_progress": "قيد التنفيذ",
+      "resolved": "تم الحل",
+      "closed": "مغلق"
+    }
+  },
+  "Notifications": {
+    "title": "الاشعارات",
+    "dismiss": "إغلاق الإشعار",
+    "dismissed": "تم إغلاق الإشعار",
+    "empty": "لا توجد إشعارات"
   }
 }
