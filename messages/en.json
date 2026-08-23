@@ -67,6 +67,28 @@
         "price": "Price",
         "delivery": "Delivery"
       }
+    },
+    "offer_details": {
+      "alert_message": "Was the requested product or service received successfully? Please confirm the order status to update it in the system so you can add other requests.",
+      "cards": {
+        "delivery": "Delivery",
+        "total": "Total",
+        "tax": "Including Tax",
+        "duration": "Supply Duration",
+        "offer_date": "Offer Date",
+        "status": "Status",
+        "awaiting": "Awaiting Response"
+      },
+      "table": {
+        "unit_price": "Unit Price",
+        "subtotal": "Total",
+        "tax_rate": "Tax 15%",
+        "grand_total": "Total including Tax"
+      },
+      "buttons": {
+        "received": "Received",
+        "not_delivered": "Not Delivered"
+      }
     }
   }
 }
