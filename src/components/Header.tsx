@@ -53,28 +53,27 @@ export default function Header({ onMenuClick }: HeaderProps) {
       color="primary"
       elevation={0}
       sx={{
-        bgcolor: "#886ce8",
+        bgcolor: "#FFFFFF ",
         boxShadow: "none",
-        borderBottom: "1px solid rgba(255,255,255,0.12)",
+        borderBottom: "1px solid rgba(0,0,0,0.08)",
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 4 } }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton
-            color="inherit"
             edge="start"
             onClick={onMenuClick}
-            sx={{ display: { md: "none" } }}
+            sx={{ display: { md: "none" }, color: "#171717" }}
           >
             <MenuIcon />
           </IconButton>
 
           <Box
             component="img"
-            src="/logoyouni.png"
+            src="/logo.png"
             alt="Trade Global"
-            sx={{ height: 36 }}
+            sx={{ height: 36, marginInlineStart: { xs: 0, md: "40px" } }}
           />
         </Box>
 
@@ -90,7 +89,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
               borderRadius: "999px",
               cursor: "pointer",
               "&:hover": {
-                bgcolor: "rgba(255,255,255,0.22)",
+                bgcolor: "rgba(0,0,0,0.06)",
               },
             }}
           >
@@ -100,7 +99,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             />
             <Typography
               sx={{
-                color: "#fff",
+                color: "#171717",
                 fontSize: 13,
                 fontWeight: 700,
                 lineHeight: 1,
@@ -108,16 +107,16 @@ export default function Header({ onMenuClick }: HeaderProps) {
             >
               {currentLocaleSetting?.label}
             </Typography>
-            <ExpandMoreRoundedIcon sx={{ fontSize: 15, color: "rgba(255,255,255,0.85)" }} />
+            <ExpandMoreRoundedIcon sx={{ fontSize: 15, color: "#9DA4AE" }} />
           </Box>
 
           <Divider
             orientation="vertical"
             flexItem
-            sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 0.75 }}
+            sx={{ bgcolor: "rgba(0,0,0,0.12)", my: 0.75 }}
           />
 
-          <Avatar sx={{ width: 36, height: 36, border: "2px solid #fff", bgcolor: '#6D4CFF' }}>
+          <Avatar sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}>
             <PersonIcon />
           </Avatar>
         </Box>
