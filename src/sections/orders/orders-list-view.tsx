@@ -207,7 +207,36 @@ export default function OrdersListView() {
             gap: 2,
           }}
         >
-          {/* Filters List (Left in LTR, Right in RTL depending on theme, but we flex-row) */}
+          {/* Search Input */}
+          <TextField
+            size="small"
+            placeholder={t('search')}
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPage(1);
+            }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" width={20} sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            sx={{
+              width: { xs: '100%', sm: 260 },
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+                bgcolor: '#F9FAFB',
+                '& fieldset': { borderColor: '#EAEFEA' },
+                '&:hover fieldset': { borderColor: '#DFE3E8' },
+              },
+            }}
+          />
+
+          {/* Filters List */}
           <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
             
             {/* Category Filter */}
@@ -424,35 +453,6 @@ export default function OrdersListView() {
               </MenuItem>
             </Menu>
           </Box>
-
-          {/* Search Input */}
-          <TextField
-            size="small"
-            placeholder={t('search')}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setPage(1);
-            }}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" width={20} sx={{ color: 'text.disabled' }} />
-                  </InputAdornment>
-                ),
-              },
-            }}
-            sx={{
-              width: { xs: '100%', sm: 260 },
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-                bgcolor: '#F9FAFB',
-                '& fieldset': { borderColor: '#EAEFEA' },
-                '&:hover fieldset': { borderColor: '#DFE3E8' },
-              },
-            }}
-          />
         </Box>
 
         {/* Table Container */}
