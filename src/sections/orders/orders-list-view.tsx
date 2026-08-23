@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'src/i18n/routing';
 import {
   Box,
   Card,
@@ -28,6 +29,7 @@ import { MOCK_ORDERS, Order } from './orders-mock';
 export default function OrdersListView() {
   const t = useTranslations('Orders');
   const locale = useLocale();
+  const router = useRouter();
   const isRtl = locale === 'ar';
 
   // State
@@ -563,6 +565,7 @@ export default function OrdersListView() {
                       <Button
                         variant="outlined"
                         size="small"
+                        onClick={() => router.push(`/orders/${row.id}`)}
                         startIcon={<Iconify icon="solar:eye-bold" width={16} />}
                         sx={{
                           borderColor: '#DFE3E8',
