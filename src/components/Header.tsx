@@ -55,7 +55,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
       sx={{
         bgcolor: "#FFFFFF ",
         boxShadow: "none",
-        borderBottom: "1px solid rgba(0,0,0,0.08)",
+        borderBottom: "1px solid #1B83541A",
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
