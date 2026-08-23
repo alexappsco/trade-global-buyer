@@ -20,7 +20,6 @@ import {
   Typography,
   InputAdornment,
   IconButton,
-  Grid2 as Grid, // Use standard MUI Grid or Grid2
   Collapse,
 } from '@mui/material';
 
