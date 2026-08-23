@@ -697,7 +697,11 @@ export default function OrdersDetailsView({ id }: Props) {
                     </TableCell>
 
                     <TableCell align="center">
-                      <IconButton size="small" sx={{ color: '#637381' }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => router.push(`/orders/${order.id}/${row.id}`)}
+                        sx={{ color: '#637381' }}
+                      >
                         <Iconify icon="solar:eye-outline" width={18} />
                       </IconButton>
                     </TableCell>
