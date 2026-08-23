@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { scrollbar } from "src/theme/css";
+import SvgColor from "src/components/svg-color";
 import {
   Box,
   Drawer,
@@ -40,7 +41,7 @@ const sidebarItems: SidebarItem[] = [
   },
   {
     key: "my_orders",
-    icon: "/icons/file.svg",
+    icon: "/icons/package.svg",
     path: "/orders",
   },
   {
@@ -62,16 +63,12 @@ const sidebarItems: SidebarItem[] = [
 
 function SidebarIcon({ active = false, src }: SidebarIconProps) {
   return (
-    <Box
-      component="img"
+    <SvgColor
       src={src}
-      alt=""
-      aria-hidden="true"
       sx={{
-        display: "block",
-        height: 24,
-        opacity: active ? 1 : 0.72,
         width: 24,
+        height: 24,
+        color: active ? "#1B8354" : "#9DA4AE",
       }}
     />
   );
@@ -99,7 +96,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         boxSizing: "border-box",
         p: 2,
         height: "100%",
-        bgcolor: "#efedfa",
+        bgcolor: "#FFFFFF",
       }}
     >
       <List disablePadding>
@@ -116,9 +113,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   mb: 0.08,
                   pr: 2,
                   pl: 2,
+                  "&:hover": {
+                    bgcolor: "#1B83541A",
+                  },
                   "&.Mui-selected": {
-                    bgcolor: "#DDD6FE",
-                    "&:hover": { bgcolor: "#C4B5FD" },
+                    bgcolor: "#1B83541A",
+                    "&:hover": { bgcolor: "#1B83541A" },
                   },
                 }}
                 selected={active}
@@ -130,7 +130,11 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   primary={
                     <Typography
                       variant="body2"
-                      sx={{ fontWeight: active ? 700 : 500, textAlign }}
+                      sx={{
+                        fontWeight: active ? 700 : 500,
+                        textAlign,
+                        color: active ? "#1B8354" : "#9DA4AE",
+                      }}
                     >
                       {t(item.key)}
                     </Typography>
@@ -155,11 +159,11 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         flexShrink: { md: 0 },
         width: { md: 280 },
         "& .MuiDrawer-paper": {
-          bgcolor: "#efedfa",
+          bgcolor: "#EBEBEB",
           width: 280,
           boxSizing: "border-box",
-          borderLeft: isRtl ? "none" : undefined,
-          borderRight: isRtl ? undefined : "none",
+          borderLeft: "none",
+          borderRight: "none",
           top: mdUp ? "64px" : undefined,
           height: mdUp ? "calc(100% - 64px)" : "100%",
           ...scrollbar(),
