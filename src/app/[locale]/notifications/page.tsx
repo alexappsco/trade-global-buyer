@@ -1,3 +1,5 @@
+import NotificationsView from "src/sections/notifications/NotificationsView";
+
 export default function Notifications() {
-  return null;
+  return <NotificationsView />;
 }

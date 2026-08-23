@@ -5,5 +5,44 @@
     "profile": "Profile",
     "notifications": "Notifications",
     "support": "Support"
+  },
+  "Support": {
+    "requests_title": "Requests",
+    "form_title": "Send a request to technical support",
+    "form_hint": "Please describe the issue or inquiry in detail so we can help you better.",
+    "view_requests": "View requests",
+    "create_request": "Create request",
+    "search": "Search",
+    "filter": "Filter",
+    "all_statuses": "All statuses",
+    "email_label": "Email",
+    "email_placeholder": "Hint text",
+    "details_label": "Request details",
+    "details_placeholder": "Entered text",
+    "send": "Send",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "empty": "No matching requests",
+    "email_required": "Email is required",
+    "email_invalid": "Invalid email format",
+    "details_required": "Request details are required",
+    "created_success": "Support request sent successfully",
+    "deleted_success": "Request deleted",
+    "request_number": "Request number",
+    "request_date": "Request date",
+    "request_time": "Request time",
+    "request_status": "Request status",
+    "status": {
+      "under_review": "Under review",
+      "in_progress": "In progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    }
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "dismiss": "Dismiss notification",
+    "dismissed": "Notification dismissed",
+    "empty": "No notifications"
   }
 }
