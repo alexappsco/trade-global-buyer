@@ -5,5 +5,32 @@
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "support": "الدعم الفني"
+  },
+  "Orders": {
+    "title": "الطلبات",
+    "add_new": "اضافة طلب جديد",
+    "search": "بحث",
+    "filter_category": "الفئة",
+    "filter_classification": "التصنيف",
+    "filter_date": "التاريخ",
+    "filter_status": "الحالة",
+    "table": {
+      "order_id": "رقم الطلب",
+      "order_title": "عنوان الطلب",
+      "category": "الفئة",
+      "classification": "التصنيف",
+      "delivery_date": "تاريخ التسليم",
+      "creation_date": "تاريخ الانشاء",
+      "status": "الحالة",
+      "actions": "اجراءات",
+      "action_view": "عرض"
+    },
+    "status": {
+      "open": "مفتوح",
+      "closed": "مغلق"
+    },
+    "pagination": {
+      "showing": "عرض {from}-{to} من {count}"
+    }
   }
 }
