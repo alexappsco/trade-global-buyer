@@ -77,6 +77,9 @@
         "order_id": "رقم الطلب",
         "created_at": "تاريخ الانشاء",
         "delivery_date": "تاريخ التسليم المتوقع",
+        "status": "الحالة",
+        "order_title": "عنوان الطلب",
+        "category": "الفئة"
         "status": "الحالة"
       },
       "table": {
@@ -113,6 +116,9 @@
         "duration": "مدة التوريد",
         "offer_date": "تاريخ العرض",
         "status": "الحالة",
+        "awaiting": "في انتظار الرد",
+        "supplier": "المورد",
+        "address": "العنوان"
         "awaiting": "في انتظار الرد"
       },
       "table": {
@@ -123,6 +129,21 @@
       },
       "buttons": {
         "received": "تم الاستلام",
+        "not_delivered": "لم يتم التوصيل",
+        "accept": "قبول",
+        "reject": "رفض",
+        "download": "تحميل تفاصيل العرض"
+      }
+    },
+    "dialog": {
+      "confirm_close_order": "انت على وشك اغلاق الطلب",
+      "success_close_order": "تم اغلاق الطلب بنجاح",
+      "confirm_accept_offer": "انت على وشك قبول هذا العرض",
+      "confirm_reject_offer": "انت على وشك رفض هذا العرض",
+      "confirm": "تأكيد",
+      "cancel": "الغاء",
+      "go_to_orders": "الذهاب الى الطلبات"
+    },
         "not_delivered": "لم يتم التوصيل"
       }
     }
@@ -516,4 +537,5 @@
     },
     "no_data": "لا توجد فواتير"
   }
+}
 }

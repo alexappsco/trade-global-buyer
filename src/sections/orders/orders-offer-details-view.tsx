@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
+import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
 import { getOrderById } from './orders-mock';
 
 interface Props {
@@ -36,6 +37,10 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
   // Alert State
   const [showAlert, setShowAlert] = useState(true);
+
+  // Dialog States
+  const [openAcceptConfirm, setOpenAcceptConfirm] = useState(false);
+  const [openRejectConfirm, setOpenRejectConfirm] = useState(false);
 
   // Localized values helper
   const translateValue = (val: string) => {
@@ -55,6 +60,9 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         case 'في انتظار الرد': return 'Awaiting Response';
         case 'أيام': return 'Days';
         case '3 أيام': return '3 Days';
+        case 'نون': return 'Noon';
+        case 'ملحقات اجهزة كمبيوتر': return 'Computer Accessories';
+        case 'أجهزة كمبيوتر وملحقاته': return 'Computers and Accessories';
         default: return val;
       }
     }
@@ -147,7 +155,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         </Button>
       </Box>
 
-      {/* Order Info Card (3-column layout) */}
+      {/* Order Info Card (5-column layout) */}
       <Card
         sx={{
           borderRadius: 3,
@@ -162,10 +170,11 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: 4,
+            gap: 3,
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          {/* 1. Order Number */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 100px' }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.order_id')}
             </Typography>
@@ -174,7 +183,8 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          {/* 2. Creation Date */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 120px' }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.created_at')}
             </Typography>
@@ -183,7 +193,28 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          {/* 3. Order Title */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 150px' }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+              {t('details.info.order_title')}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#637381', fontSize: '0.95rem', textAlign: 'center' }}>
+              {translateValue('ملحقات اجهزة كمبيوتر')}
+            </Typography>
+          </Box>
+
+          {/* 4. Category */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 180px' }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+              {t('details.info.category')}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#637381', fontSize: '0.95rem', textAlign: 'center' }}>
+              {translateValue('أجهزة كمبيوتر وملحقاته')}
+            </Typography>
+          </Box>
+
+          {/* 5. Status */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 100px' }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.status')}
             </Typography>
@@ -361,6 +392,33 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
       </Box>
 
+      {/* Supplier & Address horizontal strip info bar */}
+      <Box
+        sx={{
+          bgcolor: '#EAEFEA',
+          borderRadius: '4px',
+          p: 1.5,
+          display: 'flex',
+          gap: 4,
+          alignItems: 'center',
+          mt: 2,
+        }}
+      >
+        <Typography variant="body2" sx={{ fontWeight: 700, color: '#161C24' }}>
+          {t('offer_details.cards.supplier')}:{' '}
+          <Box component="span" sx={{ color: '#006838', fontWeight: 700 }}>
+            {translateValue('نون')}
+          </Box>
+        </Typography>
+
+        <Typography variant="body2" sx={{ fontWeight: 700, color: '#161C24' }}>
+          {t('offer_details.cards.address')}:{' '}
+          <Box component="span" sx={{ color: '#006838', fontWeight: 700 }}>
+            {translateValue('الرياض')}
+          </Box>
+        </Typography>
+      </Box>
+
       {/* Offer Calculations Table Card */}
       <Card
         sx={{
@@ -422,54 +480,115 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
       <Box
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           gap: 2,
           justifyContent: 'center',
           alignItems: 'center',
-          flexWrap: 'wrap',
           mt: 1,
         }}
       >
-        <Button
-          variant="contained"
+        <Box
           sx={{
-            bgcolor: '#10754E',
-            color: 'white',
-            fontWeight: 700,
-            borderRadius: '8px',
-            px: 4,
-            py: 1.5,
-            minWidth: 160,
-            boxShadow: 'none',
-            '&:hover': {
-              bgcolor: '#0c5b3c',
-              boxShadow: 'none',
-            },
+            display: 'flex',
+            gap: 2,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
           }}
         >
-          {t('offer_details.buttons.received')}
-        </Button>
+          <Button
+            variant="contained"
+            onClick={() => setOpenAcceptConfirm(true)}
+            sx={{
+              bgcolor: '#10754E',
+              color: 'white',
+              fontWeight: 700,
+              borderRadius: '8px',
+              px: 4,
+              py: 1.5,
+              minWidth: 200,
+              boxShadow: 'none',
+              '&:hover': {
+                bgcolor: '#0c5b3c',
+                boxShadow: 'none',
+              },
+            }}
+          >
+            {t('offer_details.buttons.accept')}
+          </Button>
 
+          <Button
+            variant="contained"
+            onClick={() => setOpenRejectConfirm(true)}
+            sx={{
+              bgcolor: '#FF3B30',
+              color: 'white',
+              fontWeight: 700,
+              borderRadius: '8px',
+              px: 4,
+              py: 1.5,
+              minWidth: 200,
+              boxShadow: 'none',
+              '&:hover': {
+                bgcolor: '#d32f2f',
+                boxShadow: 'none',
+              },
+            }}
+          >
+            {t('offer_details.buttons.reject')}
+          </Button>
+        </Box>
+
+        {/* Download Offer Details Button */}
         <Button
-          variant="contained"
+          variant="outlined"
+          startIcon={<Iconify icon="solar:printer-line-duotone" width={18} />}
           sx={{
-            bgcolor: '#FF3B30',
-            color: 'white',
+            borderColor: '#10754E',
+            color: '#10754E',
             fontWeight: 700,
             borderRadius: '8px',
             px: 4,
-            py: 1.5,
-            minWidth: 160,
-            boxShadow: 'none',
+            py: 1.2,
+            minWidth: 416,
             '&:hover': {
-              bgcolor: '#d32f2f',
-              boxShadow: 'none',
+              borderColor: '#0c5b3c',
+              bgcolor: 'rgba(16, 117, 78, 0.04)',
             },
           }}
         >
-          {t('offer_details.buttons.not_delivered')}
+          {t('offer_details.buttons.download')}
         </Button>
       </Box>
 
+      {/* Accept Offer Confirmation Dialog */}
+      <ConfirmationDialog
+        open={openAcceptConfirm}
+        onClose={() => setOpenAcceptConfirm(false)}
+        variant="success"
+        title={t('dialog.confirm_accept_offer')}
+        confirmLabel={t('dialog.confirm')}
+        cancelLabel={t('dialog.cancel')}
+        onConfirm={() => {
+          setOpenAcceptConfirm(false);
+          router.push(`/orders/${order.id}`);
+        }}
+      />
+
+      {/* Reject Offer Confirmation Dialog */}
+      <ConfirmationDialog
+        open={openRejectConfirm}
+        onClose={() => setOpenRejectConfirm(false)}
+        variant="warning"
+        title={t('dialog.confirm_reject_offer')}
+        confirmLabel={t('dialog.confirm')}
+        cancelLabel={t('dialog.cancel')}
+        onConfirm={() => {
+          setOpenRejectConfirm(false);
+          router.push(`/orders/${order.id}`);
+        }}
+      />
     </Box>
   );
 }

@@ -77,6 +77,9 @@
         "order_id": "Order ID",
         "created_at": "Creation Date",
         "delivery_date": "Expected Delivery Date",
+        "status": "Status",
+        "order_title": "Order Title",
+        "category": "Category"
         "status": "Status"
       },
       "table": {
@@ -113,6 +116,9 @@
         "duration": "Supply Duration",
         "offer_date": "Offer Date",
         "status": "Status",
+        "awaiting": "Awaiting Response",
+        "supplier": "Supplier",
+        "address": "Address"
         "awaiting": "Awaiting Response"
       },
       "table": {
@@ -123,6 +129,21 @@
       },
       "buttons": {
         "received": "Received",
+        "not_delivered": "Not Delivered",
+        "accept": "Accept",
+        "reject": "Reject",
+        "download": "Download Offer Details"
+      }
+    },
+    "dialog": {
+      "confirm_close_order": "You are about to close the order",
+      "success_close_order": "The order has been closed successfully",
+      "confirm_accept_offer": "You are about to accept this offer",
+      "confirm_reject_offer": "You are about to reject this offer",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "go_to_orders": "Go to Orders"
+    },
         "not_delivered": "Not Delivered"
       }
     }
@@ -516,4 +537,5 @@
     },
     "no_data": "No invoices found"
   }
+}
 }
