@@ -1,10 +1,45 @@
 {
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "Rows per page",
+        "of": "of",
+        "more_than": "more than"
+      }
+    },
+    "Label": {
+      "no_data": "No data"
+    }
+  },
   "Sidebar": {
     "home": "Home",
     "my_orders": "My Orders",
     "profile": "Profile",
     "notifications": "Notifications",
     "support": "Support"
+  },
+  "Home": {
+    "stats": {
+      "total_orders": "Total Orders",
+      "completed_orders": "Completed Orders",
+      "price_quotes": "Price Quotes",
+      "active_orders": "Active Orders",
+      "orders_count": "{count} orders"
+    },
+    "categories": {
+      "title": "Categories",
+      "view_section": "View Section",
+      "items": {
+        "computers": "Computers & Laptops",
+        "networking": "Networking & Infrastructure",
+        "printers": "Printers & Ink",
+        "services": "Services & Maintenance"
+      }
+    },
+    "recent_orders": {
+      "title": "Recent Orders",
+      "add_new": "Add New Order"
+    }
   },
   "Orders": {
     "title": "Orders",
@@ -89,7 +124,8 @@
         "received": "Received",
         "not_delivered": "Not Delivered"
       }
-    },
+    }
+  },
   "Profile": {
     "edit_profile": "Edit Profile",
     "account_info": "Account Information",
@@ -226,5 +262,4 @@
     "agree_label": "I agree to the Terms & Conditions and Privacy Policy",
     "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
   }
-}
 }

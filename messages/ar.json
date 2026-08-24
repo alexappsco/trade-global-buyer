@@ -1,10 +1,45 @@
 {
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "صفوف لكل صفحة",
+        "of": "من",
+        "more_than": "أكثر من"
+      }
+    },
+    "Label": {
+      "no_data": "لا توجد بيانات"
+    }
+  },
   "Sidebar": {
     "home": "الرئيسية",
     "my_orders": "الطلبات التي قدمتها",
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "support": "الدعم الفني"
+  },
+  "Home": {
+    "stats": {
+      "total_orders": "إجمالي الطلبات",
+      "completed_orders": "طلبات مكتملة",
+      "price_quotes": "عروض الأسعار",
+      "active_orders": "طلبات نشطة",
+      "orders_count": "{count} طلب"
+    },
+    "categories": {
+      "title": "الفئات",
+      "view_section": "مراجعة القسم",
+      "items": {
+        "computers": "أجهزة كمبيوتر ولاب توب",
+        "networking": "قسم الشبكات والبنية التحتية",
+        "printers": "طابعات أحبار وورق",
+        "services": "قسم الخدمات والصيانة"
+      }
+    },
+    "recent_orders": {
+      "title": "آخر الطلبات",
+      "add_new": "اضافة طلب جديد"
+    }
   },
   "Orders": {
     "title": "الطلبات",
@@ -89,7 +124,8 @@
         "received": "تم الاستلام",
         "not_delivered": "لم يتم التوصيل"
       }
-    },
+    }
+  },
   "Profile": {
     "edit_profile": "تعديل الملف الشخصي",
     "account_info": "معلومات الحساب",
@@ -226,5 +262,4 @@
     "agree_label": "أوافق على الشروط والأحكام وسياسة الخصوصية",
     "legal_tooltip": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية الخاصة بالمنصة، وتتعهد بصحة البيانات المدخلة."
   }
-}
 }
