@@ -63,5 +63,28 @@
     "dismiss": "إغلاق الإشعار",
     "dismissed": "تم إغلاق الإشعار",
     "empty": "لا توجد إشعارات"
+  },
+  "CreateQuoteRequest": {
+    "page_title": "إنشاء طلب عرض سعر",
+    "create_request": "إنشاء الطلب",
+    "create_request_hint": "(يمكنك إنشاء أكثر من طلب)",
+    "add": "اضافة",
+    "delete": "حذف",
+    "send": "ارسال",
+    "cancel": "الغاء",
+    "category": "الفئة",
+    "request_title": "عنوان الطلب",
+    "delivery_date": "تاريخ التسليم",
+    "item": "الصنف",
+    "quantity": "الكمية",
+    "details": "تفاصيل الطلب",
+    "actions": "الاجراءات",
+    "category_placeholder": "أدخل الفئة",
+    "title_placeholder": "أدخل عنوان الطلب",
+    "item_placeholder": "اسم الصنف",
+    "quantity_placeholder": "0",
+    "details_placeholder": "تفاصيل الصنف",
+    "send_success": "تم إرسال طلب عرض السعر بنجاح",
+    "cancel_success": "تم إلغاء الطلب"
   }
 }

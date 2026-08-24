@@ -63,5 +63,28 @@
     "dismiss": "Dismiss notification",
     "dismissed": "Notification dismissed",
     "empty": "No notifications"
+  },
+  "CreateQuoteRequest": {
+    "page_title": "Create Quote Request",
+    "create_request": "Create Request",
+    "create_request_hint": "(You can create more than one request)",
+    "add": "Add",
+    "delete": "Delete",
+    "send": "Send",
+    "cancel": "Cancel",
+    "category": "Category",
+    "request_title": "Request Title",
+    "delivery_date": "Delivery Date",
+    "item": "Item",
+    "quantity": "Quantity",
+    "details": "Details",
+    "actions": "Actions",
+    "category_placeholder": "Enter category",
+    "title_placeholder": "Enter request title",
+    "item_placeholder": "Item name",
+    "quantity_placeholder": "0",
+    "details_placeholder": "Item details",
+    "send_success": "Quote request sent successfully",
+    "cancel_success": "Request cancelled"
   }
 }
