@@ -20,7 +20,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslations } from "next-intl";
 import { useToast } from "src/components/toast";
-
+import { useRouter } from "src/i18n/routing";
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
 const RED = "#D32F2F";
@@ -291,6 +291,7 @@ function RequestFormBlock({
 export default function CreateQuoteRequestView() {
   const t = useTranslations("CreateQuoteRequest");
   const toast = useToast();
+  const router = useRouter();
   const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
 
   const addRequest = () => setRequests((prev) => [...prev, createBlock()]);
@@ -306,8 +307,9 @@ export default function CreateQuoteRequestView() {
   };
 
   const handleSubmit = () => {
-    console.log("quote_requests", requests);
+    
     toast.success(t("send_success"));
+    router.push("/orders");
   };
 
   const handleCancel = () => {
