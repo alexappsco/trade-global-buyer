@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
+import { usePathname } from "src/i18n/routing";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 
@@ -11,6 +12,14 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const theme = useTheme();
+  const pathname = usePathname();
+  const pathnameWithoutLocale = pathname?.replace(/^\/(?:ar|en)/, "") ?? "";
+  const isAuthPage = pathnameWithoutLocale.startsWith("/auth");
+
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -32,6 +41,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             color: "#171717",
             minWidth: 0,
             maxWidth: "100%",
+            borderTop: "1px solid #1B83541A",
+            [theme.breakpoints.up("md")]: {
+              borderInlineStart: "1px solid #1B83541A",
+              // borderStartStartRadius: 12,
+            },
           }}
         >
           <Box sx={{ maxWidth: "1536px", mx: "auto", width: "100%" }}>{children}</Box>

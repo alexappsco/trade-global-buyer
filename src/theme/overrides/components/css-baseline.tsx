@@ -10,33 +10,29 @@ export function cssBaseline(_theme: Theme) {
           boxSizing: 'border-box',
         },
         '::-webkit-scrollbar': {
-          width: 8,
-          height: 8,
+          width: 10,
+          height: 10,
         },
         '::-webkit-scrollbar-track': {
-          bgcolor: '#efedfa',
+          bgcolor: '#F3F4F6',
         },
         '::-webkit-scrollbar-thumb': {
-          bgcolor: '#C4B5FD',
+          bgcolor: '#B5D2C3',
           borderRadius: 8,
         },
         '::-webkit-scrollbar-thumb:hover': {
-          bgcolor: '#A78BFA',
+          bgcolor: '#86B79D',
         },
         html: {
           margin: 0,
           padding: 0,
-          width: '100%',
-          height: '100%',
           WebkitOverflowScrolling: 'touch',
           scrollbarWidth: 'thin',
-          scrollbarColor: '#C4B5FD #efedfa',
+          scrollbarColor: '#B5D2C3 #F3F4F6',
         },
         body: {
           margin: 0,
           padding: 0,
-          width: '100%',
-          height: '100%',
         },
         '#root, #__next': {
           width: '100%',

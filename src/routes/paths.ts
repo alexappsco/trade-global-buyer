@@ -3,7 +3,10 @@ export const paths = {
   orders: {
     root: '/orders',
   },
-  profile: '/profile',
   notifications: '/notifications',
   support: '/support',
+  profile: {
+    view: '/profile',
+    edit: '/edit-profile',
+  },
 };

@@ -1,4 +1,4 @@
-import { Cairo, Kufam } from 'next/font/google';
+import { IBM_Plex_Sans_Arabic } from 'next/font/google';
 
 // ----------------------------------------------------------------------
 
@@ -31,28 +31,18 @@ declare module '@mui/material/styles' {
   }
 }
 
-export const enPrimaryFont = Cairo({
-  weight: ['400', '500', '600', '700', '800', '900'],
-  subsets: ['latin'],
-  display: 'swap',
-  fallback: ['Helvetica', 'Arial', 'sans-serif'],
-});
-
-export const secondaryFont = Kufam({
-  weight: ['400', '500', '600', '700', '800', '900'],
-  subsets: ['latin'],
+export const plexArabic = IBM_Plex_Sans_Arabic({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['arabic', 'latin'],
   display: 'swap',
   fallback: ['Helvetica', 'Arial', 'sans-serif'],
 });
 
 // ----------------------------------------------------------------------
 
-// LEARN MORE
-// https://nextjs.org/docs/basic-features/font-optimization#google-fonts
-
 export const typography = {
-  fontFamily: `DINNextLTArabic, ${enPrimaryFont.style.fontFamily}`,
-  fontSecondaryFamily: secondaryFont.style.fontFamily,
+  fontFamily: `${plexArabic.style.fontFamily}, Helvetica, Arial, sans-serif`,
+  fontSecondaryFamily: `${plexArabic.style.fontFamily}, Helvetica, Arial, sans-serif`,
   fontWeightRegular: 400,
   fontWeightMedium: 500,
   fontWeightSemiBold: 600,
