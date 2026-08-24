@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
+import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
 import { getOrderById, OfferItem } from './orders-mock';
 
 interface Props {
@@ -40,6 +41,10 @@ export default function OrdersDetailsView({ id }: Props) {
 
   // Alert State
   const [showAlert, setShowAlert] = useState(true);
+
+  // Dialog States
+  const [openCloseConfirm, setOpenCloseConfirm] = useState(false);
+  const [openCloseSuccess, setOpenCloseSuccess] = useState(false);
 
   // Offers Table State
   const [searchQuery, setSearchQuery] = useState('');
@@ -209,7 +214,7 @@ export default function OrdersDetailsView({ id }: Props) {
 
         <Button
           variant="contained"
-          onClick={() => router.push('/orders')}
+          onClick={() => setOpenCloseConfirm(true)}
           sx={{
             bgcolor: '#FF3B30',
             color: 'white',
@@ -722,6 +727,33 @@ export default function OrdersDetailsView({ id }: Props) {
           </Table>
         </TableContainer>
       </Card>
+
+      {/* Close Order Confirmation Dialog */}
+      <ConfirmationDialog
+        open={openCloseConfirm}
+        onClose={() => setOpenCloseConfirm(false)}
+        variant="warning"
+        title={t('dialog.confirm_close_order')}
+        confirmLabel={t('dialog.confirm')}
+        cancelLabel={t('dialog.cancel')}
+        onConfirm={() => {
+          setOpenCloseConfirm(false);
+          setOpenCloseSuccess(true);
+        }}
+      />
+
+      {/* Close Order Success Dialog */}
+      <ConfirmationDialog
+        open={openCloseSuccess}
+        onClose={() => setOpenCloseSuccess(false)}
+        variant="success"
+        title={t('dialog.success_close_order')}
+        confirmLabel={t('dialog.go_to_orders')}
+        onConfirm={() => {
+          setOpenCloseSuccess(false);
+          router.push('/orders');
+        }}
+      />
     </Box>
   );
 }
