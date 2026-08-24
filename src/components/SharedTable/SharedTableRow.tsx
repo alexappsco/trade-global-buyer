@@ -1,6 +1,5 @@
 import React from 'react';
 import { IconButton } from '@mui/material';
-import { useTranslations } from 'next-intl';
 import Iconify from 'src/components/iconify';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -16,7 +15,6 @@ function SharedTableRow<T extends { id: string }>({
   customRender,
   headIds,
 }: SharedTableRowProps<T>) {
-  const t = useTranslations();
   let rowStyle: SxStyle = {};
 
   if (Object.hasOwn(row, 'rowSx')) {
@@ -61,7 +59,7 @@ function SharedTableRow<T extends { id: string }>({
                 sx={action.sx}
               >
                 <ListItemIcon>{action.icon}</ListItemIcon>
-                <ListItemText>{t(action.label)}</ListItemText>
+                <ListItemText>{action.label}</ListItemText>
               </MenuItem>
             ))}
         </MenuList>

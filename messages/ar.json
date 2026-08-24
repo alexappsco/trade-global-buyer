@@ -1,4 +1,16 @@
 {
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "صفوف لكل صفحة",
+        "of": "من",
+        "more_than": "أكثر من"
+      }
+    },
+    "Label": {
+      "no_data": "لا توجد بيانات"
+    }
+  },
   "Sidebar": {
     "home": "الرئيسية",
     "my_orders": "الطلبات التي قدمتها",
@@ -6,6 +18,29 @@
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
     "invoices": "الفواتير"
+  },
+  "Home": {
+    "stats": {
+      "total_orders": "إجمالي الطلبات",
+      "completed_orders": "طلبات مكتملة",
+      "price_quotes": "عروض الأسعار",
+      "active_orders": "طلبات نشطة",
+      "orders_count": "{count} طلب"
+    },
+    "categories": {
+      "title": "الفئات",
+      "view_section": "مراجعة القسم",
+      "items": {
+        "computers": "أجهزة كمبيوتر ولاب توب",
+        "networking": "قسم الشبكات والبنية التحتية",
+        "printers": "طابعات أحبار وورق",
+        "services": "قسم الخدمات والصيانة"
+      }
+    },
+    "recent_orders": {
+      "title": "آخر الطلبات",
+      "add_new": "اضافة طلب جديد"
+    }
   },
   "Orders": {
     "title": "الطلبات",
@@ -45,6 +80,7 @@
         "status": "الحالة",
         "order_title": "عنوان الطلب",
         "category": "الفئة"
+        "status": "الحالة"
       },
       "table": {
         "item": "الصنف",
@@ -83,6 +119,7 @@
         "awaiting": "في انتظار الرد",
         "supplier": "المورد",
         "address": "العنوان"
+        "awaiting": "في انتظار الرد"
       },
       "table": {
         "unit_price": "سعر الوحدة",
@@ -107,6 +144,10 @@
       "cancel": "الغاء",
       "go_to_orders": "الذهاب الى الطلبات"
     },
+        "not_delivered": "لم يتم التوصيل"
+      }
+    }
+  },
   "Profile": {
     "edit_profile": "تعديل الملف الشخصي",
     "account_info": "معلومات الحساب",
