@@ -45,4 +45,5 @@ export interface SimpleTableProps<T extends { id: string | number }> {
   loading?: boolean;
   emptyMessage?: string;
   serverPagination?: ServerPaginationProps;
+  hidePagination?: boolean;
 }

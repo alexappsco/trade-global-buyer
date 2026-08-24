@@ -32,6 +32,7 @@ function SimpleTable<T extends { id: string | number }>({
   loading = false,
   emptyMessage = "لا توجد بيانات",
   serverPagination,
+  hidePagination = false,
 }: SimpleTableProps<T>) {
   const t = useTranslations();
   const popover = usePopover();
@@ -308,21 +309,23 @@ function SimpleTable<T extends { id: string | number }>({
         </CustomPopover>
       )}
 
-      <TablePaginationCustom
-        count={paginationCount}
-        page={paginationPage}
-        rowsPerPage={paginationRowsPerPage}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        rowsPerPageOptions={[5, 10, 20]}
-        dense={dense}
-        onChangeDense={(event) => setDense(event.target.checked)}
-        sx={{ mt: 2, px: 2 }}
-        labelRowsPerPage={t("Global.Sections.Table.rows_per_page")}
-        labelDisplayedRows={({ from, to, count: rows }) =>
-          `${from}-${to} ${t("Global.Sections.Table.of")} ${rows !== -1 ? rows : `${t("Global.Sections.Table.more_than")} ${to}`}`
-        }
-      />
+      {!hidePagination && (
+        <TablePaginationCustom
+          count={paginationCount}
+          page={paginationPage}
+          rowsPerPage={paginationRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 20]}
+          dense={dense}
+          onChangeDense={(event) => setDense(event.target.checked)}
+          sx={{ mt: 2, px: 2 }}
+          labelRowsPerPage={t("Global.Sections.Table.rows_per_page")}
+          labelDisplayedRows={({ from, to, count: rows }) =>
+            `${from}-${to} ${t("Global.Sections.Table.of")} ${rows !== -1 ? rows : `${t("Global.Sections.Table.more_than")} ${to}`}`
+          }
+        />
+      )}
     </>
   );
 }
