@@ -198,8 +198,8 @@ export function MarketingCard() {
           textAlign: "center",
         }}
       >
-        {stats.map((stat) => (
-          <Box key={stat.label}>
+        {stats.map((stat, index) => (
+          <Box key={`${stat.label}-${index}`}>
             <Typography sx={{ fontSize: { xs: 26, md: 30 }, fontWeight: 800, color: "#6B7280" }}>
               <StatValue value={stat.value} />
             </Typography>
