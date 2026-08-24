@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import ThemeProvider from "src/theme";
@@ -11,16 +10,7 @@ import { localesSettings } from "src/i18n/config-locale";
 import type { LocaleType } from "src/i18n/config-locale";
 import { notFound } from "next/navigation";
 import { routing } from "src/i18n/routing";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { plexArabic } from "src/theme/typography";
 
 export const metadata: Metadata = {
   title: "Trade Global",
@@ -48,12 +38,8 @@ export default async function LocaleLayout({
   const themeDirection = dir as "rtl" | "ltr";
 
   return (
-    <html
-      lang={locale}
-      dir={dir}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
+    <html lang={locale} dir={dir} className={`${plexArabic.className} antialiased`}>
+      <body>
         <SettingsProvider
           defaultSettings={{
             themeStretch: false,

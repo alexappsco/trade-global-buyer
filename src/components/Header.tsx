@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter, usePathname } from "src/i18n/routing";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import PersonIcon from "@mui/icons-material/Person";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import Iconify from "src/components/iconify";
 import { localesSettings, LocaleType, allLocales } from "src/i18n/config-locale";
 import {
@@ -27,12 +28,14 @@ interface HeaderProps {
 }
 
 export default function Header({ onMenuClick }: HeaderProps) {
+  const t = useTranslations("Auth");
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
   const currentLocaleSetting = localesSettings[locale as LocaleType];
 
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null);
+  const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleLangOpen = (e: React.MouseEvent<HTMLElement>) => {
     setLangAnchorEl(e.currentTarget);
@@ -40,6 +43,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const handleLangClose = () => {
     setLangAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAvatarAnchorEl(null);
+    router.push("/auth/login");
   };
 
   const changeLanguage = (newLocale: string) => {
@@ -115,9 +123,15 @@ export default function Header({ onMenuClick }: HeaderProps) {
             sx={{ bgcolor: "rgba(0,0,0,0.12)", my: 0.75 }}
           />
 
-          <Avatar sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}>
-            <PersonIcon />
-          </Avatar>
+          <IconButton
+            onClick={(e) => setAvatarAnchorEl(e.currentTarget)}
+            disableRipple
+            sx={{ p: 0.5, "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }}
+          >
+            <Avatar sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}>
+              <PersonIcon />
+            </Avatar>
+          </IconButton>
         </Box>
       </Toolbar>
 
@@ -150,6 +164,38 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <ListItemText>{loc.label}</ListItemText>
           </MenuItem>
         ))}
+      </Menu>
+
+      <Menu
+        anchorEl={avatarAnchorEl}
+        open={Boolean(avatarAnchorEl)}
+        onClose={() => setAvatarAnchorEl(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        slotProps={{
+          paper: {
+            sx: {
+              mt: 1,
+              minWidth: 180,
+              borderRadius: "12px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+            },
+          },
+        }}
+      >
+        <MenuItem
+          onClick={handleLogout}
+          sx={{ color: "#D32F2F", "&:hover": { bgcolor: "rgba(211, 47, 47, 0.08)" } }}
+        >
+          <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
+            <LogoutRoundedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText
+            slotProps={{ primary: { sx: { fontSize: 14, fontWeight: 600 } } }}
+          >
+            {t("logout")}
+          </ListItemText>
+        </MenuItem>
       </Menu>
     </AppBar>
   );

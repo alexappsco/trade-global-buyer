@@ -170,19 +170,19 @@ export const scrollbar = (params?: {
   width?: number;
 }) => ({
   scrollbarWidth: 'thin' as const,
-  scrollbarColor: `${params?.thumbColor ?? '#C4B5FD'} ${params?.trackColor ?? '#efedfa'}`,
+  scrollbarColor: `${params?.thumbColor ?? '#B5D2C3'} ${params?.trackColor ?? '#F3F4F6'}`,
   '&::-webkit-scrollbar': {
     width: params?.width ?? 6,
   },
   '&::-webkit-scrollbar-track': {
-    bgcolor: params?.trackColor ?? '#efedfa',
+    bgcolor: params?.trackColor ?? '#F3F4F6',
   },
   '&::-webkit-scrollbar-thumb': {
-    bgcolor: params?.thumbColor ?? '#C4B5FD',
+    bgcolor: params?.thumbColor ?? '#B5D2C3',
     borderRadius: 8,
   },
   '&::-webkit-scrollbar-thumb:hover': {
-    bgcolor: params?.thumbHoverColor ?? '#A78BFA',
+    bgcolor: params?.thumbHoverColor ?? '#86B79D',
   },
 });
 
