@@ -4,7 +4,8 @@
     "my_orders": "الطلبات التي قدمتها",
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
-    "support": "الدعم الفني"
+    "support": "الدعم الفني",
+    "invoices": "الفواتير"
   },
   "Orders": {
     "title": "الطلبات",
@@ -462,6 +463,38 @@
       "agree_label": "أوافق على الشروط والأحكام وسياسة الخصوصية",
       "legal_tooltip": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية الخاصة بالمنصة، وتتعهد بصحة البيانات المدخلة."
     }
+  },
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "صفوف لكل صفحة:",
+        "of": "من",
+        "more_than": "أكثر من"
+      }
+    }
+  },
+  "Invoices": {
+    "title": "الفواتير",
+    "search": "بحث",
+    "status_filter": "الحالة",
+    "all": "الكل",
+    "status": {
+      "paid": "مدفوعة",
+      "unpaid": "غير مدفوعة"
+    },
+    "table": {
+      "invoice_number": "رقم الفاتورة",
+      "transaction_title": "عنوان المعاملة",
+      "order_number": "رقم الطلب",
+      "registered_at": "وقت تسجيل الفاتورة",
+      "amount_paid": "المبلغ المدفوع",
+      "actions": "اجراءات",
+      "view": "عرض"
+    },
+    "pagination": {
+      "showing": "عرض {from}-{to} من {count}"
+    },
+    "no_data": "لا توجد فواتير"
   }
 }
 }

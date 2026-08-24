@@ -4,7 +4,8 @@
     "my_orders": "My Orders",
     "profile": "Profile",
     "notifications": "Notifications",
-    "support": "Support"
+    "support": "Support",
+    "invoices": "Invoices"
   },
   "Orders": {
     "title": "Orders",
@@ -462,6 +463,38 @@
       "agree_label": "I agree to the Terms & Conditions and Privacy Policy",
       "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
     }
+  },
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "Rows per page:",
+        "of": "of",
+        "more_than": "more than"
+      }
+    }
+  },
+  "Invoices": {
+    "title": "Invoices",
+    "search": "Search",
+    "status_filter": "Status",
+    "all": "All",
+    "status": {
+      "paid": "Paid",
+      "unpaid": "Unpaid"
+    },
+    "table": {
+      "invoice_number": "Invoice No.",
+      "transaction_title": "Transaction Title",
+      "order_number": "Order No.",
+      "registered_at": "Registered At",
+      "amount_paid": "Amount Paid",
+      "actions": "Actions",
+      "view": "View"
+    },
+    "pagination": {
+      "showing": "Showing {from}-{to} of {count}"
+    },
+    "no_data": "No invoices found"
   }
 }
 }
