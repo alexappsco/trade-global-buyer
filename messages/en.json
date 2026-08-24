@@ -6,6 +6,7 @@
     "notifications": "Notifications",
     "support": "Support"
   },
+<<<<<<< HEAD
   "Orders": {
     "title": "Orders",
     "add_new": "Add New Order",
@@ -97,6 +98,8 @@
         "download": "Download Offer Details"
       }
     },
+=======
+>>>>>>> 8d13a79a1b40441bf01c1d256e64a82b5edc616c
   "Profile": {
     "edit_profile": "Edit Profile",
     "account_info": "Account Information",
@@ -232,6 +235,226 @@
     "stats_label_3": "Satisfaction rate",
     "agree_label": "I agree to the Terms & Conditions and Privacy Policy",
     "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
+  },
+  "Orders": {
+    "title": "Orders",
+    "add_new": "Add New Order",
+    "search": "Search",
+    "filter_category": "Category",
+    "filter_classification": "Classification",
+    "filter_date": "Date",
+    "filter_status": "Status",
+    "table": {
+      "order_id": "Order ID",
+      "order_title": "Order Title",
+      "category": "Category",
+      "classification": "Classification",
+      "delivery_date": "Delivery Date",
+      "creation_date": "Creation Date",
+      "status": "Status",
+      "actions": "Actions",
+      "action_view": "View"
+    },
+    "status": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "pagination": {
+      "showing": "Showing {from}-{to} of {count}"
+    },
+    "details": {
+      "title": "Order #{id}",
+      "close": "Close",
+      "alert_title": "Confirm Order Status",
+      "alert_message": "Please confirm the order status within 7 days of selecting the offer. If receipt is not confirmed or reason for non-receipt is explained within the specified period, creating new orders will be suspended until the current order status is updated.",
+      "info": {
+        "order_id": "Order ID",
+        "created_at": "Creation Date",
+        "delivery_date": "Expected Delivery Date",
+        "status": "Status"
+      },
+      "table": {
+        "item": "Item",
+        "qty": "Quantity",
+        "details": "Order Details",
+        "detail_link": "Details"
+      },
+      "offers_title": "Submitted Offers",
+      "offers": {
+        "supplier": "Supplier",
+        "address": "Supplier Address",
+        "total": "Total",
+        "total_tax": "Total including Tax",
+        "offer_date": "Offer Date",
+        "delivery": "Delivery",
+        "status": "Offer Status",
+        "free_delivery": "Free",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "closed": "Closed"
+      },
+      "filters": {
+        "price": "Price",
+        "delivery": "Delivery"
+      }
+    },
+    "offer_details": {
+      "alert_message": "Was the requested product or service received successfully? Please confirm the order status to update it in the system so you can add other requests.",
+      "cards": {
+        "delivery": "Delivery",
+        "total": "Total",
+        "tax": "Including Tax",
+        "duration": "Supply Duration",
+        "offer_date": "Offer Date",
+        "status": "Status",
+        "awaiting": "Awaiting Response"
+      },
+      "table": {
+        "unit_price": "Unit Price",
+        "subtotal": "Total",
+        "tax_rate": "Tax 15%",
+        "grand_total": "Total including Tax"
+      },
+      "buttons": {
+        "received": "Received",
+        "not_delivered": "Not Delivered"
+      }
+    },
+    "Profile": {
+      "edit_profile": "Edit Profile",
+      "account_info": "Account Information",
+      "member_since": "Member since {year}",
+      "save": "Save",
+      "cancel": "Cancel",
+      "fields": {
+        "name": "Name",
+        "company": "Company Name",
+        "phone": "Phone Number",
+        "email": "Email",
+        "sector": "Sector",
+        "tax_number": "Tax Number",
+        "commercial_record": "Commercial Record",
+        "company_address": "Company Address",
+        "city": "City",
+        "password": "Password"
+      }
+    },
+    "Support": {
+      "requests_title": "Requests",
+      "form_title": "Send a request to technical support",
+      "form_hint": "Please describe the issue or inquiry in detail so we can help you better.",
+      "view_requests": "View requests",
+      "create_request": "Create request",
+      "search": "Search",
+      "filter": "Filter",
+      "all_statuses": "All statuses",
+      "email_label": "Email",
+      "email_placeholder": "Hint text",
+      "details_label": "Request details",
+      "details_placeholder": "Entered text",
+      "send": "Send",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "empty": "No matching requests",
+      "email_required": "Email is required",
+      "email_invalid": "Invalid email format",
+      "details_required": "Request details are required",
+      "created_success": "Support request sent successfully",
+      "deleted_success": "Request deleted",
+      "request_number": "Request number",
+      "request_date": "Request date",
+      "request_time": "Request time",
+      "request_status": "Request status",
+      "status": {
+        "under_review": "Under review",
+        "in_progress": "In progress",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      }
+    },
+    "Notifications": {
+      "title": "Notifications",
+      "dismiss": "Dismiss notification",
+      "dismissed": "Notification dismissed",
+      "empty": "No notifications"
+    },
+    "CreateQuoteRequest": {
+      "page_title": "Create Quote Request",
+      "create_request": "Create Request",
+      "create_request_hint": "(You can create more than one request)",
+      "add": "Add",
+      "delete": "Delete",
+      "send": "Send",
+      "cancel": "Cancel",
+      "category": "Category",
+      "request_title": "Request Title",
+      "delivery_date": "Delivery Date",
+      "item": "Item",
+      "quantity": "Quantity",
+      "details": "Details",
+      "actions": "Actions",
+      "category_placeholder": "Enter category",
+      "title_placeholder": "Enter request title",
+      "item_placeholder": "Item name",
+      "quantity_placeholder": "0",
+      "details_placeholder": "Item details",
+      "send_success": "Quote request sent successfully",
+      "cancel_success": "Request cancelled"
+    },
+    "Auth": {
+      "signin_title": "Sign In",
+      "signin_subtitle": "Join the region's most trusted trade network.",
+      "go_register": "Don't have an account?",
+      "go_login": "Already have an account? Sign in",
+      "phone": "Phone Number",
+      "password": "Password",
+      "forgot_prefix": "Forgot your password?",
+      "forgot_link": "Recover",
+      "signin_cta": "Sign Up",
+      "signin_success": "Signed in successfully",
+      "forgot_title": "Forgot Password",
+      "forgot_subtitle": "Please enter the phone number linked to your account and we will send you an SMS code to reset your password.",
+      "send": "Send",
+      "back_to_login": "Back to sign in",
+      "new_account_title": "New Account",
+      "otp_title": "Enter the sent code",
+      "otp_subtitle": "We have sent a verification code (OTP) to your mobile number.",
+      "confirm": "Confirm",
+      "otp_verified": "Verified successfully",
+      "otp_resent": "Code resent successfully",
+      "resend_question": "Didn't receive the code?",
+      "resend_link": "Resend verification code (OTP)",
+      "supplier": "Supplier",
+      "buyer": "Buyer",
+      "company": "Company",
+      "individual": "Individual",
+      "company_name": "Company Name",
+      "full_name": "Full Name",
+      "confirm_password": "Confirm Password",
+      "register_cta": "Sign Up",
+      "logout": "Log Out",
+      "complete_title": "Complete Registration Data",
+      "account_info_title": "Account Information",
+      "legal_company_name": "Legal Company Name",
+      "email": "Email",
+      "sector": "Sector",
+      "tax_number": "Tax Number",
+      "commercial_record": "Commercial Record",
+      "city": "City",
+      "company_address": "Company Address",
+      "save": "Save",
+      "cancel_btn": "Cancel",
+      "profile_saved": "Data saved successfully",
+      "why_title": "Why Trade Mediation?",
+      "feature_1_title": "Safety & Reliability",
+      "feature_1_desc": "We guarantee the rights of suppliers and buyers through an advanced financial mediation system and binding commercial contracts.",
+      "feature_2_title": "Regional Expansion",
+      "feature_2_desc": "Reach thousands of potential buyers across the Kingdom and Gulf countries at the click of a button.",
+      "stats_label_1": "Verified suppliers",
+      "stats_label_2": "Satisfaction rate",
+      "stats_label_3": "Satisfaction rate",
+      "agree_label": "I agree to the Terms & Conditions and Privacy Policy",
+      "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
+    }
   }
-}
 }
