@@ -169,7 +169,7 @@ export default function OrdersListView() {
 
         <Button
           variant="contained"
-          startIcon={<Iconify icon="mingcute:add-line" width={18} />}
+          onClick={() => router.push('/orders/create')}
           sx={{
             bgcolor: '#10754E',
             color: 'white',
@@ -177,6 +177,7 @@ export default function OrdersListView() {
             borderRadius: '8px',
             px: 2.5,
             py: 1,
+            gap: 1,
             boxShadow: 'none',
             '&:hover': {
               bgcolor: '#0c5b3c',
@@ -184,6 +185,7 @@ export default function OrdersListView() {
             },
           }}
         >
+          <Iconify icon="mingcute:add-line" width={18} />
           {t('add_new')}
         </Button>
       </Box>

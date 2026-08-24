@@ -102,8 +102,8 @@ function InfoField({
   placeholder?: string;
 }) {
   return (
-    <Stack spacing={0.5}>
-      <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#6B7280" }}>
+    <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
+      <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#171717" }}>
         {label}
       </Typography>
       <TextField
@@ -115,7 +115,9 @@ function InfoField({
         fullWidth
         sx={{
           bgcolor: "#fff",
-          "& .MuiOutlinedInput-root": { borderRadius: "8px" },
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "8px",
+          },
         }}
       />
     </Stack>
@@ -162,17 +164,12 @@ function RequestFormBlock({
         p: { xs: 2, md: 3 },
       }}
     >
-      <Box
-        sx={{
-          border: "1px solid #E5E7EB",
-          borderRadius: "8px",
-          px: 2,
-          py: 2.5,
-          mb: 3,
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "repeat(3, minmax(0, 1fr))" },
-          gap: 2,
-        }}
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={{ xs: 2, md: 4 }}
+        sx={{ mb: 3, border: "1px solid #E0E0E0",
+        borderRadius: "12px",
+        p: { xs: 2, md: 3 }, }}
       >
         <InfoField
           label={t("category")}
@@ -192,108 +189,28 @@ function RequestFormBlock({
           value={block.deliveryDate}
           onChange={(v) => updateField("deliveryDate", v)}
         />
-      </Box>
+      </Stack>
 
-      <TableContainer
-        sx={{
-          border: "1px solid #E0E0E0",
-          borderRadius: "8px",
-          overflow: "hidden",
-        }}
-      >
+      <TableContainer>
         <Table size="small">
           <TableHead>
-            <TableRow sx={{ bgcolor: "#F3F4F6" }}>
-              <TableCell
-                sx={{
-                  fontWeight: 700,
-                  fontSize: 13,
-                  color: "#374151",
-                  "&:not(:last-child)": { borderInlineEnd: "1px solid #E5E7EB" },
-                }}
-              >
-                {t("item")}
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 160,
-                  fontWeight: 700,
-                  fontSize: 13,
-                  color: "#374151",
-                  "&:not(:last-child)": { borderInlineEnd: "1px solid #E5E7EB" },
-                }}
-              >
-                {t("quantity")}
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 700,
-                  fontSize: 13,
-                  color: "#374151",
-                  "&:not(:last-child)": { borderInlineEnd: "1px solid #E5E7EB" },
-                }}
-              >
-                {t("details")}
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 72,
-                  fontWeight: 700,
-                  fontSize: 13,
-                  color: "#374151",
-                }}
-              >
+            <TableRow>
+              <TableCell sx={{ width: 64, fontWeight: 700, fontSize: 13 }}>
                 {t("actions")}
               </TableCell>
+              <TableCell sx={{ fontWeight: 700, fontSize: 13 }}>
+                {t("details")}
+              </TableCell>
+              <TableCell sx={{ width: 140, fontWeight: 700, fontSize: 13 }}>
+                {t("quantity")}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 700, fontSize: 13 }}>{t("item")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {block.items.map((item) => (
               <TableRow key={item.id}>
-                <TableCell
-                  sx={{
-                    py: 0.75,
-                    "&:not(:last-child)": { borderInlineEnd: "1px solid #EEEEEE" },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={item.name}
-                    placeholder={t("item_placeholder")}
-                    onChange={(e) => updateItem(item.id, "name", e.target.value)}
-                  />
-                </TableCell>
-                <TableCell
-                  sx={{
-                    py: 0.75,
-                    "&:not(:last-child)": { borderInlineEnd: "1px solid #EEEEEE" },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    size="small"
-                    type="number"
-                    value={item.quantity}
-                    placeholder={t("quantity_placeholder")}
-                    onChange={(e) => updateItem(item.id, "quantity", e.target.value)}
-                  />
-                </TableCell>
-                <TableCell
-                  sx={{
-                    py: 0.75,
-                    "&:not(:last-child)": { borderInlineEnd: "1px solid #EEEEEE" },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={item.details}
-                    placeholder={t("details_placeholder")}
-                    onChange={(e) => updateItem(item.id, "details", e.target.value)}
-                  />
-                </TableCell>
-                <TableCell sx={{ py: 0.75 }}>
+                <TableCell>
                   <IconButton
                     size="small"
                     color="error"
@@ -302,14 +219,51 @@ function RequestFormBlock({
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </TableCell>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    value={item.details}
+                    placeholder={t("details_placeholder")}
+                    onChange={(e) => updateItem(item.id, "details", e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    type="number"
+                    value={item.quantity}
+                    placeholder="0"
+                    onChange={(e) => updateItem(item.id, "quantity", e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    value={item.name}
+                    placeholder={t("item_placeholder")}
+                    onChange={(e) => updateItem(item.id, "name", e.target.value)}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
-        <GreenButton onClick={addItem}>{t("add")}</GreenButton>
+      <Stack
+        direction={{ xs: "column-reverse", sm: "row" }}
+        spacing={2}
+        sx={{
+          mt: 3,
+          pt: 3,
+          borderTop: "1px solid #EEEEEE",
+          alignItems: { xs: "stretch", sm: "center" },
+          justifyContent: "space-between",
+        }}
+      >
         <Button
           onClick={onDelete}
           disabled={!canDelete}
@@ -328,6 +282,7 @@ function RequestFormBlock({
           <DeleteIcon />
           {t("delete")}
         </Button>
+        <GreenButton onClick={addItem}>{t("add")}</GreenButton>
       </Stack>
     </Paper>
   );
