@@ -6,7 +6,6 @@
     "notifications": "Notifications",
     "support": "Support"
   },
-<<<<<<< HEAD
   "Orders": {
     "title": "Orders",
     "add_new": "Add New Order",
@@ -98,8 +97,15 @@
         "download": "Download Offer Details"
       }
     },
-=======
->>>>>>> 8d13a79a1b40441bf01c1d256e64a82b5edc616c
+    "dialog": {
+      "confirm_close_order": "You are about to close the order",
+      "success_close_order": "The order has been closed successfully",
+      "confirm_accept_offer": "You are about to accept this offer",
+      "confirm_reject_offer": "You are about to reject this offer",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "go_to_orders": "Go to Orders"
+    },
   "Profile": {
     "edit_profile": "Edit Profile",
     "account_info": "Account Information",
@@ -457,4 +463,5 @@
       "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
     }
   }
+}
 }
