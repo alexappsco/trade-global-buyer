@@ -45,6 +45,11 @@ const sidebarItems: SidebarItem[] = [
     path: "/orders",
   },
   {
+    key: "invoices",
+    icon: "/icons/invoice.svg",
+    path: "/invoices",
+  },
+  {
     key: "profile",
     icon: "/icons/profile.svg",
     path: "/profile",

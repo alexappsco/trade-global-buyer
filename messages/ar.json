@@ -16,7 +16,8 @@
     "my_orders": "الطلبات التي قدمتها",
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
-    "support": "الدعم الفني"
+    "support": "الدعم الفني",
+    "invoices": "الفواتير"
   },
   "Home": {
     "stats": {
@@ -261,5 +262,258 @@
     "stats_label_3": "نسبة الرضا",
     "agree_label": "أوافق على الشروط والأحكام وسياسة الخصوصية",
     "legal_tooltip": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية الخاصة بالمنصة، وتتعهد بصحة البيانات المدخلة."
+  },
+  "Orders": {
+    "title": "الطلبات",
+    "add_new": "اضافة طلب جديد",
+    "search": "بحث",
+    "filter_category": "الفئة",
+    "filter_classification": "التصنيف",
+    "filter_date": "التاريخ",
+    "filter_status": "الحالة",
+    "table": {
+      "order_id": "رقم الطلب",
+      "order_title": "عنوان الطلب",
+      "category": "الفئة",
+      "classification": "التصنيف",
+      "delivery_date": "تاريخ التسليم",
+      "creation_date": "تاريخ الانشاء",
+      "status": "الحالة",
+      "actions": "اجراءات",
+      "action_view": "عرض"
+    },
+    "status": {
+      "open": "مفتوح",
+      "closed": "مغلق"
+    },
+    "pagination": {
+      "showing": "عرض {from}-{to} من {count}"
+    },
+    "details": {
+      "title": "الطلب رقم #{id}",
+      "close": "إغلاق",
+      "alert_title": "تأكيد حالة الطلب",
+      "alert_message": "يرجى تأكيد حالة الطلب خلال 7 أيام من تاريخ اختيار العرض. في حال عدم تأكيد الاستلام أو توضيح سبب عدم الاستلام خلال الفترة المحددة، سيتم تعليق إمكانية إنشاء طلبات جديدة حتى يتم تحديث حالة الطلب الحالي.",
+      "info": {
+        "order_id": "رقم الطلب",
+        "created_at": "تاريخ الانشاء",
+        "delivery_date": "تاريخ التسليم المتوقع",
+        "status": "الحالة"
+      },
+      "table": {
+        "item": "الصنف",
+        "qty": "الكمية",
+        "details": "تفاصيل الطلب",
+        "detail_link": "التفاصيل"
+      },
+      "offers_title": "العرض المقدم",
+      "offers": {
+        "supplier": "المورد",
+        "address": "عنوان المورد",
+        "total": "الإجمالي",
+        "total_tax": "الإجمالي شامل الضريبة",
+        "offer_date": "تاريخ العرض",
+        "delivery": "التوصيل",
+        "status": "تاريخ العرض",
+        "free_delivery": "مجاني",
+        "accepted": "مقبول",
+        "rejected": "مرفوض",
+        "closed": "مغلق"
+      },
+      "filters": {
+        "price": "السعر",
+        "delivery": "التوصيل"
+      }
+    },
+    "offer_details": {
+      "alert_message": "هل تم استلام المنتج أو الخدمة المطلوبة بنجاح؟ يرجى تأكيد حالة الطلب لتحديثه داخل النظام حتى تتمكن من اضافة طلبات أخرى.",
+      "cards": {
+        "delivery": "التوصيل",
+        "total": "الإجمالي",
+        "tax": "شامل الضريبة",
+        "duration": "مدة التوريد",
+        "offer_date": "تاريخ العرض",
+        "status": "الحالة",
+        "awaiting": "في انتظار الرد"
+      },
+      "table": {
+        "unit_price": "سعر الوحدة",
+        "subtotal": "الاجمالي",
+        "tax_rate": "الضريبة %15",
+        "grand_total": "الاجمالي شامل الضريبة"
+      },
+      "buttons": {
+        "received": "تم الاستلام",
+        "not_delivered": "لم يتم التوصيل"
+      }
+    },
+    "Profile": {
+      "edit_profile": "تعديل الملف الشخصي",
+      "account_info": "معلومات الحساب",
+      "member_since": "عضو منذ {year}",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "fields": {
+        "name": "الاسم",
+        "company": "اسم الشركة",
+        "phone": "رقم الجوال",
+        "email": "البريد الإلكتروني",
+        "sector": "القطاع",
+        "tax_number": "الرقم الضريبي",
+        "commercial_record": "السجل التجاري",
+        "company_address": "عنوان الشركة",
+        "city": "المدينة",
+        "password": "كلمة المرور"
+      }
+    },
+    "Support": {
+      "requests_title": "الطلبات",
+      "form_title": "ارسل طلب الي الدعم الفني",
+      "form_hint": "يرجى توضيح المشكلة أو الاستفسار بالتفصيل لمساعدتنا في خدمتك بشكل أفضل.",
+      "view_requests": "عرض الطلبات",
+      "create_request": "إنشاء طلب",
+      "search": "بحث",
+      "filter": "فلتر",
+      "all_statuses": "كل الحالات",
+      "email_label": "البريد الالكتروني",
+      "email_placeholder": "نص تلميحي",
+      "details_label": "تفاصيل الطلب",
+      "details_placeholder": "النص المدخل",
+      "send": "ارسال",
+      "cancel": "الغاء",
+      "delete": "حذف",
+      "empty": "لا توجد طلبات مطابقة",
+      "email_required": "البريد الإلكتروني مطلوب",
+      "email_invalid": "صيغة البريد الإلكتروني غير صحيحة",
+      "details_required": "تفاصيل الطلب مطلوبة",
+      "created_success": "تم إرسال طلب الدعم بنجاح",
+      "deleted_success": "تم حذف الطلب",
+      "request_number": "رقم الطلب",
+      "request_date": "تاريخ الطلب",
+      "request_time": "وقت الطلب",
+      "request_status": "حالة الطلب",
+      "status": {
+        "under_review": "تحت المراجعة",
+        "in_progress": "قيد التنفيذ",
+        "resolved": "تم الحل",
+        "closed": "مغلق"
+      }
+    },
+    "Notifications": {
+      "title": "الاشعارات",
+      "dismiss": "إغلاق الإشعار",
+      "dismissed": "تم إغلاق الإشعار",
+      "empty": "لا توجد إشعارات"
+    },
+    "CreateQuoteRequest": {
+      "page_title": "إنشاء طلب عرض سعر",
+      "create_request": "إنشاء الطلب",
+      "create_request_hint": "(يمكنك إنشاء أكثر من طلب)",
+      "add": "اضافة",
+      "delete": "حذف",
+      "send": "ارسال",
+      "cancel": "الغاء",
+      "category": "الفئة",
+      "request_title": "عنوان الطلب",
+      "delivery_date": "تاريخ التسليم",
+      "item": "الصنف",
+      "quantity": "الكمية",
+      "details": "تفاصيل الطلب",
+      "actions": "الاجراءات",
+      "category_placeholder": "أدخل الفئة",
+      "title_placeholder": "أدخل عنوان الطلب",
+      "item_placeholder": "اسم الصنف",
+      "quantity_placeholder": "0",
+      "details_placeholder": "تفاصيل الصنف",
+      "send_success": "تم إرسال طلب عرض السعر بنجاح",
+      "cancel_success": "تم إلغاء الطلب"
+    },
+    "Auth": {
+      "signin_title": "تسجيل دخول",
+      "signin_subtitle": "انضم إلى شبكة التجارة الأكثر موثوقية في المنطقة.",
+      "go_register": "ليس لديك حساب",
+      "go_login": "لديك حساب بالفعل؟ سجل الدخول",
+      "phone": "رقم الجوال",
+      "password": "كلمة السر",
+      "forgot_prefix": "هل نسيت كلمة السر؟",
+      "forgot_link": "استعادة",
+      "signin_cta": "تسجيل",
+      "signin_success": "تم تسجيل الدخول بنجاح",
+      "forgot_title": "نسيت كلمة السر",
+      "forgot_subtitle": "الرجاء إدخال رقم الهاتف المرتبط بحسابكم وسنرسل إليك رمزا عبر SMS لإعادة تعيين كلمة السر الخاصة بكم.",
+      "send": "ارسال",
+      "back_to_login": "العودة لتسجيل الدخول",
+      "new_account_title": "حساب جديد",
+      "otp_title": "برجاء ادخال الكود المرسل",
+      "otp_subtitle": "لقد أرسلنا رمز التحقق (OTP) إلى رقم هاتفك المحمول.",
+      "confirm": "تاكيد",
+      "otp_verified": "تم التحقق بنجاح",
+      "otp_resent": "تم إعادة إرسال الرمز بنجاح",
+      "resend_question": "ألم تتلقَّ الرمز؟",
+      "resend_link": "إعادة إرسال رمز التحقق (OTP)",
+      "supplier": "مورد",
+      "buyer": "مشتري",
+      "company": "شركة",
+      "individual": "فرد",
+      "company_name": "اسم الشركة",
+      "full_name": "الاسم",
+      "confirm_password": "تأكيد كلمة السر",
+      "register_cta": "تسجيل",
+      "logout": "تسجيل خروج",
+      "complete_title": "اكمال تسجيل البيانات",
+      "account_info_title": "بيانات الحساب",
+      "legal_company_name": "اسم الشركة القانوني",
+      "email": "البريد الالكتروني",
+      "sector": "القطاع",
+      "tax_number": "الرقم الضريبي",
+      "commercial_record": "السجل التجاري",
+      "city": "المدينة",
+      "company_address": "عنوان الشركة",
+      "save": "حفظ",
+      "cancel_btn": "إلغاء",
+      "profile_saved": "تم حفظ البيانات بنجاح",
+      "why_title": "لماذا وساطة تجارية؟",
+      "feature_1_title": "أمان وموثوقية",
+      "feature_1_desc": "نضمن حقوق المورد والمشتري من خلال نظام وساطة مالي متطور وعقود تجارية ملزمة.",
+      "feature_2_title": "توسع إقليمي",
+      "feature_2_desc": "الوصول إلى آلاف المشترين المحتملين في جميع أنحاء المملكة ودول الخليج بضغطة زر.",
+      "stats_label_1": "مورد معتمد",
+      "stats_label_2": "نسبة الرضا",
+      "stats_label_3": "نسبة الرضا",
+      "agree_label": "أوافق على الشروط والأحكام وسياسة الخصوصية",
+      "legal_tooltip": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية الخاصة بالمنصة، وتتعهد بصحة البيانات المدخلة."
+    }
+  },
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "صفوف لكل صفحة:",
+        "of": "من",
+        "more_than": "أكثر من"
+      }
+    }
+  },
+  "Invoices": {
+    "title": "الفواتير",
+    "search": "بحث",
+    "status_filter": "الحالة",
+    "all": "الكل",
+    "status": {
+      "paid": "مدفوعة",
+      "unpaid": "غير مدفوعة"
+    },
+    "table": {
+      "invoice_number": "رقم الفاتورة",
+      "transaction_title": "عنوان المعاملة",
+      "order_number": "رقم الطلب",
+      "registered_at": "وقت تسجيل الفاتورة",
+      "amount_paid": "المبلغ المدفوع",
+      "actions": "اجراءات",
+      "view": "عرض"
+    },
+    "pagination": {
+      "showing": "عرض {from}-{to} من {count}"
+    },
+    "no_data": "لا توجد فواتير"
   }
 }
