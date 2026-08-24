@@ -41,7 +41,9 @@
         "order_id": "رقم الطلب",
         "created_at": "تاريخ الانشاء",
         "delivery_date": "تاريخ التسليم المتوقع",
-        "status": "الحالة"
+        "status": "الحالة",
+        "order_title": "عنوان الطلب",
+        "category": "الفئة"
       },
       "table": {
         "item": "الصنف",
@@ -77,7 +79,9 @@
         "duration": "مدة التوريد",
         "offer_date": "تاريخ العرض",
         "status": "الحالة",
-        "awaiting": "في انتظار الرد"
+        "awaiting": "في انتظار الرد",
+        "supplier": "المورد",
+        "address": "العنوان"
       },
       "table": {
         "unit_price": "سعر الوحدة",
@@ -87,7 +91,10 @@
       },
       "buttons": {
         "received": "تم الاستلام",
-        "not_delivered": "لم يتم التوصيل"
+        "not_delivered": "لم يتم التوصيل",
+        "accept": "قبول",
+        "reject": "رفض",
+        "download": "تحميل تفاصيل العرض"
       }
     },
   "Profile": {

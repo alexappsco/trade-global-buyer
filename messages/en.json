@@ -41,7 +41,9 @@
         "order_id": "Order ID",
         "created_at": "Creation Date",
         "delivery_date": "Expected Delivery Date",
-        "status": "Status"
+        "status": "Status",
+        "order_title": "Order Title",
+        "category": "Category"
       },
       "table": {
         "item": "Item",
@@ -77,7 +79,9 @@
         "duration": "Supply Duration",
         "offer_date": "Offer Date",
         "status": "Status",
-        "awaiting": "Awaiting Response"
+        "awaiting": "Awaiting Response",
+        "supplier": "Supplier",
+        "address": "Address"
       },
       "table": {
         "unit_price": "Unit Price",
@@ -87,7 +91,10 @@
       },
       "buttons": {
         "received": "Received",
-        "not_delivered": "Not Delivered"
+        "not_delivered": "Not Delivered",
+        "accept": "Accept",
+        "reject": "Reject",
+        "download": "Download Offer Details"
       }
     },
   "Profile": {
