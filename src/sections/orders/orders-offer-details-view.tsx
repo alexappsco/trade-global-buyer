@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
+import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
 import { getOrderById } from './orders-mock';
 
 interface Props {
@@ -36,6 +37,10 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
   // Alert State
   const [showAlert, setShowAlert] = useState(true);
+
+  // Dialog States
+  const [openAcceptConfirm, setOpenAcceptConfirm] = useState(false);
+  const [openRejectConfirm, setOpenRejectConfirm] = useState(false);
 
   // Localized values helper
   const translateValue = (val: string) => {
@@ -494,6 +499,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         >
           <Button
             variant="contained"
+            onClick={() => setOpenAcceptConfirm(true)}
             sx={{
               bgcolor: '#10754E',
               color: 'white',
@@ -514,6 +520,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
           <Button
             variant="contained"
+            onClick={() => setOpenRejectConfirm(true)}
             sx={{
               bgcolor: '#FF3B30',
               color: 'white',
@@ -555,6 +562,33 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         </Button>
       </Box>
 
+      {/* Accept Offer Confirmation Dialog */}
+      <ConfirmationDialog
+        open={openAcceptConfirm}
+        onClose={() => setOpenAcceptConfirm(false)}
+        variant="success"
+        title={t('dialog.confirm_accept_offer')}
+        confirmLabel={t('dialog.confirm')}
+        cancelLabel={t('dialog.cancel')}
+        onConfirm={() => {
+          setOpenAcceptConfirm(false);
+          router.push(`/orders/${order.id}`);
+        }}
+      />
+
+      {/* Reject Offer Confirmation Dialog */}
+      <ConfirmationDialog
+        open={openRejectConfirm}
+        onClose={() => setOpenRejectConfirm(false)}
+        variant="warning"
+        title={t('dialog.confirm_reject_offer')}
+        confirmLabel={t('dialog.confirm')}
+        cancelLabel={t('dialog.cancel')}
+        onConfirm={() => {
+          setOpenRejectConfirm(false);
+          router.push(`/orders/${order.id}`);
+        }}
+      />
     </Box>
   );
 }
