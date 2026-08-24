@@ -1,4 +1,16 @@
 {
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "Rows per page",
+        "of": "of",
+        "more_than": "more than"
+      }
+    },
+    "Label": {
+      "no_data": "No data"
+    }
+  },
   "Sidebar": {
     "home": "Home",
     "my_orders": "My Orders",
@@ -6,6 +18,114 @@
     "notifications": "Notifications",
     "support": "Support",
     "invoices": "Invoices"
+  },
+  "Home": {
+    "stats": {
+      "total_orders": "Total Orders",
+      "completed_orders": "Completed Orders",
+      "price_quotes": "Price Quotes",
+      "active_orders": "Active Orders",
+      "orders_count": "{count} orders"
+    },
+    "categories": {
+      "title": "Categories",
+      "view_section": "View Section",
+      "items": {
+        "computers": "Computers & Laptops",
+        "networking": "Networking & Infrastructure",
+        "printers": "Printers & Ink",
+        "services": "Services & Maintenance"
+      }
+    },
+    "recent_orders": {
+      "title": "Recent Orders",
+      "add_new": "Add New Order"
+    }
+  },
+  "Orders": {
+    "title": "Orders",
+    "add_new": "Add New Order",
+    "search": "Search",
+    "filter_category": "Category",
+    "filter_classification": "Classification",
+    "filter_date": "Date",
+    "filter_status": "Status",
+    "table": {
+      "order_id": "Order ID",
+      "order_title": "Order Title",
+      "category": "Category",
+      "classification": "Classification",
+      "delivery_date": "Delivery Date",
+      "creation_date": "Creation Date",
+      "status": "Status",
+      "actions": "Actions",
+      "action_view": "View"
+    },
+    "status": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "pagination": {
+      "showing": "Showing {from}-{to} of {count}"
+    },
+    "details": {
+      "title": "Order #{id}",
+      "close": "Close",
+      "alert_title": "Confirm Order Status",
+      "alert_message": "Please confirm the order status within 7 days of selecting the offer. If receipt is not confirmed or reason for non-receipt is explained within the specified period, creating new orders will be suspended until the current order status is updated.",
+      "info": {
+        "order_id": "Order ID",
+        "created_at": "Creation Date",
+        "delivery_date": "Expected Delivery Date",
+        "status": "Status"
+      },
+      "table": {
+        "item": "Item",
+        "qty": "Quantity",
+        "details": "Order Details",
+        "detail_link": "Details"
+      },
+      "offers_title": "Submitted Offers",
+      "offers": {
+        "supplier": "Supplier",
+        "address": "Supplier Address",
+        "total": "Total",
+        "total_tax": "Total including Tax",
+        "offer_date": "Offer Date",
+        "delivery": "Delivery",
+        "status": "Offer Status",
+        "free_delivery": "Free",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "closed": "Closed"
+      },
+      "filters": {
+        "price": "Price",
+        "delivery": "Delivery"
+      }
+    },
+    "offer_details": {
+      "alert_message": "Was the requested product or service received successfully? Please confirm the order status to update it in the system so you can add other requests.",
+      "cards": {
+        "delivery": "Delivery",
+        "total": "Total",
+        "tax": "Including Tax",
+        "duration": "Supply Duration",
+        "offer_date": "Offer Date",
+        "status": "Status",
+        "awaiting": "Awaiting Response"
+      },
+      "table": {
+        "unit_price": "Unit Price",
+        "subtotal": "Total",
+        "tax_rate": "Tax 15%",
+        "grand_total": "Total including Tax"
+      },
+      "buttons": {
+        "received": "Received",
+        "not_delivered": "Not Delivered"
+      }
+    }
   },
   "Profile": {
     "edit_profile": "Edit Profile",

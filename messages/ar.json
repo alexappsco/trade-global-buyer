@@ -1,4 +1,16 @@
 {
+  "Global": {
+    "Sections": {
+      "Table": {
+        "rows_per_page": "صفوف لكل صفحة",
+        "of": "من",
+        "more_than": "أكثر من"
+      }
+    },
+    "Label": {
+      "no_data": "لا توجد بيانات"
+    }
+  },
   "Sidebar": {
     "home": "الرئيسية",
     "my_orders": "الطلبات التي قدمتها",
@@ -6,6 +18,114 @@
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
     "invoices": "الفواتير"
+  },
+  "Home": {
+    "stats": {
+      "total_orders": "إجمالي الطلبات",
+      "completed_orders": "طلبات مكتملة",
+      "price_quotes": "عروض الأسعار",
+      "active_orders": "طلبات نشطة",
+      "orders_count": "{count} طلب"
+    },
+    "categories": {
+      "title": "الفئات",
+      "view_section": "مراجعة القسم",
+      "items": {
+        "computers": "أجهزة كمبيوتر ولاب توب",
+        "networking": "قسم الشبكات والبنية التحتية",
+        "printers": "طابعات أحبار وورق",
+        "services": "قسم الخدمات والصيانة"
+      }
+    },
+    "recent_orders": {
+      "title": "آخر الطلبات",
+      "add_new": "اضافة طلب جديد"
+    }
+  },
+  "Orders": {
+    "title": "الطلبات",
+    "add_new": "اضافة طلب جديد",
+    "search": "بحث",
+    "filter_category": "الفئة",
+    "filter_classification": "التصنيف",
+    "filter_date": "التاريخ",
+    "filter_status": "الحالة",
+    "table": {
+      "order_id": "رقم الطلب",
+      "order_title": "عنوان الطلب",
+      "category": "الفئة",
+      "classification": "التصنيف",
+      "delivery_date": "تاريخ التسليم",
+      "creation_date": "تاريخ الانشاء",
+      "status": "الحالة",
+      "actions": "اجراءات",
+      "action_view": "عرض"
+    },
+    "status": {
+      "open": "مفتوح",
+      "closed": "مغلق"
+    },
+    "pagination": {
+      "showing": "عرض {from}-{to} من {count}"
+    },
+    "details": {
+      "title": "الطلب رقم #{id}",
+      "close": "إغلاق",
+      "alert_title": "تأكيد حالة الطلب",
+      "alert_message": "يرجى تأكيد حالة الطلب خلال 7 أيام من تاريخ اختيار العرض. في حال عدم تأكيد الاستلام أو توضيح سبب عدم الاستلام خلال الفترة المحددة، سيتم تعليق إمكانية إنشاء طلبات جديدة حتى يتم تحديث حالة الطلب الحالي.",
+      "info": {
+        "order_id": "رقم الطلب",
+        "created_at": "تاريخ الانشاء",
+        "delivery_date": "تاريخ التسليم المتوقع",
+        "status": "الحالة"
+      },
+      "table": {
+        "item": "الصنف",
+        "qty": "الكمية",
+        "details": "تفاصيل الطلب",
+        "detail_link": "التفاصيل"
+      },
+      "offers_title": "العرض المقدم",
+      "offers": {
+        "supplier": "المورد",
+        "address": "عنوان المورد",
+        "total": "الإجمالي",
+        "total_tax": "الإجمالي شامل الضريبة",
+        "offer_date": "تاريخ العرض",
+        "delivery": "التوصيل",
+        "status": "تاريخ العرض",
+        "free_delivery": "مجاني",
+        "accepted": "مقبول",
+        "rejected": "مرفوض",
+        "closed": "مغلق"
+      },
+      "filters": {
+        "price": "السعر",
+        "delivery": "التوصيل"
+      }
+    },
+    "offer_details": {
+      "alert_message": "هل تم استلام المنتج أو الخدمة المطلوبة بنجاح؟ يرجى تأكيد حالة الطلب لتحديثه داخل النظام حتى تتمكن من اضافة طلبات أخرى.",
+      "cards": {
+        "delivery": "التوصيل",
+        "total": "الإجمالي",
+        "tax": "شامل الضريبة",
+        "duration": "مدة التوريد",
+        "offer_date": "تاريخ العرض",
+        "status": "الحالة",
+        "awaiting": "في انتظار الرد"
+      },
+      "table": {
+        "unit_price": "سعر الوحدة",
+        "subtotal": "الاجمالي",
+        "tax_rate": "الضريبة %15",
+        "grand_total": "الاجمالي شامل الضريبة"
+      },
+      "buttons": {
+        "received": "تم الاستلام",
+        "not_delivered": "لم يتم التوصيل"
+      }
+    }
   },
   "Profile": {
     "edit_profile": "تعديل الملف الشخصي",
