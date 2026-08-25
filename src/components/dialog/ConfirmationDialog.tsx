@@ -18,6 +18,7 @@ type ConfirmationDialogProps = {
   title: string;
   confirmLabel: string;
   cancelLabel?: string; // If omitted, only one button is displayed
+  cancelVariant?: 'outlined' | 'gray'; // Outlined green or solid gray
 };
 
 export default function ConfirmationDialog({
@@ -28,6 +29,7 @@ export default function ConfirmationDialog({
   title,
   confirmLabel,
   cancelLabel,
+  cancelVariant = 'outlined',
 }: ConfirmationDialogProps) {
   return (
     <Dialog
@@ -128,19 +130,31 @@ export default function ConfirmationDialog({
 
           {cancelLabel && (
             <Button
-              variant="outlined"
+              variant={cancelVariant === 'gray' ? 'contained' : 'outlined'}
               fullWidth
               onClick={onClose}
               sx={{
-                borderColor: '#10754E',
-                color: '#10754E',
                 fontWeight: 700,
                 borderRadius: '8px',
                 py: 1.2,
-                '&:hover': {
-                  borderColor: '#0c5b3c',
-                  bgcolor: 'rgba(16, 117, 78, 0.04)',
-                },
+                boxShadow: 'none',
+                ...(cancelVariant === 'gray'
+                  ? {
+                      bgcolor: '#F4F6F8',
+                      color: '#637381',
+                      '&:hover': {
+                        bgcolor: '#E5E8EB',
+                        boxShadow: 'none',
+                      },
+                    }
+                  : {
+                      borderColor: '#10754E',
+                      color: '#10754E',
+                      '&:hover': {
+                        borderColor: '#0c5b3c',
+                        bgcolor: 'rgba(16, 117, 78, 0.04)',
+                      },
+                    }),
               }}
             >
               {cancelLabel}
