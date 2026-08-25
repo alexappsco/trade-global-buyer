@@ -20,6 +20,7 @@ import {
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
 import { getOrderById } from './orders-mock';
+import { MOCK_QUOTATION_REQUESTS } from '../quotations/quotations-mock';
 
 interface Props {
   id: string;
@@ -33,6 +34,15 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
   const isRtl = locale === 'ar';
 
   const order = useMemo(() => getOrderById(id), [id]);
+
+  // Load the corresponding quotation request to determine UI state
+  const quotationRequest = useMemo(() => {
+    return MOCK_QUOTATION_REQUESTS.find((q) => q.id === offerId);
+  }, [offerId]);
+
+  const actionType = quotationRequest?.actionType || 'submit';
+  const offerStatus = quotationRequest?.offerStatus || 'pending';
+  const orderNumber = quotationRequest?.orderNumber || order.orderNumber || '2654';
 
   // Dialog States
   const [openConfirmSubmit, setOpenConfirmSubmit] = useState(false);
@@ -82,7 +92,11 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
   const [unitPrices, setUnitPrices] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     items.forEach((item) => {
-      initial[item.name] = '500';
+      // Default mock values for view_submitted matching design: Laptop=500, Screen=765, Mouse=800 (Keyboard fallback to 800)
+      if (item.name === 'لابتوب') initial[item.name] = '500';
+      else if (item.name === 'شاشة' || item.name === 'ماوس') initial[item.name] = '765';
+      else if (item.name === 'كيبورد' || item.name === 'ماوس') initial[item.name] = '800';
+      else initial[item.name] = '500';
     });
     return initial;
   });
@@ -97,7 +111,9 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
     creationDate: isRtl ? 'تاريخ الانشاء' : 'Creation Date',
     status: isRtl ? 'الحالة' : 'Status',
     open: isRtl ? 'مفتوح' : 'Open',
+    closed: isRtl ? 'مغلق' : 'Closed',
     submitTitle: isRtl ? 'تقديم عرض على هذا الطلب' : 'Submit Offer on this Order',
+    viewSubmittedTitle: isRtl ? 'العرض المقدم' : 'Submitted Offer',
     orderTitle: isRtl ? 'عنوان الطلب' : 'Order Title',
     category: isRtl ? 'الفئة' : 'Category',
     date: isRtl ? 'التاريخ' : 'Date',
@@ -119,6 +135,13 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
     successText: isRtl ? 'تم ارسال العرض بنجاح.' : 'Offer sent successfully.',
     viewNow: isRtl ? 'اطلع عليه الان' : 'View it now',
     skipToOrders: isRtl ? 'التخطي والذهاب الى الطلبات' : 'Skip and go to Orders',
+    
+    // Banner specific strings
+    acceptedText: isRtl ? `تهانينا، تم قبول عرضك على الطلب رقم #${orderNumber}` : `Congratulations, your offer has been accepted on order #${orderNumber}`,
+    rejectedText: isRtl ? `تم رفض العرض المقدم على الطلب رقم #${orderNumber} شكرا لمشاركتكم.` : `The offer submitted on order #${orderNumber} was rejected, thank you for participating.`,
+    closedText: isRtl ? `تم اغلاق الطلب رقم #${orderNumber}` : `Order #${orderNumber} has been closed`,
+    browseBuyer: isRtl ? 'تصفح تفاصيل المشتري' : 'Browse Buyer Details',
+    browseOthers: isRtl ? 'تصفح الطلبات الأخرى' : 'Browse Other Orders',
   };
 
   // Dynamic calculations
@@ -158,12 +181,189 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
   };
 
   const handleCancel = () => {
-    router.push(`/orders/${order.id}`);
+    router.push('/quotation-requests');
+  };
+
+  // Render prices in read-only mode matching design
+  const getReadOnlyPrice = (itemName: string) => {
+    if (actionType === 'cannot_submit') return '-';
+    // Display fixed values matching images (Laptop=500, Screen=765, Mouse=800)
+    if (itemName === 'لابتوب') return '500';
+    if (itemName === 'شاشة') return '765';
+    if (itemName === 'ماوس' || itemName === 'كيبورد') return '800';
+    return unitPrices[itemName] || '500';
   };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       
+      {/* 1. Conditional Status Banners on Top (Only for read-only view) */}
+      {actionType !== 'submit' && (
+        <>
+          {/* Green Accepted Banner */}
+          {offerStatus === 'accepted' && (
+            <Box
+              sx={{
+                bgcolor: '#E6EFEA',
+                border: '1px solid #B7CBB7',
+                borderRadius: '8px',
+                p: 2,
+                px: 3,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    bgcolor: 'rgba(0, 104, 56, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Iconify icon="solar:check-circle-bold" width={20} sx={{ color: '#006838' }} />
+                </Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#006838' }}>
+                  {labels.acceptedText}
+                </Typography>
+              </Box>
+              <Button
+                variant="contained"
+                onClick={() => router.push('/profile')}
+                startIcon={<Iconify icon="solar:eye-bold" width={16} />}
+                sx={{
+                  bgcolor: '#006838',
+                  color: 'white',
+                  fontWeight: 700,
+                  borderRadius: '24px',
+                  px: 3,
+                  py: 1,
+                  boxShadow: 'none',
+                  '&:hover': { bgcolor: '#00502b', boxShadow: 'none' },
+                }}
+              >
+                {labels.browseBuyer}
+              </Button>
+            </Box>
+          )}
+
+          {/* Yellow/Orange Banner for Rejected */}
+          {offerStatus === 'rejected' && (
+            <Box
+              sx={{
+                bgcolor: '#FFF9E6',
+                border: '1px solid #FFE699',
+                borderRadius: '8px',
+                p: 2,
+                px: 3,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    bgcolor: 'rgba(255, 171, 0, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Iconify icon="solar:danger-triangle-bold" width={20} sx={{ color: '#FFAB00' }} />
+                </Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#7A4100' }}>
+                  {labels.rejectedText}
+                </Typography>
+              </Box>
+              <Button
+                variant="contained"
+                onClick={() => router.push('/quotation-requests')}
+                startIcon={<Iconify icon="solar:eye-bold" width={16} />}
+                sx={{
+                  bgcolor: '#FFAB00',
+                  color: 'white',
+                  fontWeight: 700,
+                  borderRadius: '24px',
+                  px: 3,
+                  py: 1,
+                  boxShadow: 'none',
+                  '&:hover': { bgcolor: '#e09600', boxShadow: 'none' },
+                }}
+              >
+                {labels.browseOthers}
+              </Button>
+            </Box>
+          )}
+
+          {/* Yellow/Orange Banner for Closed or Cannot Submit */}
+          {(offerStatus === 'closed' || actionType === 'cannot_submit') && (
+            <Box
+              sx={{
+                bgcolor: '#FFF9E6',
+                border: '1px solid #FFE699',
+                borderRadius: '8px',
+                p: 2,
+                px: 3,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    bgcolor: 'rgba(255, 171, 0, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Iconify icon="solar:danger-triangle-bold" width={20} sx={{ color: '#FFAB00' }} />
+                </Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#7A4100' }}>
+                  {labels.closedText}
+                </Typography>
+              </Box>
+              <Button
+                variant="contained"
+                onClick={() => router.push('/quotation-requests')}
+                startIcon={<Iconify icon="solar:eye-bold" width={16} />}
+                sx={{
+                  bgcolor: '#FFAB00',
+                  color: 'white',
+                  fontWeight: 700,
+                  borderRadius: '24px',
+                  px: 3,
+                  py: 1,
+                  boxShadow: 'none',
+                  '&:hover': { bgcolor: '#e09600', boxShadow: 'none' },
+                }}
+              >
+                {labels.browseOthers}
+              </Button>
+            </Box>
+          )}
+        </>
+      )}
+
       {/* Title Header Banner */}
       <Box
         sx={{
@@ -176,7 +376,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         }}
       >
         <Typography variant="h5" sx={{ fontWeight: 700, color: '#161C24' }}>
-          {isRtl ? `الطلب رقم #${id}` : `Order #${id}`}
+          {isRtl ? `الطلب رقم #${orderNumber}` : `Order #${orderNumber}`}
         </Typography>
       </Box>
 
@@ -232,8 +432,14 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {labels.status}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#006838' }}>
-              {labels.open}
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                color: (actionType === 'cannot_submit' || offerStatus === 'closed') ? '#FF3B30' : '#006838',
+              }}
+            >
+              {(actionType === 'cannot_submit' || offerStatus === 'closed') ? labels.closed : labels.open}
             </Typography>
           </Box>
         </Box>
@@ -252,7 +458,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         }}
       >
         <Typography variant="h6" sx={{ fontWeight: 700, color: '#161C24' }}>
-          {labels.submitTitle}
+          {actionType === 'submit' ? labels.submitTitle : labels.viewSubmittedTitle}
         </Typography>
       </Box>
 
@@ -297,254 +503,267 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
               {/* Item Rows */}
               {items.map((item, idx) => (
                 <TableRow key={idx}>
-                  <TableCell sx={{ fontWeight: 600, color: '#006838', borderBottom: '1px solid #F4F6F8' }}>
+                  <TableCell sx={{ fontWeight: 600, color: '#006838', borderBottom: actionType === 'submit' ? '1px solid #F4F6F8' : 'none' }}>
                     {translateValue(item.name)}
                   </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                  <TableCell align="center" sx={{ borderBottom: actionType === 'submit' ? '1px solid #F4F6F8' : 'none' }}>
                     <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
                       {item.qty}
                       <Iconify icon="eva:chevron-down-fill" width={16} sx={{ color: 'text.secondary' }} />
                     </Box>
                   </TableCell>
-                  <TableCell align="center" sx={{ color: '#637381', borderBottom: '1px solid #F4F6F8' }}>
+                  <TableCell align="center" sx={{ color: '#637381', borderBottom: actionType === 'submit' ? '1px solid #F4F6F8' : 'none' }}>
                     {item.details}
                   </TableCell>
-                  <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
-                    <TextField
-                      size="small"
-                      value={unitPrices[item.name] || ''}
-                      onChange={(e) => handlePriceChange(item.name, e.target.value)}
-                      slotProps={{
-                        htmlInput: {
-                          style: { textAlign: 'center' }
-                        }
-                      }}
-                      sx={{
-                        width: 140,
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px',
-                          bgcolor: '#fff',
-                          '& fieldset': { borderColor: '#EAEFEA' },
-                          '&:hover fieldset': { borderColor: '#DFE3E8' },
-                          '&.Mui-focused fieldset': { borderColor: '#10754E' },
-                        },
-                      }}
-                    />
+                  <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: actionType === 'submit' ? '1px solid #F4F6F8' : 'none' }}>
+                    {actionType === 'submit' ? (
+                      <TextField
+                        size="small"
+                        value={unitPrices[item.name] || ''}
+                        onChange={(e) => handlePriceChange(item.name, e.target.value)}
+                        slotProps={{
+                          htmlInput: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        sx={{
+                          width: 140,
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            bgcolor: '#fff',
+                            '& fieldset': { borderColor: '#EAEFEA' },
+                            '&:hover fieldset': { borderColor: '#DFE3E8' },
+                            '&.Mui-focused fieldset': { borderColor: '#10754E' },
+                          },
+                        }}
+                      />
+                    ) : (
+                      <Typography sx={{ fontWeight: 600, color: '#212B36', width: 140, textAlign: 'center' }}>
+                        {getReadOnlyPrice(item.name)}
+                      </Typography>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
 
-              {/* Delivery Row */}
-              <TableRow>
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
-                  {labels.delivery}
-                </TableCell>
-                <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
-                  <TextField
-                    size="small"
-                    value={deliveryPrice}
-                    onChange={(e) => handleDeliveryChange(e.target.value)}
-                    slotProps={{
-                      htmlInput: {
-                        style: { textAlign: 'center' }
-                      }
-                    }}
-                    sx={{
-                      width: 140,
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '8px',
-                        bgcolor: '#fff',
-                        '& fieldset': { borderColor: '#EAEFEA' },
-                        '&:hover fieldset': { borderColor: '#DFE3E8' },
-                        '&.Mui-focused fieldset': { borderColor: '#10754E' },
-                      },
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
+              {/* Summary Rows (Only shown for editable submission flow) */}
+              {actionType === 'submit' && (
+                <>
+                  {/* Delivery Row */}
+                  <TableRow>
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                      {labels.delivery}
+                    </TableCell>
+                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                      <TextField
+                        size="small"
+                        value={deliveryPrice}
+                        onChange={(e) => handleDeliveryChange(e.target.value)}
+                        slotProps={{
+                          htmlInput: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        sx={{
+                          width: 140,
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            bgcolor: '#fff',
+                            '& fieldset': { borderColor: '#EAEFEA' },
+                            '&:hover fieldset': { borderColor: '#DFE3E8' },
+                            '&.Mui-focused fieldset': { borderColor: '#10754E' },
+                          },
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
 
-              {/* Subtotal Row */}
-              <TableRow>
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
-                  {labels.subtotal}
-                </TableCell>
-                <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
-                  <TextField
-                    disabled
-                    size="small"
-                    value={subtotal}
-                    slotProps={{
-                      htmlInput: {
-                        style: { textAlign: 'center' }
-                      }
-                    }}
-                    sx={{
-                      width: 140,
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '8px',
-                        bgcolor: '#F4F6F8',
-                        '& fieldset': { borderColor: '#EAEFEA' },
-                      },
-                      '& .MuiInputBase-input.Mui-disabled': {
-                        color: '#212B36',
-                        WebkitTextFillColor: '#212B36',
-                        fontWeight: 'bold',
-                      },
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
+                  {/* Subtotal Row */}
+                  <TableRow>
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                      {labels.subtotal}
+                    </TableCell>
+                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                      <TextField
+                        disabled
+                        size="small"
+                        value={subtotal}
+                        slotProps={{
+                          htmlInput: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        sx={{
+                          width: 140,
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            bgcolor: '#F4F6F8',
+                            '& fieldset': { borderColor: '#EAEFEA' },
+                          },
+                          '& .MuiInputBase-input.Mui-disabled': {
+                            color: '#212B36',
+                            WebkitTextFillColor: '#212B36',
+                            fontWeight: 'bold',
+                          },
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
 
-              {/* Tax Row */}
-              <TableRow>
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
-                  {labels.tax}
-                </TableCell>
-                <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
-                  <TextField
-                    disabled
-                    size="small"
-                    value={tax}
-                    slotProps={{
-                      htmlInput: {
-                        style: { textAlign: 'center' }
-                      }
-                    }}
-                    sx={{
-                      width: 140,
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '8px',
-                        bgcolor: '#F4F6F8',
-                        '& fieldset': { borderColor: '#EAEFEA' },
-                      },
-                      '& .MuiInputBase-input.Mui-disabled': {
-                        color: '#212B36',
-                        WebkitTextFillColor: '#212B36',
-                        fontWeight: 'bold',
-                      },
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
+                  {/* Tax Row */}
+                  <TableRow>
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                      {labels.tax}
+                    </TableCell>
+                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                      <TextField
+                        disabled
+                        size="small"
+                        value={tax}
+                        slotProps={{
+                          htmlInput: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        sx={{
+                          width: 140,
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            bgcolor: '#F4F6F8',
+                            '& fieldset': { borderColor: '#EAEFEA' },
+                          },
+                          '& .MuiInputBase-input.Mui-disabled': {
+                            color: '#212B36',
+                            WebkitTextFillColor: '#212B36',
+                            fontWeight: 'bold',
+                          },
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
 
-              {/* Grand Total Row */}
-              <TableRow>
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
-                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
-                  {labels.grandTotal}
-                </TableCell>
-                <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
-                  <TextField
-                    disabled
-                    size="small"
-                    value={grandTotal}
-                    slotProps={{
-                      htmlInput: {
-                        style: { textAlign: 'center' }
-                      }
-                    }}
-                    sx={{
-                      width: 140,
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '8px',
-                        bgcolor: '#F4F6F8',
-                        '& fieldset': { borderColor: '#EAEFEA' },
-                      },
-                      '& .MuiInputBase-input.Mui-disabled': {
-                        color: '#212B36',
-                        WebkitTextFillColor: '#212B36',
-                        fontWeight: 'bold',
-                      },
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
+                  {/* Grand Total Row */}
+                  <TableRow>
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                    <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                      {labels.grandTotal}
+                    </TableCell>
+                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                      <TextField
+                        disabled
+                        size="small"
+                        value={grandTotal}
+                        slotProps={{
+                          htmlInput: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        sx={{
+                          width: 140,
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            bgcolor: '#F4F6F8',
+                            '& fieldset': { borderColor: '#EAEFEA' },
+                          },
+                          '& .MuiInputBase-input.Mui-disabled': {
+                            color: '#212B36',
+                            WebkitTextFillColor: '#212B36',
+                            fontWeight: 'bold',
+                          },
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
 
-              {/* Supply Duration Row */}
-              <TableRow>
-                <TableCell sx={{ borderBottom: 'none' }} />
-                <TableCell sx={{ borderBottom: 'none' }} />
-                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: 'none', py: 2 }}>
-                  {labels.supplyDuration}
-                </TableCell>
-                <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: 'none' }}>
-                  <TextField
-                    size="small"
-                    value={supplyDuration}
-                    onChange={(e) => handleDurationChange(e.target.value)}
-                    slotProps={{
-                      htmlInput: {
-                        style: { textAlign: 'center' }
-                      }
-                    }}
-                    sx={{
-                      width: 140,
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '8px',
-                        bgcolor: '#fff',
-                        '& fieldset': { borderColor: '#EAEFEA' },
-                        '&:hover fieldset': { borderColor: '#DFE3E8' },
-                        '&.Mui-focused fieldset': { borderColor: '#10754E' },
-                      },
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
+                  {/* Supply Duration Row */}
+                  <TableRow>
+                    <TableCell sx={{ borderBottom: 'none' }} />
+                    <TableCell sx={{ borderBottom: 'none' }} />
+                    <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: 'none', py: 2 }}>
+                      {labels.supplyDuration}
+                    </TableCell>
+                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: 'none' }}>
+                      <TextField
+                        size="small"
+                        value={supplyDuration}
+                        onChange={(e) => handleDurationChange(e.target.value)}
+                        slotProps={{
+                          htmlInput: {
+                            style: { textAlign: 'center' }
+                          }
+                        }}
+                        sx={{
+                          width: 140,
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            bgcolor: '#fff',
+                            '& fieldset': { borderColor: '#EAEFEA' },
+                            '&:hover fieldset': { borderColor: '#DFE3E8' },
+                            '&.Mui-focused fieldset': { borderColor: '#10754E' },
+                          },
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </>
+              )}
 
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
 
-      {/* Buttons */}
-      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}>
-        
-        {/* Send Button */}
-        <Button
-          variant="contained"
-          onClick={handleSend}
-          sx={{
-            bgcolor: '#10754E',
-            color: 'white',
-            fontWeight: 700,
-            borderRadius: '8px',
-            px: 6,
-            py: 1.5,
-            minWidth: 160,
-            boxShadow: 'none',
-            '&:hover': { bgcolor: '#0c5b3c', boxShadow: 'none' },
-          }}
-        >
-          {labels.send}
-        </Button>
+      {/* Buttons (Only shown for editable submission flow) */}
+      {actionType === 'submit' && (
+        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}>
+          
+          {/* Send Button */}
+          <Button
+            variant="contained"
+            onClick={handleSend}
+            sx={{
+              bgcolor: '#10754E',
+              color: 'white',
+              fontWeight: 700,
+              borderRadius: '8px',
+              px: 6,
+              py: 1.5,
+              minWidth: 160,
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#0c5b3c', boxShadow: 'none' },
+            }}
+          >
+            {labels.send}
+          </Button>
 
-        {/* Cancel Button */}
-        <Button
-          variant="contained"
-          onClick={handleCancel}
-          sx={{
-            bgcolor: '#FF3B30',
-            color: 'white',
-            fontWeight: 700,
-            borderRadius: '8px',
-            px: 6,
-            py: 1.5,
-            minWidth: 160,
-            boxShadow: 'none',
-            '&:hover': { bgcolor: '#d32f2f', boxShadow: 'none' },
-          }}
-        >
-          {labels.cancel}
-        </Button>
+          {/* Cancel Button */}
+          <Button
+            variant="contained"
+            onClick={handleCancel}
+            sx={{
+              bgcolor: '#FF3B30',
+              color: 'white',
+              fontWeight: 700,
+              borderRadius: '8px',
+              px: 6,
+              py: 1.5,
+              minWidth: 160,
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#d32f2f', boxShadow: 'none' },
+            }}
+          >
+            {labels.cancel}
+          </Button>
 
-      </Box>
+        </Box>
+      )}
 
       {/* Confirmation warning platform fee dialog */}
       <ConfirmationDialog
