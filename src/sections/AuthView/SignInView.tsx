@@ -6,19 +6,30 @@ import { useRouter } from "src/i18n/routing";
 import { useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
+import { useAuth } from "src/contexts/AuthContext";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
+
+type UserRole = "buyer" | "supplier";
 
 export default function SignInView() {
   const t = useTranslations("Auth");
   const router = useRouter();
   const toast = useToast();
+  const { setRole } = useAuth();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setLocalRole] = useState<UserRole | null>(null);
+  const [roleError, setRoleError] = useState(false);
 
   const handleSubmit = () => {
-    console.log("signin", { phone, password });
+    if (!role) {
+      setRoleError(true);
+      return;
+    }
+    console.log("signin", { phone, password, role });
+    setRole(role);
     toast.success(t("signin_success"));
     router.push("/");
   };
@@ -33,6 +44,42 @@ export default function SignInView() {
       }}
     >
       <Stack spacing={3}>
+        <Box>
+          <Stack direction="row" spacing={1}>
+            {(["supplier", "buyer"] as const).map((r) => {
+              const active = role === r;
+              return (
+                <Button
+                  key={r}
+                  onClick={() => {
+                    setLocalRole(r);
+                    setRoleError(false);
+                  }}
+                  fullWidth
+                  variant="contained"
+                  disableElevation
+                  sx={{
+                    py: 1.25,
+                    borderRadius: "8px",
+                    bgcolor: active ? GREEN : "#F3F4F6",
+                    color: active ? "#fff" : "#6B7280",
+                    "&:hover": {
+                      bgcolor: active ? GREEN_HOVER : "#E5E7EB",
+                    },
+                  }}
+                >
+                  {t(r)}
+                </Button>
+              );
+            })}
+          </Stack>
+          {roleError && (
+            <Typography sx={{ fontSize: 12, color: "#D32F2F", mt: 0.5, textAlign: "center" }}>
+              {t("role_required")}
+            </Typography>
+          )}
+        </Box>
+
         <Box>
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
             {t("phone")}

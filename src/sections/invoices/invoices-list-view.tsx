@@ -61,10 +61,6 @@ export default function InvoicesListView() {
   const isAllSelected =
     filteredInvoices.length > 0 && selectedRows.length === filteredInvoices.length;
 
-  const goToOrder = (orderId: number) => {
-    router.push(`/orders/${orderId}`);
-  };
-
   const align = isRtl ? "right" : "left";
 
   const headCells: HeadCell<Invoice>[] = [
@@ -105,7 +101,6 @@ export default function InvoicesListView() {
       align,
       renderCell: (row) => (
         <Box
-          onClick={() => goToOrder(row.orderId)}
           sx={{
             color: "#10754E",
             fontWeight: 600,
@@ -144,10 +139,6 @@ export default function InvoicesListView() {
         <Button
           variant="outlined"
           size="small"
-          onClick={(e) => {
-            e.stopPropagation();
-            goToOrder(row.orderId);
-          }}
           sx={{
             bgcolor: "#fff",
             borderColor: "#DFE3E8",

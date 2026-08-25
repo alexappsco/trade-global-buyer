@@ -11,10 +11,21 @@ import type { LocaleType } from "src/i18n/config-locale";
 import { notFound } from "next/navigation";
 import { routing } from "src/i18n/routing";
 import { plexArabic } from "src/theme/typography";
+import { AuthProvider } from "src/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Trade Global",
   description: "Trade Global Dashboard",
+  manifest: "/favicon/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon/favicon.ico" },
+      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+    ],
+    apple: "/favicon/apple-touch-icon.png",
+  },
 };
 
 export default async function LocaleLayout({
@@ -53,7 +64,9 @@ export default async function LocaleLayout({
           <ThemeProvider>
             <ToastProvider>
               <NextIntlClientProvider messages={messages}>
-                <DashboardLayout>{children}</DashboardLayout>
+                <AuthProvider>
+                  <DashboardLayout>{children}</DashboardLayout>
+                </AuthProvider>
               </NextIntlClientProvider>
             </ToastProvider>
           </ThemeProvider>
