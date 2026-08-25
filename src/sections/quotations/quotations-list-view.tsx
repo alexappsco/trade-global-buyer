@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'src/i18n/routing';
 import {
   Box,
   Card,
@@ -23,6 +24,7 @@ export default function QuotationsListView() {
   const t = useTranslations('Quotations');
   const tOrders = useTranslations('Orders');
   const locale = useLocale();
+  const router = useRouter();
   const isRtl = locale === 'ar';
 
   // Search & Filter States
@@ -145,6 +147,7 @@ export default function QuotationsListView() {
           <Button
             variant="contained"
             size="small"
+            onClick={() => router.push(`/orders/${row.orderNumber}/${row.id}`)}
             sx={{
               bgcolor: '#10754E',
               color: 'white',
@@ -179,6 +182,7 @@ export default function QuotationsListView() {
         <Button
           variant="contained"
           size="small"
+          onClick={() => router.push(`/orders/${row.orderNumber}/${row.id}`)}
           sx={{
             bgcolor: '#0B5A3C',
             color: 'white',
