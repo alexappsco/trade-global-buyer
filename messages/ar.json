@@ -5,7 +5,8 @@
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
-    "invoices": "الفواتير"
+    "invoices": "الفواتير",
+    "quotation_requests": "طلبات عروض الأسعار"
   },
   "Orders": {
     "title": "الطلبات",

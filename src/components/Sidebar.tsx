@@ -45,6 +45,11 @@ const sidebarItems: SidebarItem[] = [
     path: "/orders",
   },
   {
+    key: "quotation_requests",
+    icon: "/icons/invoice.svg",
+    path: "/quotation-requests",
+  },
+  {
     key: "invoices",
     icon: "/icons/invoice.svg",
     path: "/invoices",
