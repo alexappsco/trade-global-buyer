@@ -92,15 +92,15 @@ export default function QuotationsListView() {
   // Headers for SharedTable
   const tableHead = [
     { id: 'select', label: '', align: cellAlignment.left },
-    { id: 'orderNumber', label: 'Orders.table.order_id', align: cellAlignment.center },
-    { id: 'title', label: 'Orders.table.order_title', align: cellAlignment.left },
-    { id: 'category', label: 'Orders.table.category', align: cellAlignment.left },
-    { id: 'classification', label: 'Orders.table.classification', align: cellAlignment.left },
-    { id: 'quantity', label: 'Quotations.table.quantity', align: cellAlignment.center },
-    { id: 'deliveryDate', label: 'Orders.table.delivery_date', align: cellAlignment.left },
-    { id: 'creationDate', label: 'Orders.table.creation_date', align: cellAlignment.left },
-    { id: 'status', label: 'Orders.table.status', align: cellAlignment.left },
-    { id: 'actions_cell', label: 'Quotations.table.actions', align: cellAlignment.center },
+    { id: 'orderNumber', label: tOrders('table.order_id'), align: cellAlignment.center },
+    { id: 'title', label: tOrders('table.order_title'), align: cellAlignment.left },
+    { id: 'category', label: tOrders('table.category'), align: cellAlignment.left },
+    { id: 'classification', label: tOrders('table.classification'), align: cellAlignment.left },
+    { id: 'quantity', label: t('table.quantity'), align: cellAlignment.center },
+    { id: 'deliveryDate', label: tOrders('table.delivery_date'), align: cellAlignment.left },
+    { id: 'creationDate', label: tOrders('table.creation_date'), align: cellAlignment.left },
+    { id: 'status', label: tOrders('table.status'), align: cellAlignment.left },
+    { id: 'actions_cell', label: t('table.actions'), align: cellAlignment.center },
   ];
 
   // Custom cell renders for SharedTable
