@@ -496,6 +496,17 @@
       "showing": "عرض {from}-{to} من {count}"
     },
     "no_data": "لا توجد فواتير"
+  },
+  "Quotations": {
+    "title": "طلبات عروض الأسعار",
+    "search": "بحث",
+    "table": {
+      "quantity": "الكمية",
+      "actions": "اجراءات",
+      "submit_quote": "تقديم عرض سعر",
+      "cannot_submit": "لا يمكن تقديم عرض",
+      "view_quote": "اطلاع على العرض الذي قدمته"
+    }
   }
 }
 }

@@ -496,6 +496,17 @@
       "showing": "Showing {from}-{to} of {count}"
     },
     "no_data": "No invoices found"
+  },
+  "Quotations": {
+    "title": "Quotation Requests",
+    "search": "Search",
+    "table": {
+      "quantity": "Quantity",
+      "actions": "Actions",
+      "submit_quote": "Submit Quote",
+      "cannot_submit": "Cannot Submit Quote",
+      "view_quote": "View Submitted Quote"
+    }
   }
 }
 }
