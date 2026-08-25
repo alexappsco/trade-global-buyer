@@ -223,7 +223,8 @@
     "quantity_placeholder": "0",
     "details_placeholder": "تفاصيل الصنف",
     "send_success": "تم إرسال طلب عرض السعر بنجاح",
-    "cancel_success": "تم إلغاء الطلب"
+    "go_to_orders": "الذهاب إلى الطلبات",
+      "cancel_success": "تم إلغاء الطلب"
   },
   "Auth": {
     "signin_title": "تسجيل دخول",
@@ -444,6 +445,7 @@
       "quantity_placeholder": "0",
       "details_placeholder": "تفاصيل الصنف",
       "send_success": "تم إرسال طلب عرض السعر بنجاح",
+      "go_to_orders": "الذهاب إلى الطلبات",
       "cancel_success": "تم إلغاء الطلب"
     },
     "Auth": {
@@ -503,6 +505,7 @@
       "legal_tooltip": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية الخاصة بالمنصة، وتتعهد بصحة البيانات المدخلة."
     }
   },
+
   "Global": {
     "Sections": {
       "Table": {

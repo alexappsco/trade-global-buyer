@@ -223,7 +223,8 @@
     "quantity_placeholder": "0",
     "details_placeholder": "Item details",
     "send_success": "Quote request sent successfully",
-    "cancel_success": "Request cancelled"
+    "go_to_orders": "Go to Orders",
+      "cancel_success": "Request cancelled"
   },
   "Auth": {
     "signin_title": "Sign In",
@@ -444,6 +445,7 @@
       "quantity_placeholder": "0",
       "details_placeholder": "Item details",
       "send_success": "Quote request sent successfully",
+      "go_to_orders": "Go to Orders",
       "cancel_success": "Request cancelled"
     },
     "Auth": {
@@ -503,6 +505,7 @@
       "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
     }
   },
+
   "Global": {
     "Sections": {
       "Table": {
