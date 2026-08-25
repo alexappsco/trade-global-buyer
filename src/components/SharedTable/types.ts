@@ -10,11 +10,11 @@ export enum cellAlignment {
 export type headCellType = {
   id: string;
   align?: cellAlignment;
-  label?: string;
+  label?: ReactNode;
   width?: number;
 };
 export type Action<T> = {
-  label: string;
+  label: React.ReactNode;
   icon: React.ReactNode;
   sx?: SxStyle;
   onClick: (row: T) => void;

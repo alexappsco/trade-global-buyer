@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import { useTranslations } from 'next-intl';
 import TableBody from '@mui/material/TableBody';
-import Scrollbar from 'src/components/scrollbar';
 import { useSearchParams } from 'next/navigation';
 import TableContainer from '@mui/material/TableContainer';
 
@@ -34,21 +33,21 @@ function SharedTable<T extends { id: string }>({
 
   const page = hasPage ? Number(searchParams.get('page')) - 1 : 0;
   const limit = Number(searchParams.get('limit')) || DEFAULT_LIMIT;
+  const paginatedData = data.slice(page * limit, page * limit + limit);
   return (
     <Box>
       <TableContainer
         sx={{
           position: 'relative',
-          overflow: 'unset',
+          overflow: 'auto',
           ...(maxHeight && { maxHeight: `${maxHeight}px` }),
         }}
       >
-        <Scrollbar sx={maxHeight ? { maxHeight: `${maxHeight}px` } : {}}>
           <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
             <TableHeadCustom headLabel={tableHead} enableActions={!!actions?.length} />
 
             <TableBody>
-              {data.map((row) => (
+              {paginatedData.map((row) => (
                 <SharedTableRow<T>
                   key={row.id}
                   row={row}
@@ -66,7 +65,6 @@ function SharedTable<T extends { id: string }>({
               <TableNoData notFound={!data.length} />
             </TableBody>
           </Table>
-        </Scrollbar>
       </TableContainer>
 
       {!disablePagination && (
