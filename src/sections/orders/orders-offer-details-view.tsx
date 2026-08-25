@@ -495,7 +495,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                 <TableCell sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.item}</TableCell>
                 <TableCell align="center" sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.quantity}</TableCell>
                 <TableCell align="center" sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.details}</TableCell>
-                <TableCell align={isRtl ? 'left' : 'right'} sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.unitPrice}</TableCell>
+                <TableCell align="center" sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.unitPrice}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -515,7 +515,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                   <TableCell align="center" sx={{ color: '#637381', borderBottom: actionType === 'submit' ? '1px solid #F4F6F8' : 'none' }}>
                     {item.details}
                   </TableCell>
-                  <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: actionType === 'submit' ? '1px solid #F4F6F8' : 'none' }}>
+                  <TableCell align="center" sx={{ borderBottom: actionType === 'submit' ? '1px solid #F4F6F8' : 'none' }}>
                     {actionType === 'submit' ? (
                       <TextField
                         size="small"
@@ -538,7 +538,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                         }}
                       />
                     ) : (
-                      <Typography sx={{ fontWeight: 600, color: '#212B36', width: 140, textAlign: 'center' }}>
+                      <Typography sx={{ fontWeight: 600, color: '#212B36', textAlign: 'center' }}>
                         {getReadOnlyPrice(item.name)}
                       </Typography>
                     )}
@@ -556,7 +556,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                     <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                       {labels.delivery}
                     </TableCell>
-                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                    <TableCell align="center" sx={{ borderBottom: '1px solid #F4F6F8' }}>
                       <TextField
                         size="small"
                         value={deliveryPrice}
@@ -587,7 +587,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                     <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                       {labels.subtotal}
                     </TableCell>
-                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                    <TableCell align="center" sx={{ borderBottom: '1px solid #F4F6F8' }}>
                       <TextField
                         disabled
                         size="small"
@@ -621,7 +621,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                     <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                       {labels.tax}
                     </TableCell>
-                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                    <TableCell align="center" sx={{ borderBottom: '1px solid #F4F6F8' }}>
                       <TextField
                         disabled
                         size="small"
@@ -655,7 +655,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                     <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                       {labels.grandTotal}
                     </TableCell>
-                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
+                    <TableCell align="center" sx={{ borderBottom: '1px solid #F4F6F8' }}>
                       <TextField
                         disabled
                         size="small"
@@ -689,7 +689,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                     <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: 'none', py: 2 }}>
                       {labels.supplyDuration}
                     </TableCell>
-                    <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: 'none' }}>
+                    <TableCell align="center" sx={{ borderBottom: 'none' }}>
                       <TextField
                         size="small"
                         value={supplyDuration}
