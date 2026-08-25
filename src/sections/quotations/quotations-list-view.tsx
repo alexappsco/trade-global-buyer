@@ -16,6 +16,7 @@ import {
 
 import Iconify from 'src/components/iconify';
 import SharedTable from 'src/components/SharedTable/SharedTable';
+import { cellAlignment } from 'src/components/SharedTable/types';
 import { MOCK_QUOTATION_REQUESTS, QuotationRequest } from './quotations-mock';
 
 export default function QuotationsListView() {
@@ -90,16 +91,16 @@ export default function QuotationsListView() {
 
   // Headers for SharedTable
   const tableHead = [
-    { id: 'select', label: '' },
-    { id: 'orderNumber', label: 'Orders.table.order_id', align: 'center' as const },
-    { id: 'title', label: 'Orders.table.order_title' },
-    { id: 'category', label: 'Orders.table.category' },
-    { id: 'classification', label: 'Orders.table.classification' },
-    { id: 'quantity', label: 'Quotations.table.quantity', align: 'center' as const },
-    { id: 'deliveryDate', label: 'Orders.table.delivery_date' },
-    { id: 'creationDate', label: 'Orders.table.creation_date' },
-    { id: 'status', label: 'Orders.table.status' },
-    { id: 'actions_cell', label: 'Quotations.table.actions', align: 'center' as const },
+    { id: 'select', label: '', align: cellAlignment.left },
+    { id: 'orderNumber', label: 'Orders.table.order_id', align: cellAlignment.center },
+    { id: 'title', label: 'Orders.table.order_title', align: cellAlignment.left },
+    { id: 'category', label: 'Orders.table.category', align: cellAlignment.left },
+    { id: 'classification', label: 'Orders.table.classification', align: cellAlignment.left },
+    { id: 'quantity', label: 'Quotations.table.quantity', align: cellAlignment.center },
+    { id: 'deliveryDate', label: 'Orders.table.delivery_date', align: cellAlignment.left },
+    { id: 'creationDate', label: 'Orders.table.creation_date', align: cellAlignment.left },
+    { id: 'status', label: 'Orders.table.status', align: cellAlignment.left },
+    { id: 'actions_cell', label: 'Quotations.table.actions', align: cellAlignment.center },
   ];
 
   // Custom cell renders for SharedTable
@@ -415,12 +416,14 @@ export default function QuotationsListView() {
             placeholder={tOrders('search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start" sx={{ mr: 1 }}>
-                  <Iconify icon="eva:search-fill" width={20} sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" width={20} sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              },
             }}
             sx={{
               width: { xs: '100%', sm: 260 },
