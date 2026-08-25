@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import QuoteSuccessDialog from "./QuoteSuccessDialog";
+import QuoteConfirmDialog from "./QuoteConfirmDialog";
 import {
   Box,
   Button,
@@ -295,6 +296,7 @@ export default function CreateQuoteRequestView() {
   const router = useRouter();
   const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const addRequest = () => setRequests((prev) => [...prev, createBlock()]);
 
@@ -309,6 +311,11 @@ export default function CreateQuoteRequestView() {
   };
 
   const handleSubmit = () => {
+    setShowConfirm(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    setShowConfirm(false);
     setShowSuccess(true);
   };
 
@@ -406,6 +413,12 @@ export default function CreateQuoteRequestView() {
           {t("send")}
         </Button>
       </Stack>
+
+      <QuoteConfirmDialog
+        open={showConfirm}
+        onConfirm={handleConfirmSubmit}
+        onCancel={() => setShowConfirm(false)}
+      />
 
       <QuoteSuccessDialog
         open={showSuccess}
