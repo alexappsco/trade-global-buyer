@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -13,7 +12,6 @@ type Props = {
 };
 
 export default function TableHeadCustom({ headLabel, enableActions = false }: Props) {
-  const t = useTranslations();
   return (
     <TableHead>
       <TableRow sx={{ bgcolor: '#F4F6F8' }}>
@@ -29,7 +27,7 @@ export default function TableHeadCustom({ headLabel, enableActions = false }: Pr
               fontWeight: 600,
             }}
           >
-            {headCell?.label ? t(headCell?.label) : ''}
+            {headCell.label ?? ''}
           </TableCell>
         ))}
         {enableActions && <TableCell sx={{ whiteSpace: 'nowrap', borderBottom: 'none' }} />}

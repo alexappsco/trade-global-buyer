@@ -1,6 +1,5 @@
 import React from 'react';
 import { IconButton } from '@mui/material';
-import { useTranslations } from 'next-intl';
 import Iconify from 'src/components/iconify';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -15,8 +14,8 @@ function SharedTableRow<T extends { id: string }>({
   actions,
   customRender,
   headIds,
+  tableHead,
 }: SharedTableRowProps<T>) {
-  const t = useTranslations();
   let rowStyle: SxStyle = {};
 
   if (Object.hasOwn(row, 'rowSx')) {
@@ -27,11 +26,15 @@ function SharedTableRow<T extends { id: string }>({
   return (
     <>
       <TableRow hover sx={rowStyle}>
-        {headIds.map((x, index) => (
-          <TableCell key={index} sx={{ whiteSpace: 'nowrap', borderBottom: 'none' }}>
-            {customRender && x in customRender ? customRender[x]!(row) : String((row as Record<string, unknown>)[x as string] ?? '')}
-          </TableCell>
-        ))}
+        {headIds.map((x, index) => {
+          const headCell = tableHead.find((h) => h.id === x);
+          const align = headCell?.align || 'left';
+          return (
+            <TableCell key={index} align={align} sx={{ whiteSpace: 'nowrap', borderBottom: 'none' }}>
+              {customRender && x in customRender ? customRender[x]!(row) : String((row as Record<string, unknown>)[x as string] ?? '')}
+            </TableCell>
+          );
+        })}
 
         {!!actions?.length && (
           <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap', borderBottom: 'none' }}>
@@ -61,7 +64,7 @@ function SharedTableRow<T extends { id: string }>({
                 sx={action.sx}
               >
                 <ListItemIcon>{action.icon}</ListItemIcon>
-                <ListItemText>{t(action.label)}</ListItemText>
+                <ListItemText>{action.label}</ListItemText>
               </MenuItem>
             ))}
         </MenuList>
