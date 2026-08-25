@@ -36,6 +36,7 @@ export interface SharedTableRowProps<T> {
     | Partial<Record<keyof T, (row: T) => ReactNode>>
     | Record<keyof T, (row: T) => ReactNode>;
   headIds: (keyof T)[];
+  tableHead: headCellType[];
 }
 export type SxStyle = SxProps<Theme>;
 

@@ -236,6 +236,30 @@ export default function QuotationsListView() {
             mb: 3,
           }}
         >
+          {/* Search Box (Right in RTL) */}
+          <TextField
+            size="small"
+            placeholder={tOrders('search')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" width={20} sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            sx={{
+              width: { xs: '100%', sm: 260 },
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+                borderColor: '#EAEFEA',
+              },
+            }}
+          />
+
           {/* Filter Dropdowns (Left in RTL) */}
           <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
             
@@ -409,30 +433,6 @@ export default function QuotationsListView() {
             </Menu>
 
           </Box>
-
-          {/* Search Box (Right in RTL) */}
-          <TextField
-            size="small"
-            placeholder={tOrders('search')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" width={20} sx={{ color: 'text.disabled' }} />
-                  </InputAdornment>
-                ),
-              },
-            }}
-            sx={{
-              width: { xs: '100%', sm: 260 },
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-                borderColor: '#EAEFEA',
-              },
-            }}
-          />
         </Box>
 
         {/* Table wrapper */}

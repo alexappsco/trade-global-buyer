@@ -54,6 +54,7 @@ function SharedTable<T extends { id: string }>({
                   row={row}
                   actions={actions}
                   customRender={customRender}
+                  tableHead={tableHead}
                   headIds={
                     tableHead
                       .map((x) => x.id)
@@ -75,10 +76,10 @@ function SharedTable<T extends { id: string }>({
           rowsPerPage={limit}
           onPageChange={table.onChangePage!}
           onRowsPerPageChange={table.onChangeRowsPerPage!}
-          labelRowsPerPage={t('Global.Sections.Table.rows_per_page')}
+          labelRowsPerPage={t('Orders.Global.Sections.Table.rows_per_page')}
           labelDisplayedRows={({ from, to, count: rows }) =>
-            `${from}-${to} ${t('Global.Sections.Table.of')} ${
-              rows !== -1 ? rows : `${t('Global.Sections.Table.more_than')} ${to}`
+            `${from}-${to} ${t('Orders.Global.Sections.Table.of')} ${
+              rows !== -1 ? rows : `${t('Orders.Global.Sections.Table.more_than')} ${to}`
             }`
           }
           //
