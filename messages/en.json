@@ -107,7 +107,8 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "go_to_orders": "Go to Orders"
-    },
+    }
+  },
   "Profile": {
     "edit_profile": "Edit Profile",
     "account_info": "Account Information",
@@ -508,5 +509,4 @@
       "view_quote": "View Submitted Quote"
     }
   }
-}
 }
