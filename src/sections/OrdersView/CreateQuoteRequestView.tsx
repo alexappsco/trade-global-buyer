@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import QuoteSuccessDialog from "./QuoteSuccessDialog";
 import {
   Box,
   Button,
@@ -261,7 +262,7 @@ function RequestFormBlock({
           pt: 3,
           borderTop: "1px solid #EEEEEE",
           alignItems: { xs: "stretch", sm: "center" },
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
         }}
       >
         <Button
@@ -272,7 +273,7 @@ function RequestFormBlock({
           sx={{
             bgcolor: RED,
             color: "#fff",
-            borderRadius: "8px",
+            borderRadius: "4px",
             gap: 1,
             px: 3,
             "&:hover": { bgcolor: RED_HOVER },
@@ -293,6 +294,7 @@ export default function CreateQuoteRequestView() {
   const toast = useToast();
   const router = useRouter();
   const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const addRequest = () => setRequests((prev) => [...prev, createBlock()]);
 
@@ -307,8 +309,11 @@ export default function CreateQuoteRequestView() {
   };
 
   const handleSubmit = () => {
-    
-    toast.success(t("send_success"));
+    setShowSuccess(true);
+  };
+
+  const handleGoToOrders = () => {
+    setShowSuccess(false);
     router.push("/orders");
   };
 
@@ -368,7 +373,7 @@ export default function CreateQuoteRequestView() {
       <Stack
         direction={{ xs: "column-reverse", sm: "row" }}
         spacing={2}
-        sx={{ mt: 4, alignItems: { xs: "stretch", sm: "center" }, justifyContent: "space-between" }}
+        sx={{ mt: 4, alignItems: { xs: "stretch", sm: "center" }, justifyContent: "center" }}
       >
         <Button
           onClick={handleCancel}
@@ -378,8 +383,8 @@ export default function CreateQuoteRequestView() {
           sx={{
             bgcolor: RED,
             color: "#fff",
-            borderRadius: "8px",
-            px: 4,
+            borderRadius: "4px",
+            px: 8,
             "&:hover": { bgcolor: RED_HOVER },
           }}
         >
@@ -393,14 +398,19 @@ export default function CreateQuoteRequestView() {
           sx={{
             bgcolor: GREEN,
             color: "#fff",
-            borderRadius: "8px",
-            px: 4,
+            borderRadius: "4px",
+            px: 8,
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
           {t("send")}
         </Button>
       </Stack>
+
+      <QuoteSuccessDialog
+        open={showSuccess}
+        onGoToOrders={handleGoToOrders}
+      />
     </Box>
   );
 }
