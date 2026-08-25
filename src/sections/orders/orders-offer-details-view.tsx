@@ -336,7 +336,9 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
               {/* Delivery Row */}
               <TableRow>
-                <TableCell colSpan={3} align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                   {labels.delivery}
                 </TableCell>
                 <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
@@ -365,7 +367,9 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
               {/* Subtotal Row */}
               <TableRow>
-                <TableCell colSpan={3} align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                   {labels.subtotal}
                 </TableCell>
                 <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
@@ -397,7 +401,9 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
               {/* Tax Row */}
               <TableRow>
-                <TableCell colSpan={3} align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                   {labels.tax}
                 </TableCell>
                 <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
@@ -429,7 +435,9 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
               {/* Grand Total Row */}
               <TableRow>
-                <TableCell colSpan={3} align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell sx={{ borderBottom: '1px solid #F4F6F8' }} />
+                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: '1px solid #F4F6F8', py: 2 }}>
                   {labels.grandTotal}
                 </TableCell>
                 <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
@@ -461,7 +469,9 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
               {/* Supply Duration Row */}
               <TableRow>
-                <TableCell colSpan={3} align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: 'none', py: 2 }}>
+                <TableCell sx={{ borderBottom: 'none' }} />
+                <TableCell sx={{ borderBottom: 'none' }} />
+                <TableCell align="center" sx={{ fontWeight: 700, color: '#161C24', borderBottom: 'none', py: 2 }}>
                   {labels.supplyDuration}
                 </TableCell>
                 <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: 'none' }}>
