@@ -78,7 +78,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
           <Box
             component="img"
-            src="/logo.png"
+            src="/logo.svg"
             alt="Trade Global"
             sx={{ height: 36, marginInlineStart: { xs: 0, md: "60px" } }}
           />
