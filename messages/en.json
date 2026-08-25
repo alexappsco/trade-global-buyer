@@ -536,7 +536,26 @@
     "pagination": {
       "showing": "Showing {from}-{to} of {count}"
     },
-    "no_data": "No invoices found"
+    "no_data": "No invoices found",
+    "details": {
+      "title": "Invoice #{id}",
+      "info": {
+        "invoice_number": "Invoice Number",
+        "transaction_title": "Transaction Title",
+        "order_number": "Order Number",
+        "registered_at": "Registered At",
+        "amount_paid": "Amount Paid",
+        "status": "Status"
+      },
+      "table": {
+        "item": "Item",
+        "qty": "Quantity",
+        "unit_price": "Unit Price",
+        "total": "Total"
+      },
+      "total": "Total",
+      "print": "Print"
+    }
   },
   "Quotations": {
     "title": "Quotation Requests",

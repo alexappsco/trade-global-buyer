@@ -536,7 +536,26 @@
     "pagination": {
       "showing": "عرض {from}-{to} من {count}"
     },
-    "no_data": "لا توجد فواتير"
+    "no_data": "لا توجد فواتير",
+    "details": {
+      "title": "فاتورة #{id}",
+      "info": {
+        "invoice_number": "رقم الفاتورة",
+        "transaction_title": "عنوان المعاملة",
+        "order_number": "رقم الطلب",
+        "registered_at": "وقت التسجيل",
+        "amount_paid": "المبلغ المدفوع",
+        "status": "الحالة"
+      },
+      "table": {
+        "item": "الصنف",
+        "qty": "الكمية",
+        "unit_price": "سعر الوحدة",
+        "total": "الاجمالي"
+      },
+      "total": "الاجمالي",
+      "print": "طباعة"
+    }
   },
   "Quotations": {
     "title": "طلبات عروض الأسعار",
