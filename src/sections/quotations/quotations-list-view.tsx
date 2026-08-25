@@ -20,7 +20,7 @@ import { cellAlignment } from 'src/components/SharedTable/types';
 import { MOCK_QUOTATION_REQUESTS, QuotationRequest } from './quotations-mock';
 
 export default function QuotationsListView() {
-  const t = useTranslations('Quotations');
+  const t = useTranslations('Orders.Quotations');
   const tOrders = useTranslations('Orders');
   const locale = useLocale();
   const isRtl = locale === 'ar';
@@ -96,11 +96,11 @@ export default function QuotationsListView() {
     { id: 'title', label: 'Orders.table.order_title', align: cellAlignment.left },
     { id: 'category', label: 'Orders.table.category', align: cellAlignment.left },
     { id: 'classification', label: 'Orders.table.classification', align: cellAlignment.left },
-    { id: 'quantity', label: 'Quotations.table.quantity', align: cellAlignment.center },
+    { id: 'quantity', label: 'Orders.Quotations.table.quantity', align: cellAlignment.center },
     { id: 'deliveryDate', label: 'Orders.table.delivery_date', align: cellAlignment.left },
     { id: 'creationDate', label: 'Orders.table.creation_date', align: cellAlignment.left },
     { id: 'status', label: 'Orders.table.status', align: cellAlignment.left },
-    { id: 'actions_cell', label: 'Quotations.table.actions', align: cellAlignment.center },
+    { id: 'actions_cell', label: 'Orders.Quotations.table.actions', align: cellAlignment.center },
   ];
 
   // Custom cell renders for SharedTable
