@@ -288,7 +288,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
               <TableRow sx={{ bgcolor: '#F4F6F8' }}>
                 <TableCell sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.item}</TableCell>
                 <TableCell align="center" sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.quantity}</TableCell>
-                <TableCell sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.details}</TableCell>
+                <TableCell align="center" sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.details}</TableCell>
                 <TableCell align={isRtl ? 'left' : 'right'} sx={{ color: '#6b7280', fontWeight: 600, borderBottom: 'none' }}>{labels.unitPrice}</TableCell>
               </TableRow>
             </TableHead>
@@ -306,7 +306,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                       <Iconify icon="eva:chevron-down-fill" width={16} sx={{ color: 'text.secondary' }} />
                     </Box>
                   </TableCell>
-                  <TableCell sx={{ color: '#637381', borderBottom: '1px solid #F4F6F8' }}>
+                  <TableCell align="center" sx={{ color: '#637381', borderBottom: '1px solid #F4F6F8' }}>
                     {item.details}
                   </TableCell>
                   <TableCell align={isRtl ? 'left' : 'right'} sx={{ borderBottom: '1px solid #F4F6F8' }}>
