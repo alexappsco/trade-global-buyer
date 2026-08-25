@@ -14,22 +14,21 @@ type Props = {
 
 export default function TableNoData({ notFound, sx }: Props) {
   const t = useTranslations();
+  if (!notFound) {
+    return null;
+  }
   return (
     <TableRow>
-      {notFound ? (
-        <TableCell colSpan={12}>
-          <EmptyContent
-            filled
-            title={t('Global.Label.no_data')}
-            sx={{
-              py: 10,
-              ...sx,
-            }}
-          />
-        </TableCell>
-      ) : (
-        <TableCell colSpan={12} sx={{ p: 0 }} />
-      )}
+      <TableCell colSpan={12}>
+        <EmptyContent
+          filled
+          title={t('Global.Label.no_data')}
+          sx={{
+            py: 10,
+            ...sx,
+          }}
+        />
+      </TableCell>
     </TableRow>
   );
 }

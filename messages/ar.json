@@ -17,7 +17,8 @@
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
-    "invoices": "الفواتير"
+    "invoices": "الفواتير",
+    "quotation_requests": "طلبات عروض الأسعار"
   },
   "Home": {
     "stats": {
@@ -80,7 +81,6 @@
         "status": "الحالة",
         "order_title": "عنوان الطلب",
         "category": "الفئة"
-        "status": "الحالة"
       },
       "table": {
         "item": "الصنف",
@@ -119,7 +119,6 @@
         "awaiting": "في انتظار الرد",
         "supplier": "المورد",
         "address": "العنوان"
-        "awaiting": "في انتظار الرد"
       },
       "table": {
         "unit_price": "سعر الوحدة",
@@ -143,9 +142,6 @@
       "confirm": "تأكيد",
       "cancel": "الغاء",
       "go_to_orders": "الذهاب الى الطلبات"
-    },
-        "not_delivered": "لم يتم التوصيل"
-      }
     }
   },
   "Profile": {
@@ -536,6 +532,16 @@
       "showing": "عرض {from}-{to} من {count}"
     },
     "no_data": "لا توجد فواتير"
+  },
+  "Quotations": {
+    "title": "طلبات عروض الأسعار",
+    "search": "بحث",
+    "table": {
+      "quantity": "الكمية",
+      "actions": "اجراءات",
+      "submit_quote": "تقديم عرض سعر",
+      "cannot_submit": "لا يمكن تقديم عرض",
+      "view_quote": "اطلاع على العرض الذي قدمته"
+    }
   }
-}
 }

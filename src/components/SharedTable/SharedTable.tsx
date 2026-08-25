@@ -53,6 +53,7 @@ function SharedTable<T extends { id: string }>({
                   row={row}
                   actions={actions}
                   customRender={customRender}
+                  tableHead={tableHead}
                   headIds={
                     tableHead
                       .map((x) => x.id)

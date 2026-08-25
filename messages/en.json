@@ -17,7 +17,8 @@
     "profile": "Profile",
     "notifications": "Notifications",
     "support": "Support",
-    "invoices": "Invoices"
+    "invoices": "Invoices",
+    "quotation_requests": "Quotation Requests"
   },
   "Home": {
     "stats": {
@@ -80,7 +81,6 @@
         "status": "Status",
         "order_title": "Order Title",
         "category": "Category"
-        "status": "Status"
       },
       "table": {
         "item": "Item",
@@ -119,7 +119,6 @@
         "awaiting": "Awaiting Response",
         "supplier": "Supplier",
         "address": "Address"
-        "awaiting": "Awaiting Response"
       },
       "table": {
         "unit_price": "Unit Price",
@@ -143,9 +142,6 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "go_to_orders": "Go to Orders"
-    },
-        "not_delivered": "Not Delivered"
-      }
     }
   },
   "Profile": {
@@ -536,6 +532,16 @@
       "showing": "Showing {from}-{to} of {count}"
     },
     "no_data": "No invoices found"
+  },
+  "Quotations": {
+    "title": "Quotation Requests",
+    "search": "Search",
+    "table": {
+      "quantity": "Quantity",
+      "actions": "Actions",
+      "submit_quote": "Submit Quote",
+      "cannot_submit": "Cannot Submit Quote",
+      "view_quote": "View Submitted Quote"
+    }
   }
-}
 }
