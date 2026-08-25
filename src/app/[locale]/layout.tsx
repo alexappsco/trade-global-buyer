@@ -11,6 +11,7 @@ import type { LocaleType } from "src/i18n/config-locale";
 import { notFound } from "next/navigation";
 import { routing } from "src/i18n/routing";
 import { plexArabic } from "src/theme/typography";
+import { AuthProvider } from "src/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Trade Global",
@@ -63,7 +64,9 @@ export default async function LocaleLayout({
           <ThemeProvider>
             <ToastProvider>
               <NextIntlClientProvider messages={messages}>
-                <DashboardLayout>{children}</DashboardLayout>
+                <AuthProvider>
+                  <DashboardLayout>{children}</DashboardLayout>
+                </AuthProvider>
               </NextIntlClientProvider>
             </ToastProvider>
           </ThemeProvider>

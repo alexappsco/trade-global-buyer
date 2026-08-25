@@ -5,6 +5,7 @@ import { usePathname } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { scrollbar } from "src/theme/css";
 import SvgColor from "src/components/svg-color";
+import { useAuth } from "src/contexts/AuthContext";
 import {
   Box,
   Drawer,
@@ -92,6 +93,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const t = useTranslations("Sidebar");
   const isRtl = locale === "ar";
   const anchor = isRtl ? "right" : "left";
+  const { role } = useAuth();
+
+  const isVisible = (item: SidebarItem) => {
+    if (item.key === "invoices" && role === "buyer") return false;
+    return true;
+  };
 
   const isActive = (path: string) =>
     path === "/" ? pathname === path : pathname.startsWith(path);
@@ -110,7 +117,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       }}
     >
       <List disablePadding>
-        {sidebarItems.map((item) => {
+        {sidebarItems.filter(isVisible).map((item) => {
           const active = isActive(item.path);
 
           return (
