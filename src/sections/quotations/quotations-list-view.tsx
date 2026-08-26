@@ -147,7 +147,7 @@ export default function QuotationsListView() {
           <Button
             variant="contained"
             size="small"
-            onClick={() => router.push(`/orders/${row.orderNumber}/${row.id}`)}
+            onClick={() => router.push(`/orders/${row.orderNumber}/${row.id}?role=supplier`)}
             sx={{
               bgcolor: '#10754E',
               color: 'white',
@@ -182,7 +182,7 @@ export default function QuotationsListView() {
         <Button
           variant="contained"
           size="small"
-          onClick={() => router.push(`/orders/${row.orderNumber}/${row.id}`)}
+          onClick={() => router.push(`/orders/${row.orderNumber}/${row.id}?role=supplier`)}
           sx={{
             bgcolor: '#0B5A3C',
             color: 'white',
