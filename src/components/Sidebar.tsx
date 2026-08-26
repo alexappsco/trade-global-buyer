@@ -95,10 +95,16 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const anchor = isRtl ? "right" : "left";
   const { role } = useAuth();
 
-  const isVisible = (item: SidebarItem) => {
-    if (item.key === "invoices" && role === "buyer") return false;
-    return true;
-  };
+const supplierOnlyItems = ["invoices", "quotation_requests"];
+
+const isVisible = (item: SidebarItem) => {
+  if (supplierOnlyItems.includes(item.key) && role === "buyer") {
+    return false;
+  }
+
+  return true;
+};
+
 
   const isActive = (path: string) =>
     path === "/" ? pathname === path : pathname.startsWith(path);
