@@ -567,7 +567,7 @@ export default function OrdersListView() {
                       <Button
                         variant="outlined"
                         size="small"
-                        onClick={() => router.push(`/orders/${row.id}`)}
+                        onClick={() => router.push(`/orders/${row.id}/${row.offers?.[0]?.id || '1'}`)}
                         startIcon={<Iconify icon="solar:eye-bold" width={16} />}
                         sx={{
                           borderColor: '#DFE3E8',

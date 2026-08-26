@@ -9,6 +9,10 @@ export interface Invoice {
   status: "paid" | "unpaid";
 }
 
+export function getInvoiceById(id: string): Invoice | undefined {
+  return MOCK_INVOICES.find((invoice) => invoice.id === id);
+}
+
 export const MOCK_INVOICES: Invoice[] = [
   {
     id: "inv-1",

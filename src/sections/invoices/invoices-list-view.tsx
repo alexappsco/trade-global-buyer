@@ -101,6 +101,7 @@ export default function InvoicesListView() {
       align,
       renderCell: (row) => (
         <Box
+          onClick={() => router.push(`/invoices/${row.id}`)}
           sx={{
             color: "#10754E",
             fontWeight: 600,
@@ -139,6 +140,7 @@ export default function InvoicesListView() {
         <Button
           variant="outlined"
           size="small"
+          onClick={() => router.push(`/invoices/${row.id}`)}
           sx={{
             bgcolor: "#fff",
             borderColor: "#DFE3E8",
