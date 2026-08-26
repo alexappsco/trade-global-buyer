@@ -31,7 +31,7 @@ interface Props {
   id: string;
 }
 
-export default function OrdersDetailsView({ id }: Props) {
+export default function ConfirmOrderStatus({ id }: Props) {
   const t = useTranslations('Orders');
   const locale = useLocale();
   const router = useRouter();

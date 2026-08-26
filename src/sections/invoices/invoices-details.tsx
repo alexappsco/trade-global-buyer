@@ -660,7 +660,7 @@ export default function InvoicesDetailsView({ id }: Props) {
         <Button
           variant="contained"
           startIcon={<Iconify icon="solar:eye-bold" width={18} />}
-          onClick={() => router.push(`/orders/${invoice.orderId}`)}
+          onClick={() => router.push(`/orders/${invoice.orderId}/1`)}
           sx={{
             bgcolor: '#10754E',
             color: 'white',

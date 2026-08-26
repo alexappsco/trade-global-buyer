@@ -885,7 +885,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
         <Button
           variant="contained"
-          onClick={() => router.push(`/orders/${order.id}`)}
+          onClick={() => router.push('/orders')}
           sx={{
             bgcolor: '#FF3B30',
             color: 'white',
@@ -1319,7 +1319,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         cancelLabel={tOrders('dialog.cancel')}
         onConfirm={() => {
           setOpenAcceptConfirm(false);
-          router.push(`/orders/${order.id}`);
+          router.push('/orders');
         }}
       />
 
@@ -1333,7 +1333,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         cancelLabel={tOrders('dialog.cancel')}
         onConfirm={() => {
           setOpenRejectConfirm(false);
-          router.push(`/orders/${order.id}`);
+          router.push('/orders');
         }}
       />
     </Box>

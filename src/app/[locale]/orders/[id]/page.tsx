@@ -1,4 +1,4 @@
-import OrdersDetailsView from 'src/sections/orders/orders-details-view';
+import ConfirmOrderStatus from 'src/sections/orders/orders-details-view';
 
 type Props = {
   params: Promise<{
@@ -7,7 +7,11 @@ type Props = {
   }>;
 };
 
+export const metadata = {
+  title: 'تأكيد حالة الطلب',
+};
+
 export default async function OrderDetailsPage({ params }: Props) {
   const { id } = await params;
-  return <OrdersDetailsView id={id} />;
+  return <ConfirmOrderStatus id={id} />;
 }
