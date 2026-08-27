@@ -97,7 +97,7 @@ export default function SupportRequestList({
             color="primary"
             startIcon={<FilterListRoundedIcon />}
             onClick={(event) => setFilterAnchor(event.currentTarget)}
-            sx={{ fontWeight: 700 }}
+            sx={{ fontWeight: 700 ,gap: 1}}
           >
             {t("filter")}
           </Button>
@@ -107,7 +107,7 @@ export default function SupportRequestList({
             color="primary"
             startIcon={<AddRoundedIcon />}
             onClick={onCreate}
-            sx={{ fontWeight: 700 }}
+            sx={{ fontWeight: 700,gap: 1 }}
           >
             {t("create_request")}
           </Button>
