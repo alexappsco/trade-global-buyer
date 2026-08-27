@@ -335,5 +335,75 @@
       "cannot_submit": "Cannot Submit Quote",
       "view_quote": "View Submitted Quote"
     }
+  },
+  "Metadata": {
+    "Home": {
+      "title": "Home - Trade Global",
+      "description": "Trade Global Buyer Dashboard - Manage your orders, invoices, and procurement activities"
+    },
+    "Login": {
+      "title": "Sign In - Trade Global",
+      "description": "Sign in to your Trade Global Buyer account"
+    },
+    "Register": {
+      "title": "Register - Trade Global",
+      "description": "Create a new Trade Global Buyer account"
+    },
+    "Otp": {
+      "title": "Verify OTP - Trade Global",
+      "description": "Verify your identity with a one-time password"
+    },
+    "ForgotPassword": {
+      "title": "Forgot Password - Trade Global",
+      "description": "Reset your Trade Global Buyer account password"
+    },
+    "CompleteProfile": {
+      "title": "Complete Profile - Trade Global",
+      "description": "Complete your Trade Global Buyer profile setup"
+    },
+    "EditProfile": {
+      "title": "Edit Profile - Trade Global",
+      "description": "Update your Trade Global Buyer profile information"
+    },
+    "Invoices": {
+      "title": "Invoices - Trade Global",
+      "description": "View and manage your invoices"
+    },
+    "InvoiceDetail": {
+      "title": "Invoice Details - Trade Global",
+      "description": "View invoice details"
+    },
+    "Notifications": {
+      "title": "Notifications - Trade Global",
+      "description": "View your notifications"
+    },
+    "Orders": {
+      "title": "Orders - Trade Global",
+      "description": "View and manage your orders"
+    },
+    "OrderDetail": {
+      "title": "Order Details - Trade Global",
+      "description": "View order details and offers"
+    },
+    "OrderOffer": {
+      "title": "Order Offer Details - Trade Global",
+      "description": "View order offer details"
+    },
+    "CreateOrder": {
+      "title": "Create Order - Trade Global",
+      "description": "Create a new order"
+    },
+    "Profile": {
+      "title": "Profile - Trade Global",
+      "description": "View your profile"
+    },
+    "QuotationRequests": {
+      "title": "Quotation Requests - Trade Global",
+      "description": "View and manage your quotation requests"
+    },
+    "Support": {
+      "title": "Support - Trade Global",
+      "description": "Get help and submit support tickets"
+    }
   }
 }

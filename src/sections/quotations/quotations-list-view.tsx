@@ -203,7 +203,7 @@ export default function QuotationsListView() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      
+
       {/* Banner */}
       <Box
         sx={{
@@ -266,7 +266,7 @@ export default function QuotationsListView() {
 
           {/* Filter Dropdowns (Left in RTL) */}
           <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-            
+
             {/* Category Dropdown */}
             <Button
               variant="outlined"
@@ -359,6 +359,7 @@ export default function QuotationsListView() {
                 borderRadius: '8px',
                 px: 2.5,
                 py: 1,
+                gap: 1,
                 fontWeight: 600,
                 '&:hover': { borderColor: '#B7CBB7', bgcolor: 'transparent' },
               }}

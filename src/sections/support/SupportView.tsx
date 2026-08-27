@@ -36,6 +36,7 @@ export default function SupportView() {
     success(t("created_success"));
   };
 
+
   const handleConfirmDelete = () => {
     if (!deleteId) {
       return;
