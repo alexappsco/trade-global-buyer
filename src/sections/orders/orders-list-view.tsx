@@ -102,7 +102,7 @@ export default function OrdersListView() {
       const matchesCategory = !selectedCategory || order.category === selectedCategory;
       const matchesClassification = !selectedClassification || order.classification === selectedClassification;
       const matchesStatus = !selectedStatus || order.status === selectedStatus;
-      
+
       // Simple date filter
       let matchesDate = true;
       if (selectedDate) {
@@ -143,7 +143,7 @@ export default function OrdersListView() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      
+
       {/* Banner / Header */}
       <Box
         sx={{
@@ -199,7 +199,7 @@ export default function OrdersListView() {
           overflow: 'visible',
         }}
       >
-        
+
         {/* Filters and Search Row */}
         <Box
           sx={{
@@ -242,7 +242,7 @@ export default function OrdersListView() {
 
           {/* Filters List */}
           <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-            
+
             {/* Category Filter */}
             <Button
               variant="outlined"
@@ -257,9 +257,11 @@ export default function OrdersListView() {
                 fontSize: '0.875rem',
                 px: 2,
                 py: 0.75,
+gap: 1,
                 textTransform: 'none',
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
+
             >
               {selectedCategory ? translateValue(selectedCategory) : t('filter_category')}
             </Button>
@@ -307,6 +309,7 @@ export default function OrdersListView() {
                 fontSize: '0.875rem',
                 px: 2,
                 py: 0.75,
+                gap: 1,
                 textTransform: 'none',
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
@@ -357,6 +360,7 @@ export default function OrdersListView() {
                 fontSize: '0.875rem',
                 px: 2,
                 py: 0.75,
+                gap: 1,
                 textTransform: 'none',
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
@@ -414,6 +418,7 @@ export default function OrdersListView() {
                 fontSize: '0.875rem',
                 px: 2,
                 py: 0.75,
+                gap: 1,
                 textTransform: 'none',
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
@@ -529,21 +534,21 @@ export default function OrdersListView() {
                         sx={{ color: '#C4CDD5', '&.Mui-checked': { color: '#006838' } }}
                       />
                     </TableCell>
-                    
+
                     <TableCell align={isRtl ? 'right' : 'left'}>{row.orderNumber}</TableCell>
-                    
+
                     <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 500 }}>
                       {translateValue(row.title)}
                     </TableCell>
-                    
+
                     <TableCell align={isRtl ? 'right' : 'left'}>{translateValue(row.category)}</TableCell>
-                    
+
                     <TableCell align={isRtl ? 'right' : 'left'}>{translateValue(row.classification)}</TableCell>
-                    
+
                     <TableCell align={isRtl ? 'right' : 'left'}>{row.deliveryDate}</TableCell>
-                    
+
                     <TableCell align={isRtl ? 'right' : 'left'}>{row.creationDate}</TableCell>
-                    
+
                     <TableCell align={isRtl ? 'right' : 'left'}>
                       <Box
                         sx={{
