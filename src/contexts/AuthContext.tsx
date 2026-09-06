@@ -13,8 +13,12 @@ import type {
   AuthRole,
   UserSession,
 } from "src/types/auth";
-import { ROLE_TO_UI } from "src/types/auth";
 import { logoutAction } from "src/actions/auth";
+import {
+  clearAuthSession,
+  refreshAuthSession,
+  saveAuthSession,
+} from "src/actions/session";
 
 type UserRole = "buyer" | "supplier" | null;
 
@@ -30,103 +34,114 @@ interface AuthContextType {
   setAuthFlow: (flow: AuthFlowState) => void;
   clearAuthFlow: () => void;
 
-  persistSession: (flow: AuthFlowState, session: UserSession) => void;
+  persistSession: (flow: AuthFlowState, session: UserSession) => Promise<void>;
+  refreshSession: () => Promise<string | null>;
+  getValidAccessToken: () => Promise<string | null>;
+  resetSession: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const ROLE_KEY = "user_role";
-const SESSION_KEY = "auth_session";
-const FLOW_KEY = "auth_flow";
-
-function readLocal<T>(key: string): T | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeLocal(key: string, value: unknown) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* ignore */
-  }
-}
-
-function removeLocal(key: string) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.removeItem(key);
-  } catch {
-    /* ignore */
-  }
-}
-
-function getInitialRole(): UserRole {
-  const saved = readLocal<string>(ROLE_KEY);
-  if (saved === "buyer" || saved === "supplier") return saved;
+function uiRoleOf(role?: string): UserRole {
+  if (role === "Buyer") return "buyer";
+  if (role === "Supplier") return "supplier";
   return null;
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [role, setRoleState] = useState<UserRole>(getInitialRole);
-  const [session, setSession] = useState<UserSession | null>(() =>
-    readLocal<UserSession>(SESSION_KEY)
-  );
-  const [authFlow, setAuthFlowState] = useState<AuthFlowState>(() =>
-    readLocal<AuthFlowState>(FLOW_KEY) ?? { mode: null }
-  );
+function uiRoleValue(role: UserRole): AuthRole | undefined {
+  if (role === "buyer") return "Buyer";
+  if (role === "supplier") return "Supplier";
+  return undefined;
+}
+
+function isTokenExpired(expiresAt?: string, bufferMs = 30_000): boolean {
+  if (!expiresAt) return false;
+  const time = new Date(expiresAt).getTime();
+  if (Number.isNaN(time)) return false;
+  return time - bufferMs <= Date.now();
+}
+
+export function AuthProvider({
+  children,
+  initialSession,
+}: {
+  children: ReactNode;
+  initialSession?: UserSession | null;
+}) {
+  const [session, setSession] = useState<UserSession | null>(initialSession ?? null);
+  const [authFlow, setAuthFlowState] = useState<AuthFlowState>({ mode: null });
+
+  const role: UserRole = session ? uiRoleOf(session.role) : null;
 
   const setRole = useCallback((newRole: UserRole) => {
-    setRoleState(newRole);
-    if (newRole) {
-      writeLocal(ROLE_KEY, newRole);
-    } else {
-      removeLocal(ROLE_KEY);
-    }
+    const roleValue = uiRoleValue(newRole);
+    setSession((prev) => (prev && roleValue ? { ...prev, role: roleValue } : prev));
   }, []);
 
   const setAuthFlow = useCallback((flow: AuthFlowState) => {
     setAuthFlowState(flow);
-    writeLocal(FLOW_KEY, flow);
   }, []);
 
   const clearAuthFlow = useCallback(() => {
     setAuthFlowState({ mode: null });
-    removeLocal(FLOW_KEY);
   }, []);
 
-  const persistSession = useCallback((flow: AuthFlowState, nextSession: UserSession) => {
-    setSession(nextSession);
-    writeLocal(SESSION_KEY, nextSession);
-    setAuthFlow(flow);
-    const uiRole = ROLE_TO_UI[nextSession.role];
-    setRoleState(uiRole);
-    writeLocal(ROLE_KEY, uiRole);
-  }, [setAuthFlow, setRoleState]);
+  const persistSession = useCallback(
+    (flow: AuthFlowState, nextSession: UserSession) => {
+      setAuthFlowState(flow);
+      setSession(nextSession);
+      try {
+        return saveAuthSession(nextSession);
+      } catch {
+        return Promise.resolve();
+      }
+    },
+    []
+  );
+
+  const refreshSession = useCallback(async (): Promise<string | null> => {
+    const next = await refreshAuthSession();
+    if (!next) {
+      setSession(null);
+      setAuthFlowState({ mode: null });
+      return null;
+    }
+    setSession(next);
+    return next.accessToken;
+  }, []);
+
+  const getValidAccessToken = useCallback(async (): Promise<string | null> => {
+    if (!session?.accessToken) return null;
+
+    if (isTokenExpired(session.accessTokenExpireAt)) {
+      return refreshSession();
+    }
+
+    return session.accessToken;
+  }, [session, refreshSession]);
+
+  const resetSession = useCallback(async () => {
+    setSession(null);
+    setAuthFlowState({ mode: null });
+    try {
+      await clearAuthSession();
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const logout = useCallback(async () => {
-    const currentRefresh = readLocal<UserSession>(SESSION_KEY)?.refreshToken;
-    if (currentRefresh) {
+    const current = session;
+    if (current?.refreshToken) {
       try {
-        await logoutAction(currentRefresh);
+        await logoutAction(current.refreshToken);
       } catch {
         /* ignore logout network errors */
       }
     }
-    setSession(null);
-    removeLocal(SESSION_KEY);
-    removeLocal(FLOW_KEY);
-    setAuthFlowState({ mode: null });
-    setRoleState(null);
-    removeLocal(ROLE_KEY);
-  }, []);
+    await resetSession();
+  }, [session, resetSession]);
 
   const value = useMemo<AuthContextType>(
     () => ({
@@ -134,14 +149,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRole,
       session,
       isAuthenticated: Boolean(session?.accessToken),
-      accessToken: session?.accessToken ?? null,
+      accessToken: isTokenExpired(session?.accessTokenExpireAt)
+        ? null
+        : (session?.accessToken ?? null),
       authFlow,
       setAuthFlow,
       clearAuthFlow,
       persistSession,
+      refreshSession,
+      getValidAccessToken,
+      resetSession,
       logout,
     }),
-    [role, setRole, session, authFlow, setAuthFlow, clearAuthFlow, persistSession, logout]
+    [
+      role,
+      setRole,
+      session,
+      authFlow,
+      setAuthFlow,
+      clearAuthFlow,
+      persistSession,
+      refreshSession,
+      getValidAccessToken,
+      resetSession,
+      logout,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

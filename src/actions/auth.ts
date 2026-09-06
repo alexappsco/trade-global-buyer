@@ -130,6 +130,10 @@ export async function changePasswordAction(
   return authRequest<void>("/change-password", payload, lang);
 }
 
+export async function refreshTokenAction(refreshToken: string, lang?: string) {
+  return authRequest<UserSession>("/refresh-token", { refreshToken }, lang);
+}
+
 export async function logoutAction(refreshToken: string, lang?: string) {
   return authRequest<void>("/logout", { refreshToken }, lang);
 }
