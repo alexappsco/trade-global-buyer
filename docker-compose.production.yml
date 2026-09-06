@@ -1,0 +1,23 @@
+name: trade-global-buyer-production
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_HOST_API: ${NEXT_PUBLIC_HOST_API}
+        NEXT_PUBLIC_ASSETS_API: ${NEXT_PUBLIC_ASSETS_API}
+    image: trade-global-buyer:production
+    container_name: trade-global-buyer-production
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:4001:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      NEXT_PUBLIC_HOST_API: ${NEXT_PUBLIC_HOST_API}
+      NEXT_PUBLIC_ASSETS_API: ${NEXT_PUBLIC_ASSETS_API}
+    env_file:
+      - .env.production

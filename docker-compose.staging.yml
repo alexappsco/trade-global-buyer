@@ -1,0 +1,23 @@
+name: trade-global-buyer-staging
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_HOST_API: ${NEXT_PUBLIC_HOST_API}
+        NEXT_PUBLIC_ASSETS_API: ${NEXT_PUBLIC_ASSETS_API}
+    image: trade-global-buyer:staging
+    container_name: trade-global-buyer-staging
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:4000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      NEXT_PUBLIC_HOST_API: ${NEXT_PUBLIC_HOST_API}
+      NEXT_PUBLIC_ASSETS_API: ${NEXT_PUBLIC_ASSETS_API}
+    env_file:
+      - .env.staging

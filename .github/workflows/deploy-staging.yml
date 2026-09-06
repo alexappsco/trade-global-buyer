@@ -1,0 +1,26 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Deploy staging via SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          port: ${{ secrets.STAGING_SSH_PORT }}
+          script: |
+            set -euo pipefail
+            cd /var/www/tradeglobal-buyer-staging
+            git fetch origin
+            git checkout development
+            git pull origin development
+            docker compose -f docker-compose.staging.yml --env-file .env.staging up -d --build
