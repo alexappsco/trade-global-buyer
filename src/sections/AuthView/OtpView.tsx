@@ -3,9 +3,16 @@
 import { useRef, useState } from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "src/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
+import { useAuth } from "src/contexts/AuthContext";
+import {
+  resendForgetPasswordOtpAction,
+  resendLoginOtpAction,
+  verifyForgetPasswordOtpAction,
+  verifyLoginOtpAction,
+} from "src/actions/auth";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
@@ -13,10 +20,18 @@ const OTP_LENGTH = 4;
 
 export default function OtpView() {
   const t = useTranslations("Auth");
+  const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
+  const { authFlow, setAuthFlow, persistSession, clearAuthFlow } = useAuth();
+
   const [code, setCode] = useState<string[]>(Array(OTP_LENGTH).fill(""));
+  const [loading, setLoading] = useState(false);
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
+
+  const mode = authFlow?.mode ?? "login";
+  const challengeId = authFlow?.challengeId ?? "";
+  const phoneNumber = authFlow?.phoneNumber ?? "";
 
   const handleChange = (index: number, value: string) => {
     const digit = value.replace(/\D/g, "").slice(-1);
@@ -36,14 +51,67 @@ export default function OtpView() {
     }
   };
 
-  const handleConfirm = () => {
-    console.log("otp", code.join(""));
-    toast.success(t("otp_verified"));
-    router.push("/");
+  const handleConfirm = async () => {
+    const otp = code.join("");
+    if (!challengeId || !phoneNumber) {
+      toast.error(t("session_expired"));
+      router.push("/auth/login");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (mode === "reset") {
+        const result = await verifyForgetPasswordOtpAction(
+          { challengeId, phoneNumber, otp },
+          locale
+        );
+        setAuthFlow({
+          mode: "reset",
+          resetToken: result.resetToken,
+          phoneNumber,
+        });
+        router.push("/auth/change-password");
+      } else {
+        const session = await verifyLoginOtpAction(
+          { challengeId, phoneNumber, otp },
+          locale
+        );
+        clearAuthFlow();
+        persistSession({ mode: null }, session);
+        toast.success(t("otp_verified"));
+        router.push("/");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("otp_failed"));
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleResend = () => {
-    toast.success(t("otp_resent"));
+  const handleResend = async () => {
+    if (!challengeId || !phoneNumber) {
+      toast.error(t("session_expired"));
+      return;
+    }
+    try {
+      if (mode === "reset") {
+        const challenge = await resendForgetPasswordOtpAction(
+          { challengeId, phoneNumber },
+          locale
+        );
+        setAuthFlow({ mode: "reset", challengeId: challenge.challengeId, phoneNumber });
+      } else {
+        const challenge = await resendLoginOtpAction(
+          { challengeId, phoneNumber },
+          locale
+        );
+        setAuthFlow({ mode: "login", challengeId: challenge.challengeId, phoneNumber });
+      }
+      toast.success(t("otp_resent"));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("otp_failed"));
+    }
   };
 
   return (
@@ -91,6 +159,7 @@ export default function OtpView() {
           variant="contained"
           fullWidth
           disableElevation
+          disabled={loading}
           sx={{
             bgcolor: GREEN,
             color: "#fff",
@@ -99,7 +168,7 @@ export default function OtpView() {
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
-          {t("confirm")}
+          {loading ? t("loading") : t("confirm")}
         </Button>
 
         <Typography

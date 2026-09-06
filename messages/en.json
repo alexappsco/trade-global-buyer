@@ -280,7 +280,24 @@
     "stats_label_2": "Satisfaction rate",
     "stats_label_3": "Satisfaction rate",
     "agree_label": "I agree to the Terms & Conditions and Privacy Policy",
-    "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
+    "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data.",
+    "loading": "Please wait...",
+    "signin_required": "Please enter your phone number and password",
+    "signin_failed": "Sign in failed. Please check your credentials",
+    "register_required": "Please fill in all required fields",
+    "password_mismatch": "Passwords do not match",
+    "register_failed": "Registration failed. Please try again",
+    "session_expired": "Your session has expired. Please start again",
+    "profile_required": "Please fill in all required fields",
+    "profile_failed": "Failed to save your profile. Please try again",
+    "otp_sent": "A verification code has been sent",
+    "otp_failed": "Verification failed. Please try again",
+    "forgot_failed": "Unable to send the reset code. Please try again",
+    "change_password_title": "Set a New Password",
+    "change_password_subtitle": "Enter your new password to complete the password reset.",
+    "new_password": "New Password",
+    "password_changed": "Password changed successfully",
+    "password_change_failed": "Failed to change password. Please try again"
   },
 
   "Invoices": {
@@ -360,6 +377,10 @@
     "CompleteProfile": {
       "title": "Complete Profile - Trade Global",
       "description": "Complete your Trade Global Buyer profile setup"
+    },
+    "ChangePassword": {
+      "title": "Change Password - Trade Global",
+      "description": "Set a new password for your Trade Global account"
     },
     "EditProfile": {
       "title": "Edit Profile - Trade Global",

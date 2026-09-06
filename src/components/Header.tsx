@@ -8,6 +8,7 @@ import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import Iconify from "src/components/iconify";
+import { useAuth } from "src/contexts/AuthContext";
 import { localesSettings, LocaleType, allLocales } from "src/i18n/config-locale";
 import {
   AppBar,
@@ -33,6 +34,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const pathname = usePathname();
   const locale = useLocale();
   const currentLocaleSetting = localesSettings[locale as LocaleType];
+  const { logout } = useAuth();
 
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null);
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
@@ -47,6 +49,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const handleLogout = () => {
     setAvatarAnchorEl(null);
+    logout();
     router.push("/auth/login");
   };
 

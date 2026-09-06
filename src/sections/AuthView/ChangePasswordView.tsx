@@ -7,38 +7,50 @@ import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
-import { forgetPasswordAction } from "src/actions/auth";
+import { changePasswordAction } from "src/actions/auth";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
 
-export default function ForgotPasswordView() {
+export default function ChangePasswordView() {
   const t = useTranslations("Auth");
   const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
-  const { setAuthFlow } = useAuth();
-  const [phone, setPhone] = useState("");
+  const { authFlow, clearAuthFlow } = useAuth();
+
+  const resetToken = authFlow?.resetToken;
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!phone) {
-      toast.error(t("signin_required"));
+    if (!resetToken) {
+      toast.error(t("session_expired"));
+      router.push("/auth/login");
+      return;
+    }
+    if (!newPassword || !confirmPassword) {
+      toast.error(t("register_required"));
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error(t("password_mismatch"));
       return;
     }
 
     setLoading(true);
     try {
-      const challenge = await forgetPasswordAction(phone, locale);
-      setAuthFlow({
-        mode: "reset",
-        challengeId: challenge.challengeId,
-        phoneNumber: phone,
-      });
-      toast.success(t("otp_sent"));
-      router.push("/auth/otp");
+      await changePasswordAction(
+        { resetToken, newPassword, confirmPassword },
+        locale
+      );
+      clearAuthFlow();
+      toast.success(t("password_changed"));
+      router.push("/auth/login");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("forgot_failed"));
+      toast.error(err instanceof Error ? err.message : t("password_change_failed"));
     } finally {
       setLoading(false);
     }
@@ -54,23 +66,37 @@ export default function ForgotPasswordView() {
       <Stack spacing={3}>
         <Box>
           <Typography variant="h6" sx={{ fontWeight: 800, color: "#171717" }}>
-            {t("forgot_title")}
+            {t("change_password_title")}
           </Typography>
           <Typography variant="body2" sx={{ color: "#6B7280", mt: 1 }}>
-            {t("forgot_subtitle")}
+            {t("change_password_subtitle")}
           </Typography>
         </Box>
 
         <Box>
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
-            {t("phone")}
+            {t("new_password")}
           </Typography>
           <TextField
             fullWidth
             size="small"
-            value={phone}
-            placeholder="+966 5 1234 5678"
-            onChange={(e) => setPhone(e.target.value)}
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </Box>
+
+        <Box>
+          <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
+            {t("confirm_password")}
+          </Typography>
+          <TextField
+            fullWidth
+            size="small"
+            type="password"
+            value={confirmPassword}
+            error={Boolean(confirmPassword) && confirmPassword !== newPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Box>
 
@@ -88,7 +114,7 @@ export default function ForgotPasswordView() {
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
-          {loading ? t("loading") : t("send")}
+          {loading ? t("loading") : t("save")}
         </Button>
 
         <Link
