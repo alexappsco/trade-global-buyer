@@ -9,16 +9,27 @@
     },
     "Label": {
       "no_data": "No data"
+    },
+    "Server": {
+      "not_found": "Resource not found",
+      "unauthorized": "Unauthorized. Please log in again.",
+      "internal_server_error": "An internal server error occurred",
+      "service_not_available": "Service is currently unavailable",
+      "unexpected_error": "An unexpected error occurred"
     }
   },
   "Sidebar": {
     "home": "Home",
-    "my_orders": "My Orders",
+    "my_orders": "Orders",
     "profile": "Profile",
     "notifications": "Notifications",
     "support": "Support",
     "invoices": "Invoices",
-    "quotation_requests": "Quotation Requests"
+    "quotation_requests": "Quotation Requests",
+    "role": {
+      "buyer": "Buyer",
+      "supplier": "Supplier"
+    }
   },
   "Home": {
     "stats": {
@@ -425,6 +436,40 @@
     "Support": {
       "title": "Support - Trade Global",
       "description": "Get help and submit support tickets"
+    }
+  },
+  "CreateQuoteRequest": {
+    "page_title": "Create New Order",
+    "create_request": "Create Order",
+    "create_request_hint": "You can add more than one order at the same time",
+    "category": "Category",
+    "category_placeholder": "Select a category",
+    "request_title": "Order Title",
+    "title_placeholder": "Enter order title",
+    "delivery_date": "Delivery Date",
+    "actions": "Actions",
+    "details": "Details",
+    "quantity": "Quantity",
+    "item": "Item",
+    "details_placeholder": "Enter item details",
+    "item_placeholder": "Enter item name",
+    "add": "Add Item",
+    "delete": "Delete Order",
+    "send": "Send",
+    "sending": "Sending...",
+    "cancel": "Cancel",
+    "cancel_success": "Order cancelled",
+    "submit_error": "An error occurred while submitting the order. Please try again."
+  },
+  "Quotations": {
+    "title": "Quotation Requests",
+    "table": {
+      "grand_total": "Grand Total (incl. VAT)",
+      "quantity": "Quantity",
+      "actions": "Actions",
+      "submit_quote": "Submit Quote",
+      "view_quote": "View Submitted Quote",
+      "cannot_submit": "Cannot Submit"
     }
   }
 }

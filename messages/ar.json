@@ -9,16 +9,27 @@
     },
     "Label": {
       "no_data": "لا توجد بيانات"
+    },
+    "Server": {
+      "not_found": "المورد غير موجود",
+      "unauthorized": "غير مصرح. يرجى تسجيل الدخول مجدداً.",
+      "internal_server_error": "حدث خطأ داخلي في الخادم",
+      "service_not_available": "الخدمة غير متاحة حالياً",
+      "unexpected_error": "حدث خطأ غير متوقع"
     }
   },
   "Sidebar": {
     "home": "الرئيسية",
-    "my_orders": "الطلبات التي قدمتها",
+    "my_orders": "الطلبات",
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
     "invoices": "الفواتير",
-    "quotation_requests": "طلبات عروض الأسعار"
+    "quotation_requests": "طلبات عروض الأسعار",
+    "role": {
+      "buyer": "مشتري",
+      "supplier": "مورد"
+    }
   },
   "Home": {
     "stats": {
@@ -425,6 +436,40 @@
     "Support": {
       "title": "الدعم الفني - تجارة عالمية",
       "description": "الحصول على المساعدة وتذاكر الدعم"
+    }
+  },
+  "CreateQuoteRequest": {
+    "page_title": "إنشاء طلب جديد",
+    "create_request": "إنشاء طلب",
+    "create_request_hint": "يمكنك إضافة أكثر من طلب في نفس الوقت",
+    "category": "الفئة",
+    "category_placeholder": "اختر الفئة",
+    "request_title": "عنوان الطلب",
+    "title_placeholder": "أدخل عنوان الطلب",
+    "delivery_date": "تاريخ التسليم",
+    "actions": "إجراءات",
+    "details": "التفاصيل",
+    "quantity": "الكمية",
+    "item": "الصنف",
+    "details_placeholder": "أدخل تفاصيل الصنف",
+    "item_placeholder": "أدخل اسم الصنف",
+    "add": "إضافة صنف",
+    "delete": "حذف الطلب",
+    "send": "إرسال",
+    "sending": "جاري الإرسال...",
+    "cancel": "إلغاء",
+    "cancel_success": "تم إلغاء الطلب",
+    "submit_error": "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مجدداً."
+  },
+  "Quotations": {
+    "title": "طلبات عروض الأسعار",
+    "table": {
+      "grand_total": "الإجمالي شامل الضريبة",
+      "quantity": "الكمية",
+      "actions": "إجراءات",
+      "submit_quote": "تقديم عرض سعر",
+      "view_quote": "عرض العرض المقدم",
+      "cannot_submit": "لا يمكن تقديم عرض"
     }
   }
 }

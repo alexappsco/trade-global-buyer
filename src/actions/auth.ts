@@ -11,7 +11,7 @@ import type {
   VerifyResetOtpResponse,
 } from "src/types/auth";
 
-const AUTH_BASE = `${HOST_API}/api/v1/auth`;
+const AUTH_BASE = `${HOST_API}/auth`;
 
 async function authRequest<T>(
   path: string,

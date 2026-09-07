@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QuoteSuccessDialog from "./QuoteSuccessDialog";
 import QuoteConfirmDialog from "./QuoteConfirmDialog";
 import {
@@ -17,7 +17,11 @@ import {
   TableRow,
   TextField,
   Typography,
+  MenuItem,
 } from "@mui/material";
+import { getOrdersCatalog, createOrder } from "src/actions/orders";
+import type { OrderCatalogItem } from "src/types/order";
+import { useLocale } from "next-intl";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslations } from "next-intl";
@@ -37,7 +41,7 @@ interface ItemRow {
 
 interface RequestBlock {
   id: string;
-  category: string;
+  categoryCode: string;
   title: string;
   deliveryDate: string;
   items: ItemRow[];
@@ -57,7 +61,7 @@ const createItem = (): ItemRow => ({
 
 const createBlock = (): RequestBlock => ({
   id: createId(),
-  category: "",
+  categoryCode: "",
   title: "",
   deliveryDate: "",
   items: [],
@@ -131,13 +135,16 @@ function RequestFormBlock({
   onChange,
   onDelete,
   canDelete,
+  catalog,
 }: {
   block: RequestBlock;
   onChange: (block: RequestBlock) => void;
   onDelete: () => void;
   canDelete: boolean;
+  catalog: OrderCatalogItem[];
 }) {
   const t = useTranslations("CreateQuoteRequest");
+  const locale = useLocale();
 
   const updateField = (field: keyof Omit<RequestBlock, "items">, value: string) =>
     onChange({ ...block, [field]: value });
@@ -173,12 +180,33 @@ function RequestFormBlock({
         borderRadius: "12px",
         p: { xs: 2, md: 3 }, }}
       >
-        <InfoField
-          label={t("category")}
-          value={block.category}
-          onChange={(v) => updateField("category", v)}
-          placeholder={t("category_placeholder")}
-        />
+        <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
+          <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#171717" }}>
+            {t("category")}
+          </Typography>
+          <TextField
+            select
+            size="small"
+            value={block.categoryCode}
+            onChange={(e) => updateField("categoryCode", e.target.value)}
+            fullWidth
+            sx={{
+              bgcolor: "#fff",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+              },
+            }}
+          >
+            <MenuItem value="" disabled>
+              {t("category_placeholder")}
+            </MenuItem>
+            {catalog.map((cat) => (
+              <MenuItem key={cat.code} value={cat.code}>
+                {locale === "ar" ? cat.nameAr : cat.nameEn}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Stack>
         <InfoField
           label={t("request_title")}
           value={block.title}
@@ -297,6 +325,35 @@ export default function CreateQuoteRequestView() {
   const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchCatalog = async () => {
+      try {
+        console.log("[Catalog] Calling getOrdersCatalog server action...");
+        const res = await getOrdersCatalog();
+        console.log("[Catalog] Full response:", JSON.stringify(res, null, 2));
+        console.log("[Catalog] success:", res.success);
+        console.log("[Catalog] data:", res.data);
+        console.log("[Catalog] status:", (res as any).status);
+        if (res.success && res.data) {
+          const catalogData = Array.isArray(res.data) ? res.data : (res.data as any).data || [];
+          console.log("[Catalog] Setting catalog items:", catalogData.length, "items");
+          setCatalog(catalogData);
+        } else {
+          const errorMsg = 'error' in res ? (res as any).error : (res as any).message || "Failed to load catalog";
+          console.error("[Catalog] API Error:", errorMsg);
+          console.error("[Catalog] Full error object:", res);
+          toast.error(errorMsg);
+        }
+      } catch (err) {
+        console.error("[Catalog] Exception:", err);
+        toast.error("Failed to load catalog");
+      }
+    };
+    fetchCatalog();
+  }, []);
 
   const addRequest = () => setRequests((prev) => [...prev, createBlock()]);
 
@@ -314,9 +371,33 @@ export default function CreateQuoteRequestView() {
     setShowConfirm(true);
   };
 
-  const handleConfirmSubmit = () => {
+  const handleConfirmSubmit = async () => {
     setShowConfirm(false);
-    setShowSuccess(true);
+    setIsSubmitting(true);
+    
+    // Prepare the payload for createOrder
+    const payload = {
+      orders: requests.map((req) => ({
+        categoryCode: req.categoryCode,
+        classificationCode: "", // Omitted per user note
+        title: req.title,
+        deliveryDate: req.deliveryDate,
+        items: req.items.map((item) => ({
+          name: item.name,
+          quantity: parseInt(item.quantity) || 1,
+          details: item.details,
+        })),
+      }))
+    };
+    
+    const res = await createOrder(payload);
+    setIsSubmitting(false);
+    
+    if (res.success) {
+      setShowSuccess(true);
+    } else {
+      toast.error(res.error || t("submit_error"));
+    }
   };
 
   const handleGoToOrders = () => {
@@ -373,6 +454,7 @@ export default function CreateQuoteRequestView() {
             onChange={updateRequest}
             onDelete={() => deleteRequest(request.id)}
             canDelete={requests.length > 1}
+            catalog={catalog}
           />
         ))}
       </Stack>
@@ -402,15 +484,17 @@ export default function CreateQuoteRequestView() {
           variant="contained"
           size="medium"
           disableElevation
+          disabled={isSubmitting}
           sx={{
             bgcolor: GREEN,
             color: "#fff",
             borderRadius: "4px",
             px: 8,
             "&:hover": { bgcolor: GREEN_HOVER },
+            "&.Mui-disabled": { bgcolor: GREEN, opacity: 0.5 },
           }}
         >
-          {t("send")}
+          {isSubmitting ? t("sending") : t("send")}
         </Button>
       </Stack>
 

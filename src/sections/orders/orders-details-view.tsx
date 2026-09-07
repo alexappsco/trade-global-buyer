@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'src/i18n/routing';
 import {
@@ -25,7 +25,8 @@ import {
 
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
-import { getOrderById, OfferItem } from './orders-mock';
+import { getOrderDetails, closeOrder } from 'src/actions/orders';
+import type { Order } from 'src/types/order';
 
 interface Props {
   id: string;
@@ -37,7 +38,19 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const router = useRouter();
   const isRtl = locale === 'ar';
 
-  const order = useMemo(() => getOrderById(id), [id]);
+  const [order, setOrder] = useState<Order | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const res = await getOrderDetails(id);
+      if (res.success && res.data) {
+        setOrder(res.data);
+      }
+      setIsLoading(false);
+    };
+    fetchOrder();
+  }, [id]);
 
   // Alert State
   const [showAlert, setShowAlert] = useState(true);
@@ -108,11 +121,12 @@ export default function ConfirmOrderStatus({ id }: Props) {
     }
   };
 
-  // Filtered Offers
+  // Filtered Offers (Mock logic kept but data is empty since not provided by Orders API)
   const filteredOffers = useMemo(() => {
-    if (!order.offers) return [];
+    const offers: any[] = [];
+    if (!offers.length) return [];
 
-    return order.offers.filter((offer) => {
+    return offers.filter((offer) => {
       const matchesSearch =
         offer.supplier.toLowerCase().includes(searchQuery.toLowerCase()) ||
         translateValue(offer.supplier).toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -129,7 +143,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
 
       return matchesSearch && matchesPrice && matchesDate && matchesDelivery && matchesStatus;
     });
-  }, [order.offers, searchQuery, selectedPrice, selectedDate, selectedDelivery, selectedStatus, locale]);
+  }, [searchQuery, selectedPrice, selectedDate, selectedDelivery, selectedStatus, locale]);
 
   // Checkbox row select
   const handleSelectAll = (checked: boolean) => {
@@ -150,6 +164,26 @@ export default function ConfirmOrderStatus({ id }: Props) {
 
   const isAllSelected =
     filteredOffers.length > 0 && selectedRows.length === filteredOffers.length;
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!order) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {locale === 'ar' ? 'لم يتم العثور على الطلب' : 'Order not found'}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -265,7 +299,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
               {t('details.info.created_at')}
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
-              {order.creationDate}
+              {new Date(order.creationTime).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
@@ -274,7 +308,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
               {t('details.info.delivery_date')}
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
-              {order.deliveryDate}
+              {new Date(order.deliveryDate).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
@@ -323,10 +357,10 @@ export default function ConfirmOrderStatus({ id }: Props) {
               {order.items?.map((item, idx) => (
                 <TableRow key={idx} hover>
                   <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600, color: '#006838', textDecoration: 'underline', cursor: 'pointer' }}>
-                    {translateValue(item.name)}
+                    {item.name}
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: 600 }}>
-                    {item.qty}
+                    {item.quantity}
                   </TableCell>
                   <TableCell align={isRtl ? 'right' : 'left'} sx={{ color: 'text.secondary' }}>
                     {t('details.table.detail_link')}
@@ -736,9 +770,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
         title={t('dialog.confirm_close_order')}
         confirmLabel={t('dialog.confirm')}
         cancelLabel={t('dialog.cancel')}
-        onConfirm={() => {
+        onConfirm={async () => {
           setOpenCloseConfirm(false);
-          setOpenCloseSuccess(true);
+          const res = await closeOrder(id);
+          if (res.success) {
+            setOpenCloseSuccess(true);
+            setOrder(res.data as Order); // Update order state with new closed status
+          }
         }}
       />
 
