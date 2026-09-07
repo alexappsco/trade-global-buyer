@@ -71,7 +71,8 @@
       "creation_date": "Creation Date",
       "status": "Status",
       "actions": "Actions",
-      "action_view": "View"
+      "action_view": "View",
+      "action_close": "Close"
     },
     "status": {
       "open": "Open",

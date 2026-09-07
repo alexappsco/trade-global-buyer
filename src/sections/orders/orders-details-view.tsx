@@ -243,7 +243,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
             color: '#161C24',
           }}
         >
-          {t('details.title', { id: order.id })}
+          {t('details.title', { id: order.orderNumber })}
         </Typography>
 
         <Button

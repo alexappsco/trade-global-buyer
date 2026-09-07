@@ -71,7 +71,8 @@
       "creation_date": "تاريخ الانشاء",
       "status": "الحالة",
       "actions": "اجراءات",
-      "action_view": "عرض"
+      "action_view": "عرض",
+      "action_close": "إغلاق"
     },
     "status": {
       "open": "مفتوح",

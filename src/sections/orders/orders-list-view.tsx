@@ -24,8 +24,10 @@ import {
 } from "@mui/material";
 
 import Iconify from "src/components/iconify";
+import ConfirmationDialog from "src/components/dialog/ConfirmationDialog";
+import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
-import { getOrders, getOrdersCatalog } from "src/actions/orders";
+import { getOrders, getOrdersCatalog, closeOrder } from "src/actions/orders";
 import type { Order, OrderCatalogItem } from "src/types/order";
 
 export default function OrdersListView() {
@@ -33,6 +35,7 @@ export default function OrdersListView() {
   const locale = useLocale();
   const router = useRouter();
   const { role } = useAuth();
+  const toast = useToast();
   const isRtl = locale === "ar";
 
   // State
@@ -64,6 +67,9 @@ export default function OrdersListView() {
     useState<null | HTMLElement>(null);
   const [statusAnchor, setStatusAnchor] = useState<null | HTMLElement>(null);
   const [dateAnchor, setDateAnchor] = useState<null | HTMLElement>(null);
+
+  // Close Order Dialog
+  const [closeTarget, setCloseTarget] = useState<Order | null>(null);
 
   // Debounce search
 
@@ -142,6 +148,23 @@ export default function OrdersListView() {
 
   const isAllSelected =
     orders.length > 0 && selectedRows.length === orders.length;
+
+  // Close Order Handler
+  const handleCloseOrder = async () => {
+    if (!closeTarget) return;
+    const res = await closeOrder(closeTarget.id);
+    setCloseTarget(null);
+    if (res.success) {
+      toast.success(t("dialog.success_close_order"));
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === closeTarget.id ? { ...o, status: "closed" } : o,
+        ),
+      );
+    } else {
+      toast.error(res.error || t("dialog.confirm_close_order"));
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -678,27 +701,67 @@ export default function OrdersListView() {
                     </TableCell>
 
                     <TableCell align={isRtl ? "right" : "left"}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => router.push(`/orders/${row.id}`)}
-                        startIcon={<Iconify icon="solar:eye-bold" width={16} />}
+                      <Box
                         sx={{
-                          borderColor: "#DFE3E8",
-                          color: "#637381",
-                          borderRadius: "16px",
-                          fontWeight: 600,
-                          px: 1.5,
-                          py: 0.5,
-                          textTransform: "none",
-                          "&:hover": {
-                            borderColor: "#919EAB",
-                            bgcolor: "#F4F6F8",
-                          },
+                          display: "flex",
+                          alignItems: "center",
+                          // gap: 1,
+                          flexWrap: "wrap",
                         }}
                       >
-                        {t("table.action_view")}
-                      </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => router.push(`/orders/${row.id}`)}
+                          sx={{
+                            border: "0 solid",
+                            borderColor: "#DFE3E8",
+                            color: "#637381",
+                            borderRadius: "16px",
+                            fontWeight: 600,
+                            // px: 1.5,
+                            // py: 0.5,
+                            // gap: 1,
+                            textTransform: "none",
+                            "&:hover": {
+                              borderColor: "#919EAB",
+                              bgcolor: "#F4F6F8",
+                            },
+                          }}
+                        >
+                          <Iconify icon="solar:eye-bold" width={16} />
+                          {/* {t("table.action_view")} */}
+                        </Button>
+
+                        {row.status === "open" && (
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => setCloseTarget(row)}
+                            sx={{
+                              border: "0 solid",
+                              borderColor: "rgba(255, 59, 48, 0.35)",
+                              color: "#FF3B30",
+                              borderRadius: "16px",
+                              fontWeight: 600,
+                              // px: 1.5,
+                              // py: 0.5,
+                              // gap: 1,
+                              textTransform: "none",
+                              "&:hover": {
+                                borderColor: "#FF3B30",
+                                bgcolor: "rgba(255, 59, 48, 0.08)",
+                              },
+                            }}
+                          >
+                            <Iconify
+                              icon="solar:lock-bold"
+                              width={16}
+                            />
+                            {/* {t("table.action_close")} */}
+                          </Button>
+                        )}
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );
@@ -852,6 +915,18 @@ export default function OrdersListView() {
           </Box>
         )}
       </Card>
+
+      {/* Close Order Confirmation Dialog */}
+      <ConfirmationDialog
+        open={Boolean(closeTarget)}
+        onClose={() => setCloseTarget(null)}
+        variant="warning"
+        title={t("dialog.confirm_close_order")}
+        confirmLabel={t("dialog.confirm")}
+        cancelLabel={t("dialog.cancel")}
+        cancelVariant="gray"
+        onConfirm={handleCloseOrder}
+      />
     </Box>
   );
 }
