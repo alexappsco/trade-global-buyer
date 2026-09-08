@@ -21,4 +21,10 @@ export const endpoints = {
     readAll: '/notifications/read-all',
     dismiss: (id: string) => `/notifications/${id}`,
   },
+  supportRequests: {
+    list: '/support-requests',
+    details: (id: string) => `/support-requests/${id}`,
+    create: '/support-requests',
+    delete: (id: string) => `/support-requests/${id}`,
+  },
 };

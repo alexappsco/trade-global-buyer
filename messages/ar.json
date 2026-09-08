@@ -238,6 +238,8 @@
     "details_required": "تفاصيل الطلب مطلوبة",
     "created_success": "تم إرسال طلب الدعم بنجاح",
     "deleted_success": "تم حذف الطلب",
+    "loading": "جاري التحميل...",
+    "submit_error": "تعذر إرسال الطلب. يرجى المحاولة مجدداً.",
     "request_number": "رقم الطلب",
     "request_date": "تاريخ الطلب",
     "request_time": "وقت الطلب",

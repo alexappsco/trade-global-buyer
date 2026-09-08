@@ -50,7 +50,7 @@ export default function SupportRequestList({
       const matchesStatus = status === "all" || request.status === status;
       const matchesSearch =
         !query ||
-        request.requestNumber.toLowerCase().includes(query) ||
+        String(request.requestNumber).toLowerCase().includes(query) ||
         request.details.toLowerCase().includes(query) ||
         request.email.toLowerCase().includes(query);
 

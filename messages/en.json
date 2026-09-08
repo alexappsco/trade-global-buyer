@@ -238,6 +238,8 @@
     "details_required": "Request details are required",
     "created_success": "Support request sent successfully",
     "deleted_success": "Request deleted",
+    "loading": "Loading...",
+    "submit_error": "Unable to send the request. Please try again.",
     "request_number": "Request number",
     "request_date": "Request date",
     "request_time": "Request time",
