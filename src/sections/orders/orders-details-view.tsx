@@ -26,7 +26,9 @@ import {
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
 import { getOrderDetails, closeOrder } from 'src/actions/orders';
+import { getOrderQuotationOffers } from 'src/actions/quotations';
 import type { Order } from 'src/types/order';
+import type { QuotationOffer } from 'src/types/quotation';
 
 interface Props {
   id: string;
@@ -37,9 +39,15 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const locale = useLocale();
   const router = useRouter();
   const isRtl = locale === 'ar';
+  const currency = locale === 'ar' ? 'ر.س' : 'SAR';
+  const formatMoney = (value: number) =>
+    `${value.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
+  const formatDate = (value: string) => (value ? new Date(value).toLocaleDateString(locale) : '—');
 
   const [order, setOrder] = useState<Order | null>(null);
+  const [offers, setOffers] = useState<QuotationOffer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isOffersLoading, setIsOffersLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -50,6 +58,20 @@ export default function ConfirmOrderStatus({ id }: Props) {
       setIsLoading(false);
     };
     fetchOrder();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      setIsOffersLoading(true);
+      const res = await getOrderQuotationOffers(id, { sorting: 'creationTime desc', skipCount: 0, maxResultCount: 1000 });
+      if (res.success && res.data) {
+        setOffers(res.data.items || []);
+      } else {
+        setOffers([]);
+      }
+      setIsOffersLoading(false);
+    };
+    fetchOffers();
   }, [id]);
 
   // Alert State
@@ -74,76 +96,58 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const [deliveryAnchor, setDeliveryAnchor] = useState<null | HTMLElement>(null);
   const [statusAnchor, setStatusAnchor] = useState<null | HTMLElement>(null);
 
-  // Localized Values Helpers
-  const translateValue = (val: string) => {
-    if (locale === 'en') {
-      switch (val) {
-        case 'لابتوب': return 'Laptop';
-        case 'ماوس': return 'Mouse';
-        case 'كيبورد': return 'Keyboard';
-        case 'التفاصيل': return 'Details';
-        case 'مورد ١': return 'Supplier 1';
-        case 'مورد ٢': return 'Supplier 2';
-        case 'مورد ٣': return 'Supplier 3';
-        case 'الرياض': return 'Riyadh';
-        case 'مجاني': return 'Free';
-        case 'مفتوح': return 'Open';
-        case 'مغلق': return 'Closed';
-        default: return val;
-      }
-    }
-    return val;
-  };
-
-  const getStatusText = (status: 'accepted' | 'rejected' | 'closed') => {
+  const getStatusText = (status: QuotationOffer['status']) => {
     switch (status) {
       case 'accepted':
         return t('details.offers.accepted');
-      case 'rejected':
+      case 'declined':
         return t('details.offers.rejected');
       case 'closed':
         return t('details.offers.closed');
+      case 'pending':
+        return locale === 'ar' ? 'قيد الانتظار' : 'Pending';
       default:
         return status;
     }
   };
 
-  const getStatusColor = (status: 'accepted' | 'rejected' | 'closed') => {
+  const getStatusColor = (status: QuotationOffer['status']) => {
     switch (status) {
       case 'accepted':
-        return '#00B8D9'; // Blue / Info
-      case 'rejected':
-        return '#FF3B30'; // Red / Error
+        return '#006838';
+      case 'declined':
+        return '#FF3B30';
       case 'closed':
-        return '#637381'; // Grey
+        return '#637381';
+      case 'pending':
+        return '#B76E00';
       default:
-        return 'text.primary';
+        return 'text.primary' as string;
     }
   };
 
-  // Filtered Offers (Mock logic kept but data is empty since not provided by Orders API)
   const filteredOffers = useMemo(() => {
-    const offers: any[] = [];
-    if (!offers.length) return [];
-
     return offers.filter((offer) => {
+      const supplier = offer.counterparty?.legalCompanyName || '';
+      const address = offer.counterparty?.companyAddress || '';
       const matchesSearch =
-        offer.supplier.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        translateValue(offer.supplier).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        offer.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        translateValue(offer.address).toLowerCase().includes(searchQuery.toLowerCase());
+        supplier.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        address.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesPrice = !selectedPrice || String(offer.total) === selectedPrice;
-      const matchesDate = !selectedDate || offer.date.startsWith(selectedDate);
+      const matchesPrice = !selectedPrice || String(offer.subtotal + offer.deliveryFee) === selectedPrice;
+      const matchesDate = !selectedDate || offer.submissionTime.startsWith(selectedDate);
       const matchesDelivery =
         !selectedDelivery ||
-        (selectedDelivery === 'free' && offer.delivery === 'مجاني') ||
-        (selectedDelivery === 'paid' && offer.delivery !== 'مجاني');
-      const matchesStatus = !selectedStatus || offer.status === selectedStatus;
+        (selectedDelivery === 'free' && offer.deliveryFee === 0) ||
+        (selectedDelivery === 'paid' && offer.deliveryFee > 0);
+      const matchesStatus = !selectedStatus || offer.status === selectedStatus || (selectedStatus === 'rejected' && offer.status === 'declined');
 
       return matchesSearch && matchesPrice && matchesDate && matchesDelivery && matchesStatus;
     });
-  }, [searchQuery, selectedPrice, selectedDate, selectedDelivery, selectedStatus, locale]);
+  }, [offers, searchQuery, selectedPrice, selectedDate, selectedDelivery, selectedStatus, locale, t]);
+
+  const priceOptions = [...new Set(offers.map((o) => String(o.subtotal + o.deliveryFee)))];
+  const dateOptions = [...new Set(offers.map((o) => o.submissionTime.slice(0, 10)))];
 
   // Checkbox row select
   const handleSelectAll = (checked: boolean) => {
@@ -473,15 +477,18 @@ export default function ConfirmOrderStatus({ id }: Props) {
               >
                 {locale === 'ar' ? 'الكل' : 'All'}
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  setSelectedPrice('5000');
-                  setPriceAnchor(null);
-                }}
-                selected={selectedPrice === '5000'}
-              >
-                5000
-              </MenuItem>
+              {priceOptions.map((price) => (
+                <MenuItem
+                  key={price}
+                  onClick={() => {
+                    setSelectedPrice(price);
+                    setPriceAnchor(null);
+                  }}
+                  selected={selectedPrice === price}
+                >
+                  {formatMoney(Number(price))}
+                </MenuItem>
+              ))}
             </Menu>
 
             {/* Date Filter */}
@@ -518,15 +525,18 @@ export default function ConfirmOrderStatus({ id }: Props) {
               >
                 {locale === 'ar' ? 'الكل' : 'All'}
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  setSelectedDate('2025-11-10');
-                  setDateAnchor(null);
-                }}
-                selected={selectedDate === '2025-11-10'}
-              >
-                2025-11-10
-              </MenuItem>
+              {dateOptions.map((date) => (
+                <MenuItem
+                  key={date}
+                  onClick={() => {
+                    setSelectedDate(date);
+                    setDateAnchor(null);
+                  }}
+                  selected={selectedDate === date}
+                >
+                  {date}
+                </MenuItem>
+              ))}
             </Menu>
 
             {/* Delivery Filter */}
@@ -625,6 +635,15 @@ export default function ConfirmOrderStatus({ id }: Props) {
               </MenuItem>
               <MenuItem
                 onClick={() => {
+                  setSelectedStatus('pending');
+                  setStatusAnchor(null);
+                }}
+                selected={selectedStatus === 'pending'}
+              >
+                {locale === 'ar' ? 'قيد الانتظار' : 'Pending'}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
                   setSelectedStatus('accepted');
                   setStatusAnchor(null);
                 }}
@@ -695,60 +714,83 @@ export default function ConfirmOrderStatus({ id }: Props) {
             </TableHead>
 
             <TableBody>
-              {filteredOffers.map((row) => {
-                const isSelected = selectedRows.includes(row.id);
-                return (
-                  <TableRow
-                    key={row.id}
-                    hover
-                    selected={isSelected}
-                    sx={{
-                      '&:hover': { bgcolor: '#F9FAFB' },
-                      '&.Mui-selected': { bgcolor: 'rgba(0, 104, 56, 0.04)' },
-                      '&.Mui-selected:hover': { bgcolor: 'rgba(0, 104, 56, 0.08)' },
-                    }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        size="small"
-                        checked={isSelected}
-                        onChange={(e) => handleSelectRow(row.id, e.target.checked)}
-                        sx={{ color: '#C4CDD5', '&.Mui-checked': { color: '#006838' } }}
-                      />
-                    </TableCell>
+              {isOffersLoading && (
+                <TableRow>
+                  <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
 
-                    <TableCell align={isRtl ? 'right' : 'left'}>{translateValue(row.supplier)}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{translateValue(row.address)}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{row.total}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{row.totalWithTax}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{row.date}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>
-                      {row.delivery === 'مجاني' ? t('details.offers.free_delivery') : row.delivery}
-                    </TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 700, color: getStatusColor(row.status) }}>
-                      {getStatusText(row.status)}
-                    </TableCell>
+              {!isOffersLoading &&
+                filteredOffers.map((row) => {
+                  const isSelected = selectedRows.includes(row.id);
+                  return (
+                    <TableRow
+                      key={row.id}
+                      hover
+                      selected={isSelected}
+                      sx={{
+                        '&:hover': { bgcolor: '#F9FAFB' },
+                        '&.Mui-selected': { bgcolor: 'rgba(0, 104, 56, 0.04)' },
+                        '&.Mui-selected:hover': { bgcolor: 'rgba(0, 104, 56, 0.08)' },
+                      }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          size="small"
+                          checked={isSelected}
+                          onChange={(e) => handleSelectRow(row.id, e.target.checked)}
+                          sx={{ color: '#C4CDD5', '&.Mui-checked': { color: '#006838' } }}
+                        />
+                      </TableCell>
 
-                    <TableCell align="center">
-                      <IconButton
-                        size="small"
-                        onClick={() => router.push(`/orders/${order.id}/${row.id}`)}
-                        sx={{ color: '#637381' }}
-                      >
-                        <Iconify icon="solar:eye-outline" width={18} />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600, color: '#006838' }}>
+                        {row.counterparty?.legalCompanyName || '—'}
+                      </TableCell>
 
-              {filteredOffers.length === 0 && (
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ color: 'text.secondary' }}>
+                        {row.counterparty?.companyAddress || '—'}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600 }}>
+                        {formatMoney(row.subtotal + row.deliveryFee)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600 }}>
+                        {formatMoney(row.grandTotal)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'}>
+                        {formatDate(row.submissionTime)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'}>
+                        {row.deliveryFee === 0
+                          ? t('details.offers.free_delivery')
+                          : formatMoney(row.deliveryFee)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 700, color: getStatusColor(row.status) }}>
+                        {getStatusText(row.status)}
+                      </TableCell>
+
+                      <TableCell align="center">
+                        <IconButton
+                          size="small"
+                          onClick={() => router.push(`/orders/${order.id}/${row.id}`)}
+                          sx={{ color: '#637381' }}
+                        >
+                          <Iconify icon="solar:eye-outline" width={18} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+
+              {!isOffersLoading && filteredOffers.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>

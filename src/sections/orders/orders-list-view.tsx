@@ -709,31 +709,33 @@ export default function OrdersListView() {
                           flexWrap: "wrap",
                         }}
                       >
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          onClick={() => router.push(`/orders/${row.id}`)}
-                          sx={{
-                            border: "0 solid",
-                            borderColor: "#DFE3E8",
-                            color: "#637381",
-                            borderRadius: "16px",
-                            fontWeight: 600,
-                            // px: 1.5,
-                            // py: 0.5,
-                            // gap: 1,
-                            textTransform: "none",
-                            "&:hover": {
-                              borderColor: "#919EAB",
-                              bgcolor: "#F4F6F8",
-                            },
-                          }}
-                        >
-                          <Iconify icon="solar:eye-bold" width={16} />
-                          {/* {t("table.action_view")} */}
-                        </Button>
+                        {role === "buyer" && (
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() => router.push(`/orders/${row.id}`)}
+                            sx={{
+                              border: "0 solid",
+                              borderColor: "#DFE3E8",
+                              color: "#637381",
+                              borderRadius: "16px",
+                              fontWeight: 600,
+                              // px: 1.5,
+                              // py: 0.5,
+                              // gap: 1,
+                              textTransform: "none",
+                              "&:hover": {
+                                borderColor: "#919EAB",
+                                bgcolor: "#F4F6F8",
+                              },
+                            }}
+                          >
+                            <Iconify icon="solar:eye-bold" width={16} />
+                            {/* {t("table.action_view")} */}
+                          </Button>
+                        )}
 
-                        {row.status === "open" && (
+                        {role === "buyer" && row.status === "open" && (
                           <Button
                             variant="outlined"
                             size="small"
@@ -754,13 +756,42 @@ export default function OrdersListView() {
                               },
                             }}
                           >
-                            <Iconify
-                              icon="solar:lock-bold"
-                              width={16}
-                            />
+                            <Iconify icon="solar:lock-bold" width={16} />
                             {/* {t("table.action_close")} */}
                           </Button>
                         )}
+
+                        {role === "supplier" &&
+                          row.status === "open" &&
+                          !row.isOwnOrder &&
+                          !row.hasSubmittedQuotation && (
+                            <Button
+                              variant="contained"
+                              size="small"
+                              onClick={() =>
+                                router.push(`/orders/${row.id}/offer`)
+                              }
+                              sx={{
+                                bgcolor: "#10754E",
+                                color: "white",
+                                fontWeight: 700,
+                                borderRadius: "16px",
+                                fontSize: "0.75rem",
+                                px: 1.5,
+                                py: 0.5,
+                                gap: 1,
+                                textTransform: "none",
+                                boxShadow: "none",
+                                "&:hover": {
+                                  bgcolor: "#0c5b3c",
+                                  boxShadow: "none",
+                                },
+                              }}
+                            >
+                              <Iconify icon="mingcute:add-line" width={14} />
+                              {t("table.action_submit_quote")}
+                            </Button>
+                          )}
                       </Box>
                     </TableCell>
                   </TableRow>

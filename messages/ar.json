@@ -72,7 +72,8 @@
       "status": "الحالة",
       "actions": "اجراءات",
       "action_view": "عرض",
-      "action_close": "إغلاق"
+      "action_close": "إغلاق",
+      "action_submit_quote": "تقديم عرض سعر"
     },
     "status": {
       "open": "مفتوح",
@@ -145,6 +146,46 @@
         "reject": "رفض",
         "download": "تحميل تفاصيل العرض"
       }
+    },
+    "submit_offer": {
+      "title": "تقديم عرض سعر",
+      "order_title": "الطلب رقم #{id}",
+      "not_allowed": "فقط الموردين يمكنهم تقديم العروض",
+      "not_open": "هذا الطلب غير مفتوح لتلقي العروض",
+      "item": "الصنف",
+      "quantity": "الكمية",
+      "details": "تفاصيل الطلب",
+      "unit_price": "سعر الوحدة",
+      "unit_price_required": "أدخل سعر وحدة صحيح",
+      "delivery_fee": "رسوم التوصيل",
+      "delivery_fee_placeholder": "0.00",
+      "duration": "مدة التوريد (أيام)",
+      "duration_placeholder": "مثال: 7",
+      "duration_required": "أدخل مدة توريد صحيحة",
+      "subtotal": "الاجمالي",
+      "tax": "الضريبة 15%",
+      "grand_total": "الاجمالي شامل الضريبة",
+      "currency": "ر.س",
+      "submit": "إرسال العرض",
+      "cancel": "الغاء",
+      "back": "العودة للطلبات",
+      "confirm_title": "أنت على وشك ارسال عرض سعر على هذا الطلب.",
+      "confirm_submit": "إرسال",
+      "success_title": "تم ارسال العرض بنجاح",
+      "view_offer": "اطلع عليه الان",
+      "go_to_orders": "الذهاب الى الطلبات",
+      "error_generic": "تعذر إرسال العرض. حاول مرة أخرى.",
+      "loading": "جاري التحميل...",
+      "view_title": "العرض المقدم",
+      "back_to_requests": "العودة لطلبات عروض الأسعار",
+      "offer_status": "حالة العرض",
+      "order_status": "حالة الطلب",
+      "offer_date": "تاريخ العرض",
+      "buyer_details": "بيانات المشتري",
+      "company": "اسم الشركة",
+      "city": "المدينة",
+      "company_address": "العنوان",
+      "item_total": "إجمالي الصنف"
     },
     "dialog": {
       "confirm_close_order": "انت على وشك اغلاق الطلب",
@@ -422,6 +463,10 @@
       "title": "تفاصيل عرض الطلب - تجارة عالمية",
       "description": "عرض تفاصيل عرض الطلب"
     },
+    "SubmitOffer": {
+      "title": "تقديم عرض سعر - تجارة عالمية",
+      "description": "تقديم عرض سعر على الطلب"
+    },
     "CreateOrder": {
       "title": "إنشاء طلب - تجارة عالمية",
       "description": "إنشاء طلب جديد"
@@ -469,7 +514,7 @@
       "quantity": "الكمية",
       "actions": "إجراءات",
       "submit_quote": "تقديم عرض سعر",
-      "view_quote": "عرض العرض المقدم",
+      "view_quote": "اطلاع على العرض الذي قدمته",
       "cannot_submit": "لا يمكن تقديم عرض"
     }
   }

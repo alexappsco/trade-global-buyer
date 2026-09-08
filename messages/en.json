@@ -72,7 +72,8 @@
       "status": "Status",
       "actions": "Actions",
       "action_view": "View",
-      "action_close": "Close"
+      "action_close": "Close",
+      "action_submit_quote": "Submit Quote"
     },
     "status": {
       "open": "Open",
@@ -145,6 +146,46 @@
         "reject": "Reject",
         "download": "Download Offer Details"
       }
+    },
+    "submit_offer": {
+      "title": "Submit Price Offer",
+      "order_title": "Order #{id}",
+      "not_allowed": "Only suppliers can submit offers",
+      "not_open": "This order is not open for offers",
+      "item": "Item",
+      "quantity": "Quantity",
+      "details": "Details",
+      "unit_price": "Unit Price",
+      "unit_price_required": "Enter a valid unit price",
+      "delivery_fee": "Delivery Fee",
+      "delivery_fee_placeholder": "0.00",
+      "duration": "Supply Duration (Days)",
+      "duration_placeholder": "e.g. 7",
+      "duration_required": "Enter a valid supply duration",
+      "subtotal": "Subtotal",
+      "tax": "Tax 15%",
+      "grand_total": "Grand Total (Inc. Tax)",
+      "currency": "SAR",
+      "submit": "Submit Offer",
+      "cancel": "Cancel",
+      "back": "Back to Orders",
+      "confirm_title": "You are about to submit your price offer to this order.",
+      "confirm_submit": "Submit",
+      "success_title": "Offer submitted successfully",
+      "view_offer": "View Quote",
+      "go_to_orders": "Go to Orders",
+      "error_generic": "Unable to submit the offer. Please try again.",
+      "loading": "Loading...",
+      "view_title": "Submitted Offer",
+      "back_to_requests": "Back to Quotation Requests",
+      "offer_status": "Offer Status",
+      "order_status": "Order Status",
+      "offer_date": "Offer Date",
+      "buyer_details": "Buyer Details",
+      "company": "Company Name",
+      "city": "City",
+      "company_address": "Address",
+      "item_total": "Item Total"
     },
     "dialog": {
       "confirm_close_order": "You are about to close the order",
@@ -422,6 +463,10 @@
       "title": "Order Offer Details - Trade Global",
       "description": "View order offer details"
     },
+    "SubmitOffer": {
+      "title": "Submit Offer - Trade Global",
+      "description": "Submit a price offer on an order"
+    },
     "CreateOrder": {
       "title": "Create Order - Trade Global",
       "description": "Create a new order"
@@ -469,7 +514,7 @@
       "quantity": "Quantity",
       "actions": "Actions",
       "submit_quote": "Submit Quote",
-      "view_quote": "View Submitted Quote",
+      "view_quote": "View Submitted Offer",
       "cannot_submit": "Cannot Submit"
     }
   }

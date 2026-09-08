@@ -169,39 +169,26 @@ export default function QuotationsListView() {
         </Box>
       );
     },
-    actions_cell: (row: QuotationOffer) => {
-      const cannotAct = row.orderStatus === "closed" && row.status === "pending";
-      const hasActed = row.status !== "pending";
-
-      if (cannotAct) {
-        return (
-          <Typography variant="subtitle2" sx={{ color: "#FF3B30", fontWeight: 700, fontSize: "0.75rem" }}>
-            {t("table.cannot_submit")}
-          </Typography>
-        );
-      }
-
-      return (
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => router.push(`/orders/${row.orderId}/${row.id}?role=supplier`)}
-          sx={{
-            bgcolor: hasActed ? "#0B5A3C" : "#10754E",
-            color: "white",
-            fontWeight: 700,
-            borderRadius: "4px",
-            fontSize: "0.75rem",
-            px: 2,
-            py: 0.75,
-            boxShadow: "none",
-            "&:hover": { bgcolor: hasActed ? "#094730" : "#0c5b3c", boxShadow: "none" },
-          }}
-        >
-          {hasActed ? t("table.view_quote") : t("table.submit_quote")}
-        </Button>
-      );
-    },
+actions_cell: (row: QuotationOffer) => (
+      <Button
+        variant="contained"
+        size="small"
+        onClick={() => router.push(`/orders/${row.orderId}/${row.id}?role=supplier`)}
+        sx={{
+          bgcolor: "#0B5A3C",
+          color: "white",
+          fontWeight: 700,
+          borderRadius: "4px",
+          fontSize: "0.75rem",
+          px: 2,
+          py: 0.75,
+          boxShadow: "none",
+          "&:hover": { bgcolor: "#094730", boxShadow: "none" },
+        }}
+      >
+        {t("table.view_quote")}
+      </Button>
+    ),
   };
 
   return (
