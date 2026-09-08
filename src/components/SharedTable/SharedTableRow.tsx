@@ -23,6 +23,8 @@ function SharedTableRow<T extends { id: string }>({
   }
   const popover = usePopover();
 
+  const visibleActions = actions?.filter((action) => (action.hide ? !action.hide(row) : true)) ?? [];
+
   return (
     <>
       <TableRow hover sx={rowStyle}>
@@ -36,7 +38,7 @@ function SharedTableRow<T extends { id: string }>({
           );
         })}
 
-        {!!actions?.length && (
+        {!!visibleActions.length && (
           <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap', borderBottom: 'none' }}>
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-vertical-fill" />
@@ -48,23 +50,30 @@ function SharedTableRow<T extends { id: string }>({
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ minWidth: 140 }}
+        // arrow="right-top"
+        sx={{ minWidth: 140, justifyContent: 'center', alignItems: 'center',p: 1  }}
       >
-        <MenuList>
-          {actions
-            ?.filter((action) => (action.hide ? !action.hide(row) : true))
-            .map((action, index) => (
+        <MenuList >
+          {visibleActions.map((action, index) => (
               <MenuItem
                 key={index}
                 onClick={() => {
                   action.onClick(row);
                   popover.onClose();
                 }}
-                sx={action.sx}
+                sx={{
+                  gap: 5,
+                  // px: 1.25,
+                  py: 0.75,
+                  borderRadius: 1,
+                  fontSize: '0.9rem',
+                  ...action.sx,
+                }}
               >
-                <ListItemIcon>{action.icon}</ListItemIcon>
-                <ListItemText>{action.label}</ListItemText>
+                <ListItemIcon sx={{ minWidth: 0, mr: 0 }}>
+                  {action.icon}
+                </ListItemIcon>
+                <ListItemText sx={{ m: 0 }}>{action.label}</ListItemText>
               </MenuItem>
             ))}
         </MenuList>

@@ -224,7 +224,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
         <Button
           variant="outlined"
           onClick={() => router.push("/orders")}
-          startIcon={<Iconify icon="solar:arrow-left-bold" width={16} />}
+          
           sx={{
             borderColor: "#10754E",
             color: "#10754E",
@@ -232,10 +232,12 @@ export default function OrdersOfferCreateView({ id }: Props) {
             fontWeight: 600,
             px: 2.5,
             py: 1,
+            gap: 1,
             textTransform: "none",
             "&:hover": { borderColor: "#0c5b3c", bgcolor: "rgba(16,117,78,0.04)" },
           }}
         >
+          <Iconify icon="solar:arrow-right-bold" width={16} />
           {t("submit_offer.back")}
         </Button>
       </Box>
