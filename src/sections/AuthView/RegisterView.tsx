@@ -3,14 +3,17 @@
 import { useState } from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "src/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
+import { useToast } from "src/components/toast";
+import { useAuth } from "src/contexts/AuthContext";
+import { registerAction } from "src/actions/auth";
+import { UI_TO_ROLE, type AuthAccountType } from "src/types/auth";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
 
 type EntityTab = "supplier" | "buyer";
-type AccountType = "company" | "individual";
 
 function ToggleTabs({
   value,
@@ -55,9 +58,9 @@ function AccountTypeRadio({
   onChange,
   options,
 }: {
-  value: AccountType;
-  onChange: (value: AccountType) => void;
-  options: { value: AccountType; label: string }[];
+  value: AuthAccountType;
+  onChange: (value: AuthAccountType) => void;
+  options: { value: AuthAccountType; label: string }[];
 }) {
   return (
     <Stack direction="row" spacing={2}>
@@ -91,18 +94,53 @@ function AccountTypeRadio({
 
 export default function RegisterView() {
   const t = useTranslations("Auth");
+  const locale = useLocale();
   const router = useRouter();
+  const toast = useToast();
+  const { setAuthFlow } = useAuth();
 
   const [entity, setEntity] = useState<EntityTab>("buyer");
-  const [accountType, setAccountType] = useState<AccountType>("company");
+  const [accountType, setAccountType] = useState<AuthAccountType>("Company");
   const [nameOrCompany, setNameOrCompany] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    console.log("register", { entity, accountType, nameOrCompany, phone });
-    router.push("/auth/complete-profile");
+  const handleSubmit = async () => {
+    if (!nameOrCompany || !phone || !password || !confirmPassword) {
+      toast.error(t("register_required"));
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast.error(t("password_mismatch"));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const result = await registerAction(
+        {
+          role: UI_TO_ROLE[entity],
+          type: accountType,
+          name: nameOrCompany,
+          phoneNumber: phone,
+          password,
+          confirmPassword,
+        },
+        locale
+      );
+      setAuthFlow({
+        mode: "register",
+        completionToken: result.completionToken,
+        phoneNumber: result.phoneNumber,
+      });
+      router.push("/auth/complete-profile");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("register_failed"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -128,14 +166,14 @@ export default function RegisterView() {
           value={accountType}
           onChange={setAccountType}
           options={[
-            { value: "company", label: t("company") },
-            { value: "individual", label: t("individual") },
+            { value: "Company", label: t("company") },
+            { value: "Individual", label: t("individual") },
           ]}
         />
 
         <Box>
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
-            {accountType === "company" ? t("company_name") : t("full_name")}
+            {accountType === "Company" ? t("company_name") : t("full_name")}
           </Typography>
           <TextField
             fullWidth
@@ -153,7 +191,7 @@ export default function RegisterView() {
             fullWidth
             size="small"
             value={phone}
-            placeholder="+20 1236765"
+            placeholder="+966 5 1234 5678"
             onChange={(e) => setPhone(e.target.value)}
           />
         </Box>
@@ -190,6 +228,7 @@ export default function RegisterView() {
           variant="contained"
           fullWidth
           disableElevation
+          disabled={loading}
           sx={{
             bgcolor: GREEN,
             color: "#fff",
@@ -199,7 +238,7 @@ export default function RegisterView() {
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
-          {t("register_cta")}
+          {loading ? t("loading") : t("register_cta")}
         </Button>
       </Stack>
     </AuthShell>

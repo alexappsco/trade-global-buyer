@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "src/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
+import { loginAction } from "src/actions/auth";
+import { UI_TO_ROLE } from "src/types/auth";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
@@ -15,23 +17,43 @@ type UserRole = "buyer" | "supplier";
 
 export default function SignInView() {
   const t = useTranslations("Auth");
+  const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
-  const { setRole } = useAuth();
+  const { setAuthFlow } = useAuth();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [role, setLocalRole] = useState<UserRole | null>(null);
   const [roleError, setRoleError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!role) {
       setRoleError(true);
       return;
     }
-    console.log("signin", { phone, password, role });
-    setRole(role);
-    toast.success(t("signin_success"));
-    router.push("/");
+    if (!phone || !password) {
+      toast.error(t("signin_required"));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const challenge = await loginAction(
+        { role: UI_TO_ROLE[role], phoneNumber: phone, password },
+        locale
+      );
+      setAuthFlow({
+        mode: "login",
+        challengeId: challenge.challengeId,
+        phoneNumber: phone,
+      });
+      router.push("/auth/otp");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("signin_failed"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -88,7 +110,7 @@ export default function SignInView() {
             fullWidth
             size="small"
             value={phone}
-            placeholder="+20 1236765"
+            placeholder="+966 5 1234 5678"
             onChange={(e) => setPhone(e.target.value)}
           />
         </Box>
@@ -124,6 +146,7 @@ export default function SignInView() {
           variant="contained"
           fullWidth
           disableElevation
+          disabled={loading}
           sx={{
             bgcolor: GREEN,
             color: "#fff",
@@ -132,7 +155,7 @@ export default function SignInView() {
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
-          {t("signin_cta")}
+          {loading ? t("loading") : t("signin_cta")}
         </Button>
       </Stack>
     </AuthShell>

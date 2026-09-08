@@ -161,7 +161,6 @@ export default function ProfileView() {
             >
               <Button
                 variant="contained"
-                startIcon={<EditOutlinedIcon sx={{ fontSize: 18 }} />}
                 onClick={() => router.push(paths.profile.edit)}
                 sx={{
                   bgcolor: '#1E8057',
@@ -173,8 +172,10 @@ export default function ProfileView() {
                   fontWeight: 'bold',
                   boxShadow: 'none',
                   textTransform: 'none',
+                  gap: 1,
                 }}
               >
+                <EditOutlinedIcon sx={{ fontSize: 18 }} />
                 {t('edit_profile')}
               </Button>
 
@@ -303,7 +304,6 @@ export default function ProfileView() {
         <Button
           fullWidth
           variant="contained"
-          startIcon={<EditOutlinedIcon sx={{ fontSize: 18 }} />}
           onClick={() => router.push(paths.profile.edit)}
           sx={{
             bgcolor: '#1E8057',
@@ -314,8 +314,10 @@ export default function ProfileView() {
             fontWeight: 'bold',
             boxShadow: 'none',
             textTransform: 'none',
+            gap: 1,
           }}
         >
+          <EditOutlinedIcon sx={{ fontSize: 18 }} />
           {t('edit_profile')}
         </Button>
       </Container>

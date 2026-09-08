@@ -623,7 +623,6 @@ export default function InvoicesDetailsView({ id }: Props) {
           <Button
             variant="contained"
             onClick={() => window.print()}
-            startIcon={<Iconify icon="solar:printer-bold" width={18} />}
             sx={{
               bgcolor: '#10754E',
               color: 'white',
@@ -633,9 +632,11 @@ export default function InvoicesDetailsView({ id }: Props) {
               px: 5,
               py: 1.2,
               boxShadow: 'none',
+              gap: 1,
               '&:hover': { bgcolor: '#0B5337', boxShadow: 'none' },
             }}
           >
+            <Iconify icon="solar:printer-bold" width={18} />
             طباعة
           </Button>
         </Box>
@@ -659,7 +660,6 @@ export default function InvoicesDetailsView({ id }: Props) {
 
         <Button
           variant="contained"
-          startIcon={<Iconify icon="solar:eye-bold" width={18} />}
           onClick={() => router.push(`/orders/${invoice.orderId}/1`)}
           sx={{
             bgcolor: '#10754E',
@@ -669,9 +669,11 @@ export default function InvoicesDetailsView({ id }: Props) {
             px: 2.5,
             py: 0.8,
             boxShadow: 'none',
+            gap: 1,
             '&:hover': { bgcolor: '#0B5337', boxShadow: 'none' },
           }}
         >
+          <Iconify icon="solar:eye-bold" width={18} />
           تصفح تفاصيل المشترين
         </Button>
       </Box>

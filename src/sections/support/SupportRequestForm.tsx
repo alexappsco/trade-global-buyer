@@ -67,10 +67,10 @@ export default function SupportRequestForm({
           type="button"
           variant="contained"
           color="primary"
-          startIcon={<VisibilityOutlinedIcon  sx={{ fontSize: 20 }} />}
           onClick={onCancel}
           sx={{ fontWeight: 700, gap: 1, alignSelf: { xs: "flex-start", sm: "center" } }}
         >
+          <VisibilityOutlinedIcon sx={{ fontSize: 20 }} />
           {t("view_requests")}
         </Button>
       </Stack>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'src/i18n/routing';
 import {
@@ -25,7 +25,10 @@ import {
 
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
-import { getOrderById, OfferItem } from './orders-mock';
+import { getOrderDetails, closeOrder } from 'src/actions/orders';
+import { getOrderQuotationOffers } from 'src/actions/quotations';
+import type { Order } from 'src/types/order';
+import type { QuotationOffer } from 'src/types/quotation';
 
 interface Props {
   id: string;
@@ -36,8 +39,40 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const locale = useLocale();
   const router = useRouter();
   const isRtl = locale === 'ar';
+  const currency = locale === 'ar' ? 'ر.س' : 'SAR';
+  const formatMoney = (value: number) =>
+    `${value.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
+  const formatDate = (value: string) => (value ? new Date(value).toLocaleDateString(locale) : '—');
 
-  const order = useMemo(() => getOrderById(id), [id]);
+  const [order, setOrder] = useState<Order | null>(null);
+  const [offers, setOffers] = useState<QuotationOffer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOffersLoading, setIsOffersLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const res = await getOrderDetails(id);
+      if (res.success && res.data) {
+        setOrder(res.data);
+      }
+      setIsLoading(false);
+    };
+    fetchOrder();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      setIsOffersLoading(true);
+      const res = await getOrderQuotationOffers(id, { sorting: 'creationTime desc', skipCount: 0, maxResultCount: 1000 });
+      if (res.success && res.data) {
+        setOffers(res.data.items || []);
+      } else {
+        setOffers([]);
+      }
+      setIsOffersLoading(false);
+    };
+    fetchOffers();
+  }, [id]);
 
   // Alert State
   const [showAlert, setShowAlert] = useState(true);
@@ -61,75 +96,58 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const [deliveryAnchor, setDeliveryAnchor] = useState<null | HTMLElement>(null);
   const [statusAnchor, setStatusAnchor] = useState<null | HTMLElement>(null);
 
-  // Localized Values Helpers
-  const translateValue = (val: string) => {
-    if (locale === 'en') {
-      switch (val) {
-        case 'لابتوب': return 'Laptop';
-        case 'ماوس': return 'Mouse';
-        case 'كيبورد': return 'Keyboard';
-        case 'التفاصيل': return 'Details';
-        case 'مورد ١': return 'Supplier 1';
-        case 'مورد ٢': return 'Supplier 2';
-        case 'مورد ٣': return 'Supplier 3';
-        case 'الرياض': return 'Riyadh';
-        case 'مجاني': return 'Free';
-        case 'مفتوح': return 'Open';
-        case 'مغلق': return 'Closed';
-        default: return val;
-      }
-    }
-    return val;
-  };
-
-  const getStatusText = (status: 'accepted' | 'rejected' | 'closed') => {
+  const getStatusText = (status: QuotationOffer['status']) => {
     switch (status) {
       case 'accepted':
         return t('details.offers.accepted');
-      case 'rejected':
+      case 'declined':
         return t('details.offers.rejected');
       case 'closed':
         return t('details.offers.closed');
+      case 'pending':
+        return locale === 'ar' ? 'قيد الانتظار' : 'Pending';
       default:
         return status;
     }
   };
 
-  const getStatusColor = (status: 'accepted' | 'rejected' | 'closed') => {
+  const getStatusColor = (status: QuotationOffer['status']) => {
     switch (status) {
       case 'accepted':
-        return '#00B8D9'; // Blue / Info
-      case 'rejected':
-        return '#FF3B30'; // Red / Error
+        return '#006838';
+      case 'declined':
+        return '#FF3B30';
       case 'closed':
-        return '#637381'; // Grey
+        return '#637381';
+      case 'pending':
+        return '#B76E00';
       default:
-        return 'text.primary';
+        return 'text.primary' as string;
     }
   };
 
-  // Filtered Offers
   const filteredOffers = useMemo(() => {
-    if (!order.offers) return [];
-
-    return order.offers.filter((offer) => {
+    return offers.filter((offer) => {
+      const supplier = offer.counterparty?.legalCompanyName || '';
+      const address = offer.counterparty?.companyAddress || '';
       const matchesSearch =
-        offer.supplier.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        translateValue(offer.supplier).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        offer.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        translateValue(offer.address).toLowerCase().includes(searchQuery.toLowerCase());
+        supplier.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        address.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesPrice = !selectedPrice || String(offer.total) === selectedPrice;
-      const matchesDate = !selectedDate || offer.date.startsWith(selectedDate);
+      const matchesPrice = !selectedPrice || String(offer.subtotal + offer.deliveryFee) === selectedPrice;
+      const matchesDate = !selectedDate || offer.submissionTime.startsWith(selectedDate);
       const matchesDelivery =
         !selectedDelivery ||
-        (selectedDelivery === 'free' && offer.delivery === 'مجاني') ||
-        (selectedDelivery === 'paid' && offer.delivery !== 'مجاني');
-      const matchesStatus = !selectedStatus || offer.status === selectedStatus;
+        (selectedDelivery === 'free' && offer.deliveryFee === 0) ||
+        (selectedDelivery === 'paid' && offer.deliveryFee > 0);
+      const matchesStatus = !selectedStatus || offer.status === selectedStatus || (selectedStatus === 'rejected' && offer.status === 'declined');
 
       return matchesSearch && matchesPrice && matchesDate && matchesDelivery && matchesStatus;
     });
-  }, [order.offers, searchQuery, selectedPrice, selectedDate, selectedDelivery, selectedStatus, locale]);
+  }, [offers, searchQuery, selectedPrice, selectedDate, selectedDelivery, selectedStatus, locale, t]);
+
+  const priceOptions = [...new Set(offers.map((o) => String(o.subtotal + o.deliveryFee)))];
+  const dateOptions = [...new Set(offers.map((o) => o.submissionTime.slice(0, 10)))];
 
   // Checkbox row select
   const handleSelectAll = (checked: boolean) => {
@@ -150,6 +168,26 @@ export default function ConfirmOrderStatus({ id }: Props) {
 
   const isAllSelected =
     filteredOffers.length > 0 && selectedRows.length === filteredOffers.length;
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!order) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {locale === 'ar' ? 'لم يتم العثور على الطلب' : 'Order not found'}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -209,7 +247,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
             color: '#161C24',
           }}
         >
-          {t('details.title', { id: order.id })}
+          {t('details.title', { id: order.orderNumber })}
         </Typography>
 
         <Button
@@ -265,7 +303,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
               {t('details.info.created_at')}
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
-              {order.creationDate}
+              {new Date(order.creationTime).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
@@ -274,7 +312,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
               {t('details.info.delivery_date')}
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
-              {order.deliveryDate}
+              {new Date(order.deliveryDate).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
@@ -323,10 +361,10 @@ export default function ConfirmOrderStatus({ id }: Props) {
               {order.items?.map((item, idx) => (
                 <TableRow key={idx} hover>
                   <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600, color: '#006838', textDecoration: 'underline', cursor: 'pointer' }}>
-                    {translateValue(item.name)}
+                    {item.name}
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: 600 }}>
-                    {item.qty}
+                    {item.quantity}
                   </TableCell>
                   <TableCell align={isRtl ? 'right' : 'left'} sx={{ color: 'text.secondary' }}>
                     {t('details.table.detail_link')}
@@ -409,8 +447,6 @@ export default function ConfirmOrderStatus({ id }: Props) {
             <Button
               variant="outlined"
               onClick={(e) => setPriceAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -420,10 +456,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedPrice ? selectedPrice : t('details.filters.price')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={priceAnchor}
@@ -439,23 +478,24 @@ export default function ConfirmOrderStatus({ id }: Props) {
               >
                 {locale === 'ar' ? 'الكل' : 'All'}
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  setSelectedPrice('5000');
-                  setPriceAnchor(null);
-                }}
-                selected={selectedPrice === '5000'}
-              >
-                5000
-              </MenuItem>
+              {priceOptions.map((price) => (
+                <MenuItem
+                  key={price}
+                  onClick={() => {
+                    setSelectedPrice(price);
+                    setPriceAnchor(null);
+                  }}
+                  selected={selectedPrice === price}
+                >
+                  {formatMoney(Number(price))}
+                </MenuItem>
+              ))}
             </Menu>
 
             {/* Date Filter */}
             <Button
               variant="outlined"
               onClick={(e) => setDateAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:calendar-minimum-outline" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -465,10 +505,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:calendar-minimum-outline" width={16} />
               {selectedDate ? selectedDate : t('filter_date')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={dateAnchor}
@@ -484,23 +527,24 @@ export default function ConfirmOrderStatus({ id }: Props) {
               >
                 {locale === 'ar' ? 'الكل' : 'All'}
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  setSelectedDate('2025-11-10');
-                  setDateAnchor(null);
-                }}
-                selected={selectedDate === '2025-11-10'}
-              >
-                2025-11-10
-              </MenuItem>
+              {dateOptions.map((date) => (
+                <MenuItem
+                  key={date}
+                  onClick={() => {
+                    setSelectedDate(date);
+                    setDateAnchor(null);
+                  }}
+                  selected={selectedDate === date}
+                >
+                  {date}
+                </MenuItem>
+              ))}
             </Menu>
 
             {/* Delivery Filter */}
             <Button
               variant="outlined"
               onClick={(e) => setDeliveryAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -510,9 +554,11 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedDelivery
                 ? selectedDelivery === 'free'
                   ? t('details.offers.free_delivery')
@@ -520,6 +566,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
                   ? 'مدفوع'
                   : 'Paid'
                 : t('details.filters.delivery')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={deliveryAnchor}
@@ -559,8 +606,6 @@ export default function ConfirmOrderStatus({ id }: Props) {
             <Button
               variant="outlined"
               onClick={(e) => setStatusAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -570,10 +615,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedStatus ? getStatusText(selectedStatus as 'accepted') : t('filter_status')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={statusAnchor}
@@ -588,6 +636,15 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 selected={selectedStatus === null}
               >
                 {locale === 'ar' ? 'الكل' : 'All'}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setSelectedStatus('pending');
+                  setStatusAnchor(null);
+                }}
+                selected={selectedStatus === 'pending'}
+              >
+                {locale === 'ar' ? 'قيد الانتظار' : 'Pending'}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -661,60 +718,83 @@ export default function ConfirmOrderStatus({ id }: Props) {
             </TableHead>
 
             <TableBody>
-              {filteredOffers.map((row) => {
-                const isSelected = selectedRows.includes(row.id);
-                return (
-                  <TableRow
-                    key={row.id}
-                    hover
-                    selected={isSelected}
-                    sx={{
-                      '&:hover': { bgcolor: '#F9FAFB' },
-                      '&.Mui-selected': { bgcolor: 'rgba(0, 104, 56, 0.04)' },
-                      '&.Mui-selected:hover': { bgcolor: 'rgba(0, 104, 56, 0.08)' },
-                    }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        size="small"
-                        checked={isSelected}
-                        onChange={(e) => handleSelectRow(row.id, e.target.checked)}
-                        sx={{ color: '#C4CDD5', '&.Mui-checked': { color: '#006838' } }}
-                      />
-                    </TableCell>
+              {isOffersLoading && (
+                <TableRow>
+                  <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
 
-                    <TableCell align={isRtl ? 'right' : 'left'}>{translateValue(row.supplier)}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{translateValue(row.address)}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{row.total}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{row.totalWithTax}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>{row.date}</TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'}>
-                      {row.delivery === 'مجاني' ? t('details.offers.free_delivery') : row.delivery}
-                    </TableCell>
-                    
-                    <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 700, color: getStatusColor(row.status) }}>
-                      {getStatusText(row.status)}
-                    </TableCell>
+              {!isOffersLoading &&
+                filteredOffers.map((row) => {
+                  const isSelected = selectedRows.includes(row.id);
+                  return (
+                    <TableRow
+                      key={row.id}
+                      hover
+                      selected={isSelected}
+                      sx={{
+                        '&:hover': { bgcolor: '#F9FAFB' },
+                        '&.Mui-selected': { bgcolor: 'rgba(0, 104, 56, 0.04)' },
+                        '&.Mui-selected:hover': { bgcolor: 'rgba(0, 104, 56, 0.08)' },
+                      }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          size="small"
+                          checked={isSelected}
+                          onChange={(e) => handleSelectRow(row.id, e.target.checked)}
+                          sx={{ color: '#C4CDD5', '&.Mui-checked': { color: '#006838' } }}
+                        />
+                      </TableCell>
 
-                    <TableCell align="center">
-                      <IconButton
-                        size="small"
-                        onClick={() => router.push(`/orders/${order.id}/${row.id}`)}
-                        sx={{ color: '#637381' }}
-                      >
-                        <Iconify icon="solar:eye-outline" width={18} />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600, color: '#006838' }}>
+                        {row.counterparty?.legalCompanyName || '—'}
+                      </TableCell>
 
-              {filteredOffers.length === 0 && (
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ color: 'text.secondary' }}>
+                        {row.counterparty?.companyAddress || '—'}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600 }}>
+                        {formatMoney(row.subtotal + row.deliveryFee)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 600 }}>
+                        {formatMoney(row.grandTotal)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'}>
+                        {formatDate(row.submissionTime)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'}>
+                        {row.deliveryFee === 0
+                          ? t('details.offers.free_delivery')
+                          : formatMoney(row.deliveryFee)}
+                      </TableCell>
+
+                      <TableCell align={isRtl ? 'right' : 'left'} sx={{ fontWeight: 700, color: getStatusColor(row.status) }}>
+                        {getStatusText(row.status)}
+                      </TableCell>
+
+                      <TableCell align="center">
+                        <IconButton
+                          size="small"
+                          onClick={() => router.push(`/orders/${order.id}/${row.id}`)}
+                          sx={{ color: '#637381' }}
+                        >
+                          <Iconify icon="solar:eye-outline" width={18} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+
+              {!isOffersLoading && filteredOffers.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -736,9 +816,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
         title={t('dialog.confirm_close_order')}
         confirmLabel={t('dialog.confirm')}
         cancelLabel={t('dialog.cancel')}
-        onConfirm={() => {
+        onConfirm={async () => {
           setOpenCloseConfirm(false);
-          setOpenCloseSuccess(true);
+          const res = await closeOrder(id);
+          if (res.success) {
+            setOpenCloseSuccess(true);
+            setOrder(res.data as Order); // Update order state with new closed status
+          }
         }}
       />
 

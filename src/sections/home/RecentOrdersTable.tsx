@@ -74,7 +74,6 @@ export default function RecentOrdersTable() {
       >
         <Button
           variant="contained"
-          startIcon={<AddIcon />}
           sx={{
             bgcolor: '#1B8354',
             '&:hover': { bgcolor: '#146440' },
@@ -82,8 +81,10 @@ export default function RecentOrdersTable() {
             px: 3,
             boxShadow: 'none',
             fontWeight: 'bold',
+            gap: 1,
           }}
         >
+          <AddIcon />
           {tHome('recent_orders.add_new')}
         </Button>
         <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>

@@ -17,6 +17,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import ShieldRoundedIcon from "@mui/icons-material/ShieldRounded";
 
 interface SidebarProps {
   open: boolean;
@@ -120,9 +121,11 @@ const isVisible = (item: SidebarItem) => {
         p: 2,
         height: "100%",
         bgcolor: "#FFFFFF",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <List disablePadding>
+      <List disablePadding sx={{ flex: 1 }}>
         {sidebarItems.filter(isVisible).map((item) => {
           const active = isActive(item.path);
 
@@ -168,6 +171,38 @@ const isVisible = (item: SidebarItem) => {
           );
         })}
       </List>
+
+      {role && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.25,
+            p: 1.5,
+            borderRadius: 2,
+            bgcolor: role === "buyer" ? "rgba(27,131,84,0.06)" : "rgba(124,58,237,0.06)",
+            border: "1px solid",
+            borderColor: role === "buyer" ? "rgba(27,131,84,0.15)" : "rgba(124,58,237,0.15)",
+            direction: isRtl ? "rtl" : "ltr",
+          }}
+        >
+          <ShieldRoundedIcon
+            sx={{
+              fontSize: 20,
+              color: role === "buyer" ? "#1B8354" : "#7C3AED",
+            }}
+          />
+          <Typography
+            sx={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: role === "buyer" ? "#1B8354" : "#7C3AED",
+            }}
+          >
+            {t(`role.${role}`)}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 

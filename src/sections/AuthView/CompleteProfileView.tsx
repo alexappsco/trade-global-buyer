@@ -13,6 +13,8 @@ import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
+import { useAuth } from "src/contexts/AuthContext";
+import { completeProfileAction } from "src/actions/auth";
 
 const GREEN = "#1E8E59";
 
@@ -35,9 +37,10 @@ function Field({
 
 export default function CompleteProfileView() {
   const t = useTranslations("Auth");
+  const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
-  const locale = useLocale();
+  const { authFlow, clearAuthFlow } = useAuth();
 
   const sectors =
     locale === "ar"
@@ -46,9 +49,12 @@ export default function CompleteProfileView() {
   const cities =
     locale === "ar" ? ["القاهرة", "الرياض", "دبي"] : ["Cairo", "Riyadh", "Dubai"];
 
+  const completionToken = authFlow?.completionToken;
+  const registeredPhone = authFlow?.phoneNumber ?? "";
+
   const [form, setForm] = useState({
     legalName: "",
-    phone: "",
+    phone: registeredPhone,
     email: "",
     sector: "",
     taxNumber: "",
@@ -57,13 +63,57 @@ export default function CompleteProfileView() {
     address: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const update = (field: keyof typeof form, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleSave = () => {
-    console.log("complete_profile", form);
-    toast.success(t("profile_saved"));
-    router.push("/");
+  const handleSave = async () => {
+    if (!completionToken) {
+      toast.error(t("session_expired"));
+      router.push("/auth/register");
+      return;
+    }
+
+    const required: (keyof typeof form)[] = [
+      "legalName",
+      "phone",
+      "email",
+      "sector",
+      "taxNumber",
+      "commercialRecord",
+      "city",
+      "address",
+    ];
+    if (required.some((field) => !form[field])) {
+      toast.error(t("profile_required"));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await completeProfileAction(
+        {
+          completionToken,
+          legalCompanyName: form.legalName,
+          phoneNumber: form.phone,
+          email: form.email,
+          sector: form.sector,
+          taxNumber: form.taxNumber,
+          commercialRecord: form.commercialRecord,
+          city: form.city,
+          companyAddress: form.address,
+        },
+        locale
+      );
+      clearAuthFlow();
+      toast.success(t("profile_saved"));
+      router.push("/auth/login");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("profile_failed"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -98,7 +148,7 @@ export default function CompleteProfileView() {
               fullWidth
               size="small"
               value={form.phone}
-              placeholder="+20 1236765"
+              placeholder="+966 5 1234 5678"
               onChange={(e) => update("phone", e.target.value)}
             />
           </Field>
@@ -173,6 +223,7 @@ export default function CompleteProfileView() {
             variant="contained"
             fullWidth
             disableElevation
+            disabled={loading}
             sx={{
               bgcolor: GREEN,
               color: "#fff",
@@ -181,7 +232,7 @@ export default function CompleteProfileView() {
               "&:hover": { bgcolor: "#17734A" },
             }}
           >
-            {t("save")}
+            {loading ? t("loading") : t("save")}
           </Button>
           <Button
             onClick={() => router.back()}

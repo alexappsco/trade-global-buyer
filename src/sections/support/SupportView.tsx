@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Box, Typography } from "@mui/material";
 import DeleteDialog from "src/components/dialog/delete";
 import { useToast } from "src/components/toast";
 import { useTranslations } from "next-intl";
 import type { CreateSupportRequestInput, SupportPageView, SupportRequest } from "src/types/support";
-import { MOCK_SUPPORT_REQUESTS } from "./mock-support-requests";
+import {
+  getSupportRequests,
+  createSupportRequest,
+  deleteSupportRequest,
+} from "src/actions/support";
 import SupportRequestForm from "./SupportRequestForm";
 import SupportRequestList from "./SupportRequestList";
 
@@ -13,38 +18,57 @@ const DEMO_EMAIL = "buyer@example.com";
 
 export default function SupportView() {
   const t = useTranslations("Support");
-  const { success } = useToast();
+  const toast = useToast();
   const [view, setView] = useState<SupportPageView>("list");
-  const [requests, setRequests] = useState<SupportRequest[]>(MOCK_SUPPORT_REQUESTS);
+  const [requests, setRequests] = useState<SupportRequest[]>([]);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleCreate = (input: CreateSupportRequestInput) => {
-    const now = new Date();
-    const nextNumber = String(464256 + requests.length);
-
-    const nextRequest: SupportRequest = {
-      id: now.getTime().toString(),
-      requestNumber: nextNumber,
-      email: input.email,
-      details: input.details,
-      status: "under_review",
-      createdAt: now.toISOString(),
+  useEffect(() => {
+    const fetchRequests = async () => {
+      setIsLoading(true);
+      const res = await getSupportRequests({
+        sorting: "createdAt desc",
+        skipCount: 0,
+        maxResultCount: 1000,
+      });
+      if (!res.success) {
+        toast.error(res.error);
+        setIsLoading(false);
+        return;
+      }
+      setRequests(res.data.items || []);
+      setIsLoading(false);
     };
+    fetchRequests();
+  }, []);
 
-    setRequests((prev) => [nextRequest, ...prev]);
+  const handleCreate = async (input: CreateSupportRequestInput) => {
+    const res = await createSupportRequest(input);
+    if (!res.success) {
+      toast.error(res.error || t("submit_error"));
+      return;
+    }
+    setRequests((prev) => [res.data, ...prev]);
     setView("list");
-    success(t("created_success"));
+    toast.success(t("created_success"));
   };
 
-
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!deleteId) {
       return;
     }
-
+    setIsDeleting(true);
+    const res = await deleteSupportRequest(deleteId);
+    setIsDeleting(false);
+    if (!res.success) {
+      toast.error(res.error);
+      return;
+    }
     setRequests((prev) => prev.filter((request) => request.id !== deleteId));
     setDeleteId(null);
-    success(t("deleted_success"));
+    toast.success(t("deleted_success"));
   };
 
   if (view === "create") {
@@ -59,15 +83,24 @@ export default function SupportView() {
 
   return (
     <>
-      <SupportRequestList
-        requests={requests}
-        onCreate={() => setView("create")}
-        onDelete={setDeleteId}
-      />
+      {isLoading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {t("loading")}
+          </Typography>
+        </Box>
+      ) : (
+        <SupportRequestList
+          requests={requests}
+          onCreate={() => setView("create")}
+          onDelete={setDeleteId}
+        />
+      )}
       <DeleteDialog
         open={Boolean(deleteId)}
         onClose={() => setDeleteId(null)}
         onConfirm={handleConfirmDelete}
+        loading={isDeleting}
       />
     </>
   );
