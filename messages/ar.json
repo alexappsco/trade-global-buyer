@@ -9,16 +9,27 @@
     },
     "Label": {
       "no_data": "لا توجد بيانات"
+    },
+    "Server": {
+      "not_found": "المورد غير موجود",
+      "unauthorized": "غير مصرح. يرجى تسجيل الدخول مجدداً.",
+      "internal_server_error": "حدث خطأ داخلي في الخادم",
+      "service_not_available": "الخدمة غير متاحة حالياً",
+      "unexpected_error": "حدث خطأ غير متوقع"
     }
   },
   "Sidebar": {
     "home": "الرئيسية",
-    "my_orders": "الطلبات التي قدمتها",
+    "my_orders": "الطلبات",
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
     "invoices": "الفواتير",
-    "quotation_requests": "طلبات عروض الأسعار"
+    "quotation_requests": "طلبات عروض الأسعار",
+    "role": {
+      "buyer": "مشتري",
+      "supplier": "مورد"
+    }
   },
   "Home": {
     "stats": {
@@ -60,7 +71,9 @@
       "creation_date": "تاريخ الانشاء",
       "status": "الحالة",
       "actions": "اجراءات",
-      "action_view": "عرض"
+      "action_view": "عرض",
+      "action_close": "إغلاق",
+      "action_submit_quote": "تقديم عرض سعر"
     },
     "status": {
       "open": "مفتوح",
@@ -134,6 +147,46 @@
         "download": "تحميل تفاصيل العرض"
       }
     },
+    "submit_offer": {
+      "title": "تقديم عرض سعر",
+      "order_title": "الطلب رقم #{id}",
+      "not_allowed": "فقط الموردين يمكنهم تقديم العروض",
+      "not_open": "هذا الطلب غير مفتوح لتلقي العروض",
+      "item": "الصنف",
+      "quantity": "الكمية",
+      "details": "تفاصيل الطلب",
+      "unit_price": "سعر الوحدة",
+      "unit_price_required": "أدخل سعر وحدة صحيح",
+      "delivery_fee": "رسوم التوصيل",
+      "delivery_fee_placeholder": "0.00",
+      "duration": "مدة التوريد (أيام)",
+      "duration_placeholder": "مثال: 7",
+      "duration_required": "أدخل مدة توريد صحيحة",
+      "subtotal": "الاجمالي",
+      "tax": "الضريبة 15%",
+      "grand_total": "الاجمالي شامل الضريبة",
+      "currency": "ر.س",
+      "submit": "إرسال العرض",
+      "cancel": "الغاء",
+      "back": "العودة للطلبات",
+      "confirm_title": "أنت على وشك ارسال عرض سعر على هذا الطلب.",
+      "confirm_submit": "إرسال",
+      "success_title": "تم ارسال العرض بنجاح",
+      "view_offer": "اطلع عليه الان",
+      "go_to_orders": "الذهاب الى الطلبات",
+      "error_generic": "تعذر إرسال العرض. حاول مرة أخرى.",
+      "loading": "جاري التحميل...",
+      "view_title": "العرض المقدم",
+      "back_to_requests": "العودة لطلبات عروض الأسعار",
+      "offer_status": "حالة العرض",
+      "order_status": "حالة الطلب",
+      "offer_date": "تاريخ العرض",
+      "buyer_details": "بيانات المشتري",
+      "company": "اسم الشركة",
+      "city": "المدينة",
+      "company_address": "العنوان",
+      "item_total": "إجمالي الصنف"
+    },
     "dialog": {
       "confirm_close_order": "انت على وشك اغلاق الطلب",
       "success_close_order": "تم اغلاق الطلب بنجاح",
@@ -185,6 +238,8 @@
     "details_required": "تفاصيل الطلب مطلوبة",
     "created_success": "تم إرسال طلب الدعم بنجاح",
     "deleted_success": "تم حذف الطلب",
+    "loading": "جاري التحميل...",
+    "submit_error": "تعذر إرسال الطلب. يرجى المحاولة مجدداً.",
     "request_number": "رقم الطلب",
     "request_date": "تاريخ الطلب",
     "request_time": "وقت الطلب",
@@ -200,31 +255,11 @@
     "title": "الاشعارات",
     "dismiss": "إغلاق الإشعار",
     "dismissed": "تم إغلاق الإشعار",
-    "empty": "لا توجد إشعارات"
-  },
-  "CreateQuoteRequest": {
-    "page_title": "إنشاء طلب عرض سعر",
-    "create_request": "إنشاء الطلب",
-    "create_request_hint": "(يمكنك إنشاء أكثر من طلب)",
-    "add": "اضافة",
-    "delete": "حذف",
-    "send": "ارسال",
-    "cancel": "الغاء",
-    "category": "الفئة",
-    "request_title": "عنوان الطلب",
-    "delivery_date": "تاريخ التسليم",
-    "item": "الصنف",
-    "quantity": "الكمية",
-    "details": "تفاصيل الطلب",
-    "actions": "الاجراءات",
-    "category_placeholder": "أدخل الفئة",
-    "title_placeholder": "أدخل عنوان الطلب",
-    "item_placeholder": "اسم الصنف",
-    "quantity_placeholder": "0",
-    "details_placeholder": "تفاصيل الصنف",
-    "send_success": "تم إرسال طلب عرض السعر بنجاح",
-    "go_to_orders": "الذهاب إلى الطلبات",
-      "cancel_success": "تم إلغاء الطلب"
+    "loading": "جاري التحميل...",
+    "empty": "لا توجد إشعارات",
+    "mark_all_read": "تحديد الكل كمقروء",
+    "marking": "جاري التحديد...",
+    "unread_count": "غير مقروء: {count}"
   },
   "Auth": {
     "signin_title": "تسجيل دخول",
@@ -280,7 +315,24 @@
     "stats_label_2": "نسبة الرضا",
     "stats_label_3": "نسبة الرضا",
     "agree_label": "أوافق على الشروط والأحكام وسياسة الخصوصية",
-    "legal_tooltip": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية الخاصة بالمنصة، وتتعهد بصحة البيانات المدخلة."
+    "legal_tooltip": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية الخاصة بالمنصة، وتتعهد بصحة البيانات المدخلة.",
+    "loading": "يرجى الانتظار...",
+    "signin_required": "يرجى إدخال رقم الجوال وكلمة السر",
+    "signin_failed": "فشل تسجيل الدخول. تحقق من بياناتك",
+    "register_required": "يرجى تعبئة جميع الحقول المطلوبة",
+    "password_mismatch": "كلمتا السر غير متطابقتين",
+    "register_failed": "فشل التسجيل. حاول مرة أخرى",
+    "session_expired": "انتهت جلستك. يرجى البدء من جديد",
+    "profile_required": "يرجى تعبئة جميع الحقول المطلوبة",
+    "profile_failed": "تعذر حفظ ملفك الشخصي. حاول مرة أخرى",
+    "otp_sent": "تم إرسال رمز التحقق",
+    "otp_failed": "فشل التحقق. حاول مرة أخرى",
+    "forgot_failed": "تعذر إرسال رمز إعادة التعيين. حاول مرة أخرى",
+    "change_password_title": "تعيين كلمة سر جديدة",
+    "change_password_subtitle": "أدخل كلمة السر الجديدة لإكمال إعادة تعيين كلمة السر.",
+    "new_password": "كلمة السر الجديدة",
+    "password_changed": "تم تغيير كلمة السر بنجاح",
+    "password_change_failed": "فشل تغيير كلمة السر. حاول مرة أخرى"
   },
 
   "Invoices": {
@@ -325,17 +377,6 @@
       "print": "طباعة"
     }
   },
-  "Quotations": {
-    "title": "طلبات عروض الأسعار",
-    "search": "بحث",
-    "table": {
-      "quantity": "الكمية",
-      "actions": "اجراءات",
-      "submit_quote": "تقديم عرض سعر",
-      "cannot_submit": "لا يمكن تقديم عرض",
-      "view_quote": "اطلاع على العرض الذي قدمته"
-    }
-  },
   "Metadata": {
     "Home": {
       "title": "الرئيسية - تجارة عالمية",
@@ -360,6 +401,10 @@
     "CompleteProfile": {
       "title": "إكمال الملف الشخصي - تجارة عالمية",
       "description": "إكمال إعداد الملف الشخصي في تجارة عالمية"
+    },
+    "ChangePassword": {
+      "title": "تغيير كلمة السر - تجارة عالمية",
+      "description": "تعيين كلمة سر جديدة لحسابك في تجارة عالمية"
     },
     "EditProfile": {
       "title": "تعديل الملف الشخصي - تجارة عالمية",
@@ -389,6 +434,10 @@
       "title": "تفاصيل عرض الطلب - تجارة عالمية",
       "description": "عرض تفاصيل عرض الطلب"
     },
+    "SubmitOffer": {
+      "title": "تقديم عرض سعر - تجارة عالمية",
+      "description": "تقديم عرض سعر على الطلب"
+    },
     "CreateOrder": {
       "title": "إنشاء طلب - تجارة عالمية",
       "description": "إنشاء طلب جديد"
@@ -404,6 +453,42 @@
     "Support": {
       "title": "الدعم الفني - تجارة عالمية",
       "description": "الحصول على المساعدة وتذاكر الدعم"
+    }
+  },
+  "CreateQuoteRequest": {
+    "page_title": "إنشاء طلب جديد",
+    "create_request": "إنشاء طلب",
+    "create_request_hint": "يمكنك إضافة أكثر من طلب في نفس الوقت",
+    "category": "الفئة",
+    "category_placeholder": "اختر الفئة",
+    "request_title": "عنوان الطلب",
+    "title_placeholder": "أدخل عنوان الطلب",
+    "delivery_date": "تاريخ التسليم",
+    "actions": "إجراءات",
+    "details": "التفاصيل",
+    "quantity": "الكمية",
+    "item": "الصنف",
+    "details_placeholder": "أدخل تفاصيل الصنف",
+    "item_placeholder": "أدخل اسم الصنف",
+    "add": "إضافة صنف",
+    "delete": "حذف الطلب",
+    "send": "إرسال",
+    "sending": "جاري الإرسال...",
+    "cancel": "إلغاء",
+    "cancel_success": "تم إلغاء الطلب",
+    "submit_error": "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مجدداً.",
+    "send_success": "تم إرسال طلب عرض السعر بنجاح",
+    "go_to_orders": "الذهاب إلى الطلبات"
+  },
+  "Quotations": {
+    "title": "طلبات عروض الأسعار",
+    "table": {
+      "grand_total": "الإجمالي شامل الضريبة",
+      "quantity": "الكمية",
+      "actions": "إجراءات",
+      "submit_quote": "تقديم عرض سعر",
+      "view_quote": "اطلاع على العرض الذي قدمته",
+      "cannot_submit": "لا يمكن تقديم عرض"
     }
   }
 }

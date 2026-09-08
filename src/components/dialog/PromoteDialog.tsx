@@ -241,13 +241,6 @@ export default function PromoteDialog({
               variant="contained"
               onClick={handleSubmit}
               disabled={!canSubmit}
-              startIcon={
-                loading ? (
-                  <CircularProgress size={18} color="inherit" />
-                ) : (
-                  <Iconify icon="solar:rocket-bold" />
-                )
-              }
               sx={{
                 height: 46,
                 px: 3,
@@ -260,6 +253,11 @@ export default function PromoteDialog({
                 "&:hover": { bgcolor: "#4338CA" },
               }}
             >
+              {loading ? (
+                <CircularProgress size={18} color="inherit" />
+              ) : (
+                <Iconify icon="solar:rocket-bold" />
+              )}
               {loading ? labels.submitting : labels.submit}
             </Button>
           </Box>

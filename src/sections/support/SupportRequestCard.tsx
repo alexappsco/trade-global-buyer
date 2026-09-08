@@ -102,10 +102,10 @@ export default function SupportRequestCard({ request, onDelete }: SupportRequest
           <Button
             color="error"
             variant="contained"
-            startIcon={<DeleteOutlineRoundedIcon />}
             onClick={() => onDelete(request.id)}
-            sx={{ minWidth: 120, fontWeight: 700 }}
+            sx={{ minWidth: 120, fontWeight: 700, gap: 1 }}
           >
+            <DeleteOutlineRoundedIcon />
             {t("delete")}
           </Button>
         </Box>

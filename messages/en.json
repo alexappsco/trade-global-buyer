@@ -9,16 +9,27 @@
     },
     "Label": {
       "no_data": "No data"
+    },
+    "Server": {
+      "not_found": "Resource not found",
+      "unauthorized": "Unauthorized. Please log in again.",
+      "internal_server_error": "An internal server error occurred",
+      "service_not_available": "Service is currently unavailable",
+      "unexpected_error": "An unexpected error occurred"
     }
   },
   "Sidebar": {
     "home": "Home",
-    "my_orders": "My Orders",
+    "my_orders": "Orders",
     "profile": "Profile",
     "notifications": "Notifications",
     "support": "Support",
     "invoices": "Invoices",
-    "quotation_requests": "Quotation Requests"
+    "quotation_requests": "Quotation Requests",
+    "role": {
+      "buyer": "Buyer",
+      "supplier": "Supplier"
+    }
   },
   "Home": {
     "stats": {
@@ -60,7 +71,9 @@
       "creation_date": "Creation Date",
       "status": "Status",
       "actions": "Actions",
-      "action_view": "View"
+      "action_view": "View",
+      "action_close": "Close",
+      "action_submit_quote": "Submit Quote"
     },
     "status": {
       "open": "Open",
@@ -134,6 +147,46 @@
         "download": "Download Offer Details"
       }
     },
+    "submit_offer": {
+      "title": "Submit Price Offer",
+      "order_title": "Order #{id}",
+      "not_allowed": "Only suppliers can submit offers",
+      "not_open": "This order is not open for offers",
+      "item": "Item",
+      "quantity": "Quantity",
+      "details": "Details",
+      "unit_price": "Unit Price",
+      "unit_price_required": "Enter a valid unit price",
+      "delivery_fee": "Delivery Fee",
+      "delivery_fee_placeholder": "0.00",
+      "duration": "Supply Duration (Days)",
+      "duration_placeholder": "e.g. 7",
+      "duration_required": "Enter a valid supply duration",
+      "subtotal": "Subtotal",
+      "tax": "Tax 15%",
+      "grand_total": "Grand Total (Inc. Tax)",
+      "currency": "SAR",
+      "submit": "Submit Offer",
+      "cancel": "Cancel",
+      "back": "Back to Orders",
+      "confirm_title": "You are about to submit your price offer to this order.",
+      "confirm_submit": "Submit",
+      "success_title": "Offer submitted successfully",
+      "view_offer": "View Quote",
+      "go_to_orders": "Go to Orders",
+      "error_generic": "Unable to submit the offer. Please try again.",
+      "loading": "Loading...",
+      "view_title": "Submitted Offer",
+      "back_to_requests": "Back to Quotation Requests",
+      "offer_status": "Offer Status",
+      "order_status": "Order Status",
+      "offer_date": "Offer Date",
+      "buyer_details": "Buyer Details",
+      "company": "Company Name",
+      "city": "City",
+      "company_address": "Address",
+      "item_total": "Item Total"
+    },
     "dialog": {
       "confirm_close_order": "You are about to close the order",
       "success_close_order": "The order has been closed successfully",
@@ -185,6 +238,8 @@
     "details_required": "Request details are required",
     "created_success": "Support request sent successfully",
     "deleted_success": "Request deleted",
+    "loading": "Loading...",
+    "submit_error": "Unable to send the request. Please try again.",
     "request_number": "Request number",
     "request_date": "Request date",
     "request_time": "Request time",
@@ -200,31 +255,11 @@
     "title": "Notifications",
     "dismiss": "Dismiss notification",
     "dismissed": "Notification dismissed",
-    "empty": "No notifications"
-  },
-  "CreateQuoteRequest": {
-    "page_title": "Create Quote Request",
-    "create_request": "Create Request",
-    "create_request_hint": "(You can create more than one request)",
-    "add": "Add",
-    "delete": "Delete",
-    "send": "Send",
-    "cancel": "Cancel",
-    "category": "Category",
-    "request_title": "Request Title",
-    "delivery_date": "Delivery Date",
-    "item": "Item",
-    "quantity": "Quantity",
-    "details": "Details",
-    "actions": "Actions",
-    "category_placeholder": "Enter category",
-    "title_placeholder": "Enter request title",
-    "item_placeholder": "Item name",
-    "quantity_placeholder": "0",
-    "details_placeholder": "Item details",
-    "send_success": "Quote request sent successfully",
-    "go_to_orders": "Go to Orders",
-      "cancel_success": "Request cancelled"
+    "loading": "Loading...",
+    "empty": "No notifications",
+    "mark_all_read": "Mark all as read",
+    "marking": "Marking...",
+    "unread_count": "{count} unread"
   },
   "Auth": {
     "signin_title": "Sign In",
@@ -280,7 +315,24 @@
     "stats_label_2": "Satisfaction rate",
     "stats_label_3": "Satisfaction rate",
     "agree_label": "I agree to the Terms & Conditions and Privacy Policy",
-    "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data."
+    "legal_tooltip": "By continuing you agree to the platform's Terms of Use and Privacy Policy, and commit to the accuracy of the entered data.",
+    "loading": "Please wait...",
+    "signin_required": "Please enter your phone number and password",
+    "signin_failed": "Sign in failed. Please check your credentials",
+    "register_required": "Please fill in all required fields",
+    "password_mismatch": "Passwords do not match",
+    "register_failed": "Registration failed. Please try again",
+    "session_expired": "Your session has expired. Please start again",
+    "profile_required": "Please fill in all required fields",
+    "profile_failed": "Failed to save your profile. Please try again",
+    "otp_sent": "A verification code has been sent",
+    "otp_failed": "Verification failed. Please try again",
+    "forgot_failed": "Unable to send the reset code. Please try again",
+    "change_password_title": "Set a New Password",
+    "change_password_subtitle": "Enter your new password to complete the password reset.",
+    "new_password": "New Password",
+    "password_changed": "Password changed successfully",
+    "password_change_failed": "Failed to change password. Please try again"
   },
 
   "Invoices": {
@@ -325,17 +377,6 @@
       "print": "Print"
     }
   },
-  "Quotations": {
-    "title": "Quotation Requests",
-    "search": "Search",
-    "table": {
-      "quantity": "Quantity",
-      "actions": "Actions",
-      "submit_quote": "Submit Quote",
-      "cannot_submit": "Cannot Submit Quote",
-      "view_quote": "View Submitted Quote"
-    }
-  },
   "Metadata": {
     "Home": {
       "title": "Home - Trade Global",
@@ -360,6 +401,10 @@
     "CompleteProfile": {
       "title": "Complete Profile - Trade Global",
       "description": "Complete your Trade Global Buyer profile setup"
+    },
+    "ChangePassword": {
+      "title": "Change Password - Trade Global",
+      "description": "Set a new password for your Trade Global account"
     },
     "EditProfile": {
       "title": "Edit Profile - Trade Global",
@@ -389,6 +434,10 @@
       "title": "Order Offer Details - Trade Global",
       "description": "View order offer details"
     },
+    "SubmitOffer": {
+      "title": "Submit Offer - Trade Global",
+      "description": "Submit a price offer on an order"
+    },
     "CreateOrder": {
       "title": "Create Order - Trade Global",
       "description": "Create a new order"
@@ -404,6 +453,42 @@
     "Support": {
       "title": "Support - Trade Global",
       "description": "Get help and submit support tickets"
+    }
+  },
+  "CreateQuoteRequest": {
+    "page_title": "Create New Order",
+    "create_request": "Create Order",
+    "create_request_hint": "You can add more than one order at the same time",
+    "category": "Category",
+    "category_placeholder": "Select a category",
+    "request_title": "Order Title",
+    "title_placeholder": "Enter order title",
+    "delivery_date": "Delivery Date",
+    "actions": "Actions",
+    "details": "Details",
+    "quantity": "Quantity",
+    "item": "Item",
+    "details_placeholder": "Enter item details",
+    "item_placeholder": "Enter item name",
+    "add": "Add Item",
+    "delete": "Delete Order",
+    "send": "Send",
+    "sending": "Sending...",
+    "cancel": "Cancel",
+    "cancel_success": "Order cancelled",
+    "submit_error": "An error occurred while submitting the order. Please try again.",
+    "send_success": "Quote request sent successfully",
+    "go_to_orders": "Go to Orders"
+  },
+  "Quotations": {
+    "title": "Quotation Requests",
+    "table": {
+      "grand_total": "Grand Total (incl. VAT)",
+      "quantity": "Quantity",
+      "actions": "Actions",
+      "submit_quote": "Submit Quote",
+      "view_quote": "View Submitted Offer",
+      "cannot_submit": "Cannot Submit"
     }
   }
 }

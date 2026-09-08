@@ -60,6 +60,8 @@ async function apiRequest<TResponse, TBody = undefined>(
   }
 
   try {
+    console.log(`[API Request] ${method} ${url}`);
+    console.log(`[API Request] Has token: ${!!token}, Lang: ${lang}`);
     const response = await fetch(url, {
       method,
       headers,

@@ -50,7 +50,7 @@ export default function SupportRequestList({
       const matchesStatus = status === "all" || request.status === status;
       const matchesSearch =
         !query ||
-        request.requestNumber.toLowerCase().includes(query) ||
+        String(request.requestNumber).toLowerCase().includes(query) ||
         request.details.toLowerCase().includes(query) ||
         request.email.toLowerCase().includes(query);
 
@@ -95,20 +95,20 @@ export default function SupportRequestList({
           <Button
             variant="contained"
             color="primary"
-            startIcon={<FilterListRoundedIcon />}
             onClick={(event) => setFilterAnchor(event.currentTarget)}
-            sx={{ fontWeight: 700 ,gap: 1}}
+            sx={{ fontWeight: 700, gap: 1 }}
           >
+            <FilterListRoundedIcon />
             {t("filter")}
           </Button>
 
           <Button
             variant="contained"
             color="primary"
-            startIcon={<AddRoundedIcon />}
             onClick={onCreate}
-            sx={{ fontWeight: 700,gap: 1 }}
+            sx={{ fontWeight: 700, gap: 1 }}
           >
+            <AddRoundedIcon />
             {t("create_request")}
           </Button>
         </Stack>
