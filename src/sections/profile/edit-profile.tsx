@@ -138,7 +138,6 @@ export default function EditProfile() {
 
               <Button
                 variant="contained"
-                startIcon={<EditOutlinedIcon />}
                 sx={{
                   bgcolor: '#1B8354',
                   '&:hover': { bgcolor: '#146440' },
@@ -148,8 +147,10 @@ export default function EditProfile() {
                   fontSize: '0.875rem',
                   boxShadow: 'none',
                   textTransform: 'none',
+                  gap: 1,
                 }}
               >
+                <EditOutlinedIcon />
                 {t('edit_profile')}
               </Button>
             </Stack>

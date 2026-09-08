@@ -374,8 +374,6 @@ export default function OrdersListView() {
             <Button
               variant="outlined"
               onClick={(e) => setCategoryAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: "24px",
                 borderColor: "#DFE3E8",
@@ -389,11 +387,13 @@ export default function OrdersListView() {
                 "&:hover": { borderColor: "#C4CDD5", bgcolor: "#F4F6F8" },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedCategoryCode
                 ? locale === "ar"
                   ? catalog.find((c) => c.code === selectedCategoryCode)?.nameAr
                   : catalog.find((c) => c.code === selectedCategoryCode)?.nameEn
                 : t("filter_category")}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={categoryAnchor}
@@ -429,8 +429,6 @@ export default function OrdersListView() {
             <Button
               variant="outlined"
               onClick={(e) => setClassificationAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: "24px",
                 borderColor: "#DFE3E8",
@@ -444,11 +442,13 @@ export default function OrdersListView() {
                 "&:hover": { borderColor: "#C4CDD5", bgcolor: "#F4F6F8" },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedClassificationCode
                 ? locale === "ar"
                   ? classifications.find((c) => c.code === selectedClassificationCode)?.nameAr
                   : classifications.find((c) => c.code === selectedClassificationCode)?.nameEn
                 : t("filter_classification")}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={classificationAnchor}
@@ -482,8 +482,6 @@ export default function OrdersListView() {
             <Button
               variant="outlined"
               onClick={(e) => setDateAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:calendar-minimum-outline" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: "24px",
                 borderColor: "#DFE3E8",
@@ -497,7 +495,9 @@ export default function OrdersListView() {
                 "&:hover": { borderColor: "#C4CDD5", bgcolor: "#F4F6F8" },
               }}
             >
+              <Iconify icon="solar:calendar-minimum-outline" width={16} />
               {selectedDate ? selectedDate : t("filter_date")}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={dateAnchor}
@@ -537,8 +537,6 @@ export default function OrdersListView() {
             <Button
               variant="outlined"
               onClick={(e) => setStatusAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: "24px",
                 borderColor: "#DFE3E8",
@@ -552,11 +550,13 @@ export default function OrdersListView() {
                 "&:hover": { borderColor: "#C4CDD5", bgcolor: "#F4F6F8" },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedStatus
                 ? selectedStatus === "open"
                   ? t("status.open")
                   : t("status.closed")
                 : t("filter_status")}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={statusAnchor}

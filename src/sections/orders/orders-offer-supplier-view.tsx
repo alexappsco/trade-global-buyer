@@ -146,7 +146,6 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
         <Button
           variant="outlined"
           onClick={() => router.push("/quotation-requests")}
-          startIcon={<Iconify icon="solar:arrow-left-bold" width={16} />}
           sx={{
             borderColor: "#10754E",
             color: "#10754E",
@@ -155,9 +154,11 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
             px: 2.5,
             py: 1,
             textTransform: "none",
+            gap: 1,
             "&:hover": { borderColor: "#0c5b3c", bgcolor: "rgba(16,117,78,0.04)" },
           }}
         >
+          <Iconify icon="solar:arrow-left-bold" width={16} />
           {t("submit_offer.back_to_requests")}
         </Button>
       </Box>

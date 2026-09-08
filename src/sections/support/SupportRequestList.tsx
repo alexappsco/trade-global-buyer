@@ -95,20 +95,20 @@ export default function SupportRequestList({
           <Button
             variant="contained"
             color="primary"
-            startIcon={<FilterListRoundedIcon />}
             onClick={(event) => setFilterAnchor(event.currentTarget)}
-            sx={{ fontWeight: 700 ,gap: 1}}
+            sx={{ fontWeight: 700, gap: 1 }}
           >
+            <FilterListRoundedIcon />
             {t("filter")}
           </Button>
 
           <Button
             variant="contained"
             color="primary"
-            startIcon={<AddRoundedIcon />}
             onClick={onCreate}
-            sx={{ fontWeight: 700,gap: 1 }}
+            sx={{ fontWeight: 700, gap: 1 }}
           >
+            <AddRoundedIcon />
             {t("create_request")}
           </Button>
         </Stack>

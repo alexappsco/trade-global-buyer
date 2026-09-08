@@ -447,8 +447,6 @@ export default function ConfirmOrderStatus({ id }: Props) {
             <Button
               variant="outlined"
               onClick={(e) => setPriceAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -458,10 +456,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedPrice ? selectedPrice : t('details.filters.price')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={priceAnchor}
@@ -495,8 +496,6 @@ export default function ConfirmOrderStatus({ id }: Props) {
             <Button
               variant="outlined"
               onClick={(e) => setDateAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:calendar-minimum-outline" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -506,10 +505,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:calendar-minimum-outline" width={16} />
               {selectedDate ? selectedDate : t('filter_date')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={dateAnchor}
@@ -543,8 +545,6 @@ export default function ConfirmOrderStatus({ id }: Props) {
             <Button
               variant="outlined"
               onClick={(e) => setDeliveryAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -554,9 +554,11 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedDelivery
                 ? selectedDelivery === 'free'
                   ? t('details.offers.free_delivery')
@@ -564,6 +566,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
                   ? 'مدفوع'
                   : 'Paid'
                 : t('details.filters.delivery')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={deliveryAnchor}
@@ -603,8 +606,6 @@ export default function ConfirmOrderStatus({ id }: Props) {
             <Button
               variant="outlined"
               onClick={(e) => setStatusAnchor(e.currentTarget)}
-              startIcon={<Iconify icon="solar:filter-bold-duotone" width={16} />}
-              endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={14} />}
               sx={{
                 borderRadius: '24px',
                 borderColor: '#DFE3E8',
@@ -614,10 +615,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 px: 2,
                 py: 0.75,
                 textTransform: 'none',
+                gap: 1,
                 '&:hover': { borderColor: '#C4CDD5', bgcolor: '#F4F6F8' },
               }}
             >
+              <Iconify icon="solar:filter-bold-duotone" width={16} />
               {selectedStatus ? getStatusText(selectedStatus as 'accepted') : t('filter_status')}
+              <Iconify icon="eva:arrow-ios-downward-fill" width={14} />
             </Button>
             <Menu
               anchorEl={statusAnchor}

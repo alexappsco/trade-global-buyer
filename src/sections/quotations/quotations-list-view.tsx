@@ -252,10 +252,9 @@ actions_cell: (row: QuotationOffer) => (
 
           {/* Filters */}
           <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-            <Button
+<Button
               variant="outlined"
               onClick={(e) => setStatusAnchor(e.currentTarget)}
-              endIcon={<Iconify icon="eva:chevron-down-fill" width={16} sx={{ ml: 1.5 }} />}
               sx={{
                 borderColor: "#EAEFEA",
                 color: "#637381",
@@ -263,9 +262,11 @@ actions_cell: (row: QuotationOffer) => (
                 px: 2.5,
                 py: 1,
                 fontWeight: 600,
+                gap: 1,
                 "&:hover": { borderColor: "#B7CBB7", bgcolor: "transparent" },
               }}
             >
+              <Iconify icon="eva:chevron-down-fill" width={16} />
               {selectedStatus ? getStatusLabel(selectedStatus) : tOrders("filter_status")}
             </Button>
             <Menu anchorEl={statusAnchor} open={Boolean(statusAnchor)} onClose={() => setStatusAnchor(null)}>
