@@ -253,31 +253,11 @@
     "title": "الاشعارات",
     "dismiss": "إغلاق الإشعار",
     "dismissed": "تم إغلاق الإشعار",
-    "empty": "لا توجد إشعارات"
-  },
-  "CreateQuoteRequest": {
-    "page_title": "إنشاء طلب عرض سعر",
-    "create_request": "إنشاء الطلب",
-    "create_request_hint": "(يمكنك إنشاء أكثر من طلب)",
-    "add": "اضافة",
-    "delete": "حذف",
-    "send": "ارسال",
-    "cancel": "الغاء",
-    "category": "الفئة",
-    "request_title": "عنوان الطلب",
-    "delivery_date": "تاريخ التسليم",
-    "item": "الصنف",
-    "quantity": "الكمية",
-    "details": "تفاصيل الطلب",
-    "actions": "الاجراءات",
-    "category_placeholder": "أدخل الفئة",
-    "title_placeholder": "أدخل عنوان الطلب",
-    "item_placeholder": "اسم الصنف",
-    "quantity_placeholder": "0",
-    "details_placeholder": "تفاصيل الصنف",
-    "send_success": "تم إرسال طلب عرض السعر بنجاح",
-    "go_to_orders": "الذهاب إلى الطلبات",
-      "cancel_success": "تم إلغاء الطلب"
+    "loading": "جاري التحميل...",
+    "empty": "لا توجد إشعارات",
+    "mark_all_read": "تحديد الكل كمقروء",
+    "marking": "جاري التحديد...",
+    "unread_count": "غير مقروء: {count}"
   },
   "Auth": {
     "signin_title": "تسجيل دخول",
@@ -395,17 +375,6 @@
       "print": "طباعة"
     }
   },
-  "Quotations": {
-    "title": "طلبات عروض الأسعار",
-    "search": "بحث",
-    "table": {
-      "quantity": "الكمية",
-      "actions": "اجراءات",
-      "submit_quote": "تقديم عرض سعر",
-      "cannot_submit": "لا يمكن تقديم عرض",
-      "view_quote": "اطلاع على العرض الذي قدمته"
-    }
-  },
   "Metadata": {
     "Home": {
       "title": "الرئيسية - تجارة عالمية",
@@ -505,7 +474,9 @@
     "sending": "جاري الإرسال...",
     "cancel": "إلغاء",
     "cancel_success": "تم إلغاء الطلب",
-    "submit_error": "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مجدداً."
+    "submit_error": "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مجدداً.",
+    "send_success": "تم إرسال طلب عرض السعر بنجاح",
+    "go_to_orders": "الذهاب إلى الطلبات"
   },
   "Quotations": {
     "title": "طلبات عروض الأسعار",

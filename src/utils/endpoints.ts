@@ -14,4 +14,11 @@ export const endpoints = {
     decline: (id: string) => `/quotation-offers/${id}/decline`,
     submit: (orderId: string) => `/orders/${orderId}/quotation-offers`,
   },
+  notifications: {
+    list: '/notifications',
+    unreadCount: '/notifications/unread-count',
+    read: (id: string) => `/notifications/${id}/read`,
+    readAll: '/notifications/read-all',
+    dismiss: (id: string) => `/notifications/${id}`,
+  },
 };

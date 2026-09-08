@@ -253,31 +253,11 @@
     "title": "Notifications",
     "dismiss": "Dismiss notification",
     "dismissed": "Notification dismissed",
-    "empty": "No notifications"
-  },
-  "CreateQuoteRequest": {
-    "page_title": "Create Quote Request",
-    "create_request": "Create Request",
-    "create_request_hint": "(You can create more than one request)",
-    "add": "Add",
-    "delete": "Delete",
-    "send": "Send",
-    "cancel": "Cancel",
-    "category": "Category",
-    "request_title": "Request Title",
-    "delivery_date": "Delivery Date",
-    "item": "Item",
-    "quantity": "Quantity",
-    "details": "Details",
-    "actions": "Actions",
-    "category_placeholder": "Enter category",
-    "title_placeholder": "Enter request title",
-    "item_placeholder": "Item name",
-    "quantity_placeholder": "0",
-    "details_placeholder": "Item details",
-    "send_success": "Quote request sent successfully",
-    "go_to_orders": "Go to Orders",
-      "cancel_success": "Request cancelled"
+    "loading": "Loading...",
+    "empty": "No notifications",
+    "mark_all_read": "Mark all as read",
+    "marking": "Marking...",
+    "unread_count": "{count} unread"
   },
   "Auth": {
     "signin_title": "Sign In",
@@ -395,17 +375,6 @@
       "print": "Print"
     }
   },
-  "Quotations": {
-    "title": "Quotation Requests",
-    "search": "Search",
-    "table": {
-      "quantity": "Quantity",
-      "actions": "Actions",
-      "submit_quote": "Submit Quote",
-      "cannot_submit": "Cannot Submit Quote",
-      "view_quote": "View Submitted Quote"
-    }
-  },
   "Metadata": {
     "Home": {
       "title": "Home - Trade Global",
@@ -505,7 +474,9 @@
     "sending": "Sending...",
     "cancel": "Cancel",
     "cancel_success": "Order cancelled",
-    "submit_error": "An error occurred while submitting the order. Please try again."
+    "submit_error": "An error occurred while submitting the order. Please try again.",
+    "send_success": "Quote request sent successfully",
+    "go_to_orders": "Go to Orders"
   },
   "Quotations": {
     "title": "Quotation Requests",
