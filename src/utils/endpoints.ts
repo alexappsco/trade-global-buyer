@@ -1,4 +1,10 @@
 export const endpoints = {
+  auth: {
+    myInfo: '/auth/my-info',
+  },
+  dashboard: {
+    metrics: '/dashboard/metrics',
+  },
   orders: {
     list: '/orders',
     create: '/orders',

@@ -18,6 +18,11 @@
       "unexpected_error": "حدث خطأ غير متوقع"
     }
   },
+  "NotFound": {
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "back_home": "العودة إلى الرئيسية"
+  },
   "Sidebar": {
     "home": "الرئيسية",
     "my_orders": "الطلبات",
@@ -37,7 +42,8 @@
       "completed_orders": "طلبات مكتملة",
       "price_quotes": "عروض الأسعار",
       "active_orders": "طلبات نشطة",
-      "orders_count": "{count} طلب"
+      "orders_count": "{count} طلب",
+      "load_error": "تعذر تحميل الإحصائيات"
     },
     "categories": {
       "title": "الفئات",
@@ -202,7 +208,21 @@
     "account_info": "معلومات الحساب",
     "member_since": "عضو منذ {year}",
     "save": "حفظ",
+    "saving": "جارٍ الحفظ...",
     "cancel": "إلغاء",
+    "save_success": "تم تحديث الملف الشخصي بنجاح",
+    "loading": "جارٍ التحميل...",
+    "load_error": "تعذر تحميل معلومات الملف الشخصي",
+    "retry": "إعادة المحاولة",
+    "view_image": "عرض الصورة",
+    "edit_image": "تعديل الصورة",
+    "image_updated": "تم تحديث الصورة بنجاح",
+    "role_supplier": "مورد",
+    "role_buyer": "مشترٍ",
+    "account_company": "شركة",
+    "account_individual": "فرد",
+    "account_type": "نوع الحساب",
+    "quick_actions": "إجراءات سريعة",
     "fields": {
       "name": "الاسم",
       "company": "اسم الشركة",

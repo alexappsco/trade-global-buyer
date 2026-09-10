@@ -44,6 +44,22 @@ export interface MyInfo {
   city: string;
   companyAddress: string;
   profileCompletedAt: string;
+  profileImageUrl?: string;
+  coverImageUrl?: string;
+}
+
+export interface UpdateMyInfoPayload {
+  name: string;
+  legalCompanyName: string;
+  phoneNumber: string;
+  email: string;
+  sector: string;
+  taxNumber: string;
+  commercialRecord: string;
+  city: string;
+  companyAddress: string;
+  profileImage?: File | null;
+  coverImage?: File | null;
 }
 
 export interface VerifyResetOtpResponse {

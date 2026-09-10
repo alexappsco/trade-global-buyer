@@ -16,6 +16,10 @@ export type ApiErrorResponse = {
   validationErrors?: unknown;
 };
 
+export type ApiSingleResponse<TResponse> =
+  | { success: true; data: TResponse }
+  | { success: false; error: string };
+
 export type ApiResponse<TResponse> = ApiSuccessResponse<TResponse> | ApiErrorResponse;
 
 export type RequestOptions = {

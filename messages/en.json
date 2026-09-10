@@ -18,6 +18,11 @@
       "unexpected_error": "An unexpected error occurred"
     }
   },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "back_home": "Back to Home"
+  },
   "Sidebar": {
     "home": "Home",
     "my_orders": "Orders",
@@ -37,7 +42,8 @@
       "completed_orders": "Completed Orders",
       "price_quotes": "Price Quotes",
       "active_orders": "Active Orders",
-      "orders_count": "{count} orders"
+      "orders_count": "{count} orders",
+      "load_error": "Failed to load statistics"
     },
     "categories": {
       "title": "Categories",
@@ -202,7 +208,21 @@
     "account_info": "Account Information",
     "member_since": "Member since {year}",
     "save": "Save",
+    "saving": "Saving...",
     "cancel": "Cancel",
+    "save_success": "Profile updated successfully",
+    "loading": "Loading...",
+    "load_error": "Failed to load profile information",
+    "retry": "Try again",
+    "view_image": "View image",
+    "edit_image": "Edit image",
+    "image_updated": "Image updated successfully",
+    "role_supplier": "Supplier",
+    "role_buyer": "Buyer",
+    "account_company": "Company",
+    "account_individual": "Individual",
+    "account_type": "Account Type",
+    "quick_actions": "Quick Actions",
     "fields": {
       "name": "Name",
       "company": "Company Name",
