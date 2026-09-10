@@ -88,13 +88,13 @@ export function AuthProvider({
   }, []);
 
   const persistSession = useCallback(
-    (flow: AuthFlowState, nextSession: UserSession) => {
+    async (flow: AuthFlowState, nextSession: UserSession) => {
       setAuthFlowState(flow);
       setSession(nextSession);
       try {
-        return saveAuthSession(nextSession);
+        await saveAuthSession(nextSession);
       } catch {
-        return Promise.resolve();
+        /* session will be re-established on next protected navigation */
       }
     },
     []

@@ -78,7 +78,7 @@ export default function OtpView() {
           locale
         );
         clearAuthFlow();
-        persistSession({ mode: null }, session);
+        await persistSession({ mode: null }, session);
         toast.success(t("otp_verified"));
         router.push("/");
       }
