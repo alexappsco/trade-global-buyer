@@ -7,17 +7,16 @@ import {
   Box,
   Button,
   IconButton,
-  Paper,
   Stack,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   TextField,
   Typography,
-  MenuItem,
+  InputBase,
+  Autocomplete,
 } from "@mui/material";
 import { getOrdersCatalog, createOrder } from "src/actions/orders";
 import type { OrderCatalogItem } from "src/types/order";
@@ -27,6 +26,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslations } from "next-intl";
 import { useToast } from "src/components/toast";
 import { useRouter } from "src/i18n/routing";
+import * as Yup from "yup";
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
 const RED = "#D32F2F";
@@ -47,6 +47,19 @@ interface RequestBlock {
   items: ItemRow[];
 }
 
+interface ItemErrors {
+  name?: string;
+  quantity?: string;
+  details?: string;
+}
+
+interface BlockErrors {
+  categoryCode?: string;
+  title?: string;
+  deliveryDate?: string;
+  items?: ItemErrors[];
+}
+
 const createId = () =>
   typeof crypto !== "undefined" && crypto.randomUUID
     ? crypto.randomUUID()
@@ -64,7 +77,7 @@ const createBlock = (): RequestBlock => ({
   categoryCode: "",
   title: "",
   deliveryDate: "",
-  items: [],
+  items: [createItem()],
 });
 
 function GreenButton({
@@ -82,7 +95,7 @@ function GreenButton({
       sx={{
         bgcolor: GREEN,
         color: "#fff",
-        borderRadius: "8px",
+        borderRadius: "4px",
         gap: 1,
         px: 3,
         "&:hover": { bgcolor: GREEN_HOVER },
@@ -94,54 +107,20 @@ function GreenButton({
   );
 }
 
-function InfoField({
-  label,
-  value,
-  onChange,
-  type = "text",
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  type?: string;
-  placeholder?: string;
-}) {
-  return (
-    <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
-      <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#171717" }}>
-        {label}
-      </Typography>
-      <TextField
-        size="small"
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        fullWidth
-        sx={{
-          bgcolor: "#fff",
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "8px",
-          },
-        }}
-      />
-    </Stack>
-  );
-}
-
 function RequestFormBlock({
   block,
   onChange,
   onDelete,
   canDelete,
   catalog,
+  errors,
 }: {
   block: RequestBlock;
   onChange: (block: RequestBlock) => void;
   onDelete: () => void;
   canDelete: boolean;
   catalog: OrderCatalogItem[];
+  errors: BlockErrors;
 }) {
   const t = useTranslations("CreateQuoteRequest");
   const locale = useLocale();
@@ -164,157 +143,221 @@ function RequestFormBlock({
     onChange({ ...block, items: block.items.filter((item) => item.id !== itemId) });
 
   return (
-    <Paper
-      elevation={0}
+    <Box
       sx={{
-        bgcolor: "#fff",
-        border: "1px solid #E0E0E0",
+        bgcolor: "#FFFFFF",
+        border: "1px solid #CBD5E1",
         borderRadius: "12px",
-        p: { xs: 2, md: 3 },
+        p: "24px",
       }}
     >
-      <Stack
-        direction={{ xs: "column", md: "row" }}
-        spacing={{ xs: 2, md: 4 }}
-        sx={{ mb: 3, border: "1px solid #E0E0E0",
-        borderRadius: "12px",
-        p: { xs: 2, md: 3 }, }}
+      <Box
+        sx={{
+          border: "1px solid #CBD5E1",
+          borderRadius: "8px",
+          mb: "32px",
+          p: "16px 24px",
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+          gap: 2,
+        }}
       >
-        <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
-          <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#171717" }}>
+        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
+          <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
             {t("category")}
           </Typography>
-          <TextField
-            select
-            size="small"
-            value={block.categoryCode}
-            onChange={(e) => updateField("categoryCode", e.target.value)}
+          <Autocomplete
+            options={catalog}
+            getOptionLabel={(option) => locale === "ar" ? option.nameAr : option.nameEn}
+            value={catalog.find((c) => c.code === block.categoryCode) || null}
+            onChange={(_, newValue) => updateField("categoryCode", newValue ? newValue.code : "")}
             fullWidth
-            sx={{
-              bgcolor: "#fff",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px",
-              },
+            size="small"
+            renderInput={(params) => {
+              const { InputProps, ...rest } = params as any;
+              return (
+                <TextField
+                  {...rest}
+                  placeholder={t("category_placeholder")}
+                  variant="standard"
+                  error={Boolean(errors.categoryCode)}
+                  slotProps={{
+                    ...rest.slotProps,
+                    input: {
+                      ...InputProps,
+                      ...rest.slotProps?.input,
+                      disableUnderline: true,
+                      sx: {
+                        color: "#16A34A",
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        "& input": { textAlign: "start", padding: 0 },
+                      }
+                    }
+                  }}
+                />
+              );
             }}
-          >
-            <MenuItem value="" disabled>
-              {t("category_placeholder")}
-            </MenuItem>
-            {catalog.map((cat) => (
-              <MenuItem key={cat.code} value={cat.code}>
-                {locale === "ar" ? cat.nameAr : cat.nameEn}
-              </MenuItem>
-            ))}
-          </TextField>
+          />
+          {errors.categoryCode && (
+            <Typography sx={{ fontSize: "12px", color: "#EF4444", mt: 0.5 }}>{errors.categoryCode}</Typography>
+          )}
         </Stack>
-        <InfoField
-          label={t("request_title")}
-          value={block.title}
-          onChange={(v) => updateField("title", v)}
-          placeholder={t("title_placeholder")}
-        />
-        <InfoField
-          label={t("delivery_date")}
-          type="date"
-          value={block.deliveryDate}
-          onChange={(v) => updateField("deliveryDate", v)}
-        />
-      </Stack>
 
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
+        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
+          <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
+            {t("request_title")}
+          </Typography>
+          <InputBase
+            value={block.title}
+            onChange={(e) => updateField("title", e.target.value)}
+            placeholder={t("title_placeholder")}
+            error={Boolean(errors.title)}
+            sx={{
+              color: errors.title ? "#EF4444" : "#9CA3AF",
+              fontSize: "14px",
+              fontWeight: 400,
+              width: "100%",
+              "& input": { textAlign: "start", p: 0 }
+            }}
+          />
+          {errors.title && (
+            <Typography sx={{ fontSize: "12px", color: "#EF4444" }}>{errors.title}</Typography>
+          )}
+        </Stack>
+
+        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
+          <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
+            {t("delivery_date")}
+          </Typography>
+          <InputBase
+            type="date"
+            value={block.deliveryDate}
+            onChange={(e) => updateField("deliveryDate", e.target.value)}
+            error={Boolean(errors.deliveryDate)}
+            sx={{
+              color: errors.deliveryDate ? "#EF4444" : "#9CA3AF",
+              fontSize: "14px",
+              fontWeight: 400,
+              width: "100%",
+              "& input": { textAlign: "start", p: 0 }
+            }}
+          />
+          {errors.deliveryDate && (
+            <Typography sx={{ fontSize: "12px", color: "#EF4444" }}>{errors.deliveryDate}</Typography>
+          )}
+        </Stack>
+      </Box>
+
+      <Box sx={{ border: "1px solid #CBD5E1", borderRadius: "8px", overflow: "hidden", mb: "16px" }}>
+        <Table sx={{ width: "100%", borderCollapse: "collapse" }}>
+          <TableHead sx={{ bgcolor: "#F1F5F9", height: "40px" }}>
             <TableRow>
-              <TableCell sx={{ width: 64, fontWeight: 700, fontSize: 13 }}>
-                {t("actions")}
-              </TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: 13 }}>
-                {t("details")}
-              </TableCell>
-              <TableCell sx={{ width: 140, fontWeight: 700, fontSize: 13 }}>
-                {t("quantity")}
-              </TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: 13 }}>{t("item")}</TableCell>
+              <TableCell align="center" sx={{ width: "27%", borderBottom: "1px solid #CBD5E1", borderInlineEnd: "1px solid #E2E8F0", fontWeight: 700, fontSize: "13px", color: "#374151", py: 1 }}>{t("item")}</TableCell>
+              <TableCell align="center" sx={{ width: "27%", borderBottom: "1px solid #CBD5E1", borderInlineEnd: "1px solid #E2E8F0", fontWeight: 700, fontSize: "13px", color: "#374151", py: 1 }}>{t("quantity")}</TableCell>
+              <TableCell align="center" sx={{ width: "28%", borderBottom: "1px solid #CBD5E1", borderInlineEnd: "1px solid #E2E8F0", fontWeight: 700, fontSize: "13px", color: "#374151", py: 1 }}>{t("details")}</TableCell>
+              <TableCell align="center" sx={{ width: "18%", borderBottom: "1px solid #CBD5E1", fontWeight: 700, fontSize: "13px", color: "#374151", py: 1 }}>{t("actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {block.items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => removeItem(item.id)}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={item.details}
-                    placeholder={t("details_placeholder")}
-                    onChange={(e) => updateItem(item.id, "details", e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    type="number"
-                    value={item.quantity}
-                    placeholder="0"
-                    onChange={(e) => updateItem(item.id, "quantity", e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={item.name}
-                    placeholder={t("item_placeholder")}
-                    onChange={(e) => updateItem(item.id, "name", e.target.value)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+            {block.items.map((item, idx) => {
+              const itemErr = errors.items?.[idx] || {};
+              return (
+                <TableRow key={item.id} sx={{ "& td": { borderBottom: "1px solid #E2E8F0" }, "&:last-child td": { borderBottom: "none" } }}>
+                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+                    <InputBase
+                      value={item.name}
+                      onChange={(e) => updateItem(item.id, "name", e.target.value)}
+                      placeholder={t("item_placeholder")}
+                      error={Boolean(itemErr.name)}
+                      sx={{ color: itemErr.name ? "#EF4444" : "#16A34A", fontSize: "14px", fontWeight: 500, width: "100%", "& input": { textAlign: "center", p: 0 } }}
+                    />
+                    {itemErr.name && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.name}</Typography>}
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+                    <InputBase
+                      type="text"
+                      inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 1 }}
+                      value={item.quantity}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || /^[1-9]\d*$/.test(val)) {
+                          updateItem(item.id, "quantity", val);
+                        }
+                      }}
+                      placeholder="0"
+                      error={Boolean(itemErr.quantity)}
+                      sx={{ color: itemErr.quantity ? "#EF4444" : "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
+                    />
+                    {itemErr.quantity && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.quantity}</Typography>}
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+                    <InputBase
+                      value={item.details}
+                      onChange={(e) => updateItem(item.id, "details", e.target.value)}
+                      placeholder={t("details_placeholder")}
+                      error={Boolean(itemErr.details)}
+                      sx={{ color: itemErr.details ? "#EF4444" : "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
+                    />
+                    {itemErr.details && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.details}</Typography>}
+                  </TableCell>
+                  <TableCell align="center" sx={{ py: 1 }}>
+                    <IconButton
+                      size="small"
+                      onClick={() => removeItem(item.id)}
+                      sx={{ color: "#EF4444" }}
+                    >
+                      <DeleteIcon sx={{ fontSize: "18px" }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
-      </TableContainer>
+      </Box>
 
-      <Stack
-        direction={{ xs: "column-reverse", sm: "row" }}
-        spacing={2}
-        sx={{
-          mt: 3,
-          pt: 3,
-          borderTop: "1px solid #EEEEEE",
-          alignItems: { xs: "stretch", sm: "center" },
-          justifyContent: "flex-end",
-        }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+        <Button
+          onClick={addItem}
+          sx={{
+            height: "36px",
+            bgcolor: "#15803D",
+            color: "#FFFFFF",
+            borderRadius: "6px",
+            px: "16px",
+            fontSize: "14px",
+            fontWeight: 600,
+            display: "flex",
+            gap: "8px",
+            "&:hover": { bgcolor: "#166534" },
+          }}
+        >
+          <AddIcon sx={{ fontSize: "16px" }} />
+          {t("add")}
+        </Button>
         <Button
           onClick={onDelete}
           disabled={!canDelete}
-          variant="contained"
-          disableElevation
           sx={{
-            bgcolor: RED,
-            color: "#fff",
-            borderRadius: "4px",
-            gap: 1,
-            px: 3,
-            "&:hover": { bgcolor: RED_HOVER },
-            "&.Mui-disabled": { bgcolor: RED, opacity: 0.5, color: "#fff" },
+            height: "36px",
+            bgcolor: "#DC2626",
+            color: "#FFFFFF",
+            borderRadius: "6px",
+            px: "16px",
+            fontSize: "14px",
+            fontWeight: 600,
+            display: "flex",
+            gap: "8px",
+            "&:hover": { bgcolor: "#B91C1C" },
+            "&.Mui-disabled": { bgcolor: "#DC2626", opacity: 0.5, color: "#fff" },
           }}
         >
-          <DeleteIcon />
+          <DeleteIcon sx={{ fontSize: "16px" }} />
           {t("delete")}
         </Button>
-        <GreenButton onClick={addItem}>{t("add")}</GreenButton>
-      </Stack>
-    </Paper>
+      </Box>
+    </Box>
   );
 }
 
@@ -327,6 +370,7 @@ export default function CreateQuoteRequestView() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [blockErrors, setBlockErrors] = useState<BlockErrors[]>([{}]);
 
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -355,20 +399,87 @@ export default function CreateQuoteRequestView() {
     fetchCatalog();
   }, []);
 
-  const addRequest = () => setRequests((prev) => [...prev, createBlock()]);
+  const addRequest = () => {
+    setRequests((prev) => [...prev, createBlock()]);
+    setBlockErrors((prev) => [...prev, {}]);
+  };
 
-  const updateRequest = (updated: RequestBlock) =>
+  const updateRequest = (updated: RequestBlock) => {
     setRequests((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
+    // clear errors for the changed block
+    setBlockErrors((prev) =>
+      prev.map((e, i) => (requests[i]?.id === updated.id ? {} : e))
+    );
+  };
 
   const deleteRequest = (id: string) => {
+    const idx = requests.findIndex((r) => r.id === id);
     setRequests((prev) => {
       if (prev.length === 1) return [createBlock()];
       return prev.filter((r) => r.id !== id);
     });
+    setBlockErrors((prev) => {
+      if (prev.length === 1) return [{}];
+      return prev.filter((_, i) => i !== idx);
+    });
   };
 
-  const handleSubmit = () => {
-    setShowConfirm(true);
+  const buildSchema = () =>
+    Yup.array().of(
+      Yup.object({
+        categoryCode: Yup.string().required(t("validation_category")),
+        title: Yup.string().trim().required(t("validation_title")),
+        deliveryDate: Yup.string().required(t("validation_delivery_date")),
+        items: Yup.array()
+          .min(1, t("validation_no_items"))
+          .of(
+            Yup.object({
+              name: Yup.string().trim().required(t("validation_item_name")),
+              quantity: Yup.string()
+                .required(t("validation_item_quantity"))
+                .test("is-positive", t("validation_item_quantity"), (v) =>
+                  Boolean(v && parseInt(v) >= 1)
+                ),
+              details: Yup.string().trim().required(t("validation_item_details")),
+            })
+          ),
+      })
+    );
+
+  const handleSubmit = async () => {
+    try {
+      await buildSchema().validate(requests, { abortEarly: false });
+      setBlockErrors(requests.map(() => ({})));
+      setShowConfirm(true);
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        // Build per-block per-field errors from Yup inner errors
+        const newErrors: BlockErrors[] = requests.map(() => ({ items: [] }));
+        err.inner.forEach((e) => {
+          // path like "[0].categoryCode" or "[0].items[1].name"
+          const blockMatch = e.path?.match(/^\[(\d+)\]/);
+          if (!blockMatch) return;
+          const bi = parseInt(blockMatch[1]);
+          if (!newErrors[bi]) return;
+
+          const itemMatch = e.path?.match(/\.items\[(\d+)\]\.(.+)$/);
+          if (itemMatch) {
+            const ii = parseInt(itemMatch[1]);
+            const field = itemMatch[2] as keyof ItemErrors;
+            if (!newErrors[bi].items) newErrors[bi].items = [];
+            if (!newErrors[bi].items![ii]) newErrors[bi].items![ii] = {};
+            newErrors[bi].items![ii][field] = e.message;
+          } else {
+            const fieldMatch = e.path?.match(/\.([^.]+)$/);
+            if (fieldMatch) {
+              const field = fieldMatch[1] as keyof BlockErrors;
+              if (field !== "items") (newErrors[bi] as any)[field] = e.message;
+            }
+          }
+        });
+        setBlockErrors(newErrors);
+      }
+    }
   };
 
   const handleConfirmSubmit = async () => {
@@ -406,8 +517,7 @@ export default function CreateQuoteRequestView() {
   };
 
   const handleCancel = () => {
-    setRequests([createBlock()]);
-    toast.info(t("cancel_success"));
+    router.push("/orders");
   };
 
   return (
@@ -447,7 +557,7 @@ export default function CreateQuoteRequestView() {
       </Stack>
 
       <Stack spacing={3}>
-        {requests.map((request) => (
+        {requests.map((request, idx) => (
           <RequestFormBlock
             key={request.id}
             block={request}
@@ -455,6 +565,7 @@ export default function CreateQuoteRequestView() {
             onDelete={() => deleteRequest(request.id)}
             canDelete={requests.length > 1}
             catalog={catalog}
+            errors={blockErrors[idx] || {}}
           />
         ))}
       </Stack>
