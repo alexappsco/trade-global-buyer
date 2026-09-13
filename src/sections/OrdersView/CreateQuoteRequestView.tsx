@@ -82,7 +82,7 @@ function GreenButton({
       sx={{
         bgcolor: GREEN,
         color: "#fff",
-        borderRadius: "8px",
+        borderRadius: "4px",
         gap: 1,
         px: 3,
         "&:hover": { bgcolor: GREEN_HOVER },
@@ -304,7 +304,7 @@ function RequestFormBlock({
             color: "#fff",
             borderRadius: "4px",
             gap: 1,
-            px: 3,
+            px: 2,
             "&:hover": { bgcolor: RED_HOVER },
             "&.Mui-disabled": { bgcolor: RED, opacity: 0.5, color: "#fff" },
           }}
