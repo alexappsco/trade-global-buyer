@@ -9,6 +9,7 @@ import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
 import { registerAction } from "src/actions/auth";
 import { UI_TO_ROLE, type AuthAccountType } from "src/types/auth";
+import * as Yup from "yup";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
@@ -105,16 +106,35 @@ export default function RegisterView() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!nameOrCompany || !phone || !password || !confirmPassword) {
+    setPhoneError("");
+    if (!nameOrCompany || !password || !confirmPassword) {
       toast.error(t("register_required"));
       return;
     }
     if (password !== confirmPassword) {
       toast.error(t("password_mismatch"));
       return;
+    }
+
+    const PhoneSchema = Yup.object().shape({
+      phone: Yup.string()
+        .required(t("phone_required") || "Phone is required")
+        .min(9, t("phone_invalid") || "Invalid phone number")
+        .max(15, t("phone_invalid") || "Invalid phone number")
+        .matches(/^\+?[0-9\s\-]+$/, t("phone_invalid") || "Invalid phone number"),
+    });
+
+    try {
+      await PhoneSchema.validate({ phone });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        setPhoneError(err.message);
+        return;
+      }
     }
 
     setLoading(true);
@@ -192,7 +212,12 @@ export default function RegisterView() {
             size="small"
             value={phone}
             placeholder="+966 5 1234 5678"
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              setPhoneError("");
+            }}
+            error={!!phoneError}
+            helperText={phoneError}
           />
         </Box>
 
