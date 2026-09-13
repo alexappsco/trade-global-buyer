@@ -273,9 +273,9 @@ export default function AuthShell({
             <Box component="form" sx={{ flex: 1 }}>
               {children}
             </Box>
-            <Box sx={{ mt: 3 }}>
+            {/* <Box sx={{ mt: 3 }}>
               <PoliciesCheckbox />
-            </Box>
+            </Box> */}
           </Paper>
 
           <MarketingCard />
