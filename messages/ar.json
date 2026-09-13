@@ -500,7 +500,14 @@
     "cancel_success": "تم إلغاء الطلب",
     "submit_error": "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مجدداً.",
     "send_success": "تم إرسال طلب عرض السعر بنجاح",
-    "go_to_orders": "الذهاب إلى الطلبات"
+    "go_to_orders": "الذهاب إلى الطلبات",
+    "validation_category": "يرجى اختيار الفئة",
+    "validation_title": "يرجى إدخال عنوان الطلب",
+    "validation_delivery_date": "يرجى تحديد تاريخ التسليم",
+    "validation_no_items": "يرجى إضافة صنف واحد على الأقل",
+    "validation_item_name": "يرجى إدخال اسم الصنف",
+    "validation_item_quantity": "يرجى إدخال كمية صحيحة للصنف",
+    "validation_item_details": "يرجى إدخال تفاصيل الصنف"
   },
   "Quotations": {
     "title": "طلبات عروض الأسعار",

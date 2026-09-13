@@ -7,19 +7,15 @@ import {
   Box,
   Button,
   IconButton,
-  Paper,
   Stack,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   TextField,
   Typography,
-  MenuItem,
   InputBase,
-  Select,
   Autocomplete,
 } from "@mui/material";
 import { getOrdersCatalog, createOrder } from "src/actions/orders";
@@ -30,6 +26,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslations } from "next-intl";
 import { useToast } from "src/components/toast";
 import { useRouter } from "src/i18n/routing";
+import * as Yup from "yup";
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
 const RED = "#D32F2F";
@@ -48,6 +45,19 @@ interface RequestBlock {
   title: string;
   deliveryDate: string;
   items: ItemRow[];
+}
+
+interface ItemErrors {
+  name?: string;
+  quantity?: string;
+  details?: string;
+}
+
+interface BlockErrors {
+  categoryCode?: string;
+  title?: string;
+  deliveryDate?: string;
+  items?: ItemErrors[];
 }
 
 const createId = () =>
@@ -103,12 +113,14 @@ function RequestFormBlock({
   onDelete,
   canDelete,
   catalog,
+  errors,
 }: {
   block: RequestBlock;
   onChange: (block: RequestBlock) => void;
   onDelete: () => void;
   canDelete: boolean;
   catalog: OrderCatalogItem[];
+  errors: BlockErrors;
 }) {
   const t = useTranslations("CreateQuoteRequest");
   const locale = useLocale();
@@ -150,7 +162,7 @@ function RequestFormBlock({
           gap: 2,
         }}
       >
-        <Stack spacing={1} sx={{ alignItems: "flex-start" }}>
+        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
           <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
             {t("category")}
           </Typography>
@@ -168,6 +180,7 @@ function RequestFormBlock({
                   {...rest}
                   placeholder={t("category_placeholder")}
                   variant="standard"
+                  error={Boolean(errors.categoryCode)}
                   slotProps={{
                     ...rest.slotProps,
                     input: {
@@ -178,10 +191,7 @@ function RequestFormBlock({
                         color: "#16A34A",
                         fontSize: "14px",
                         fontWeight: 400,
-                        "& input": { 
-                          textAlign: "start", 
-                          padding: 0,
-                        },
+                        "& input": { textAlign: "start", padding: 0 },
                       }
                     }
                   }}
@@ -189,9 +199,12 @@ function RequestFormBlock({
               );
             }}
           />
+          {errors.categoryCode && (
+            <Typography sx={{ fontSize: "12px", color: "#EF4444", mt: 0.5 }}>{errors.categoryCode}</Typography>
+          )}
         </Stack>
 
-        <Stack spacing={1} sx={{ alignItems: "flex-start" }}>
+        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
           <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
             {t("request_title")}
           </Typography>
@@ -199,17 +212,21 @@ function RequestFormBlock({
             value={block.title}
             onChange={(e) => updateField("title", e.target.value)}
             placeholder={t("title_placeholder")}
+            error={Boolean(errors.title)}
             sx={{
-              color: "#9CA3AF",
+              color: errors.title ? "#EF4444" : "#9CA3AF",
               fontSize: "14px",
               fontWeight: 400,
               width: "100%",
               "& input": { textAlign: "start", p: 0 }
             }}
           />
+          {errors.title && (
+            <Typography sx={{ fontSize: "12px", color: "#EF4444" }}>{errors.title}</Typography>
+          )}
         </Stack>
 
-        <Stack spacing={1} sx={{ alignItems: "flex-start" }}>
+        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
           <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
             {t("delivery_date")}
           </Typography>
@@ -217,14 +234,18 @@ function RequestFormBlock({
             type="date"
             value={block.deliveryDate}
             onChange={(e) => updateField("deliveryDate", e.target.value)}
+            error={Boolean(errors.deliveryDate)}
             sx={{
-              color: "#9CA3AF",
+              color: errors.deliveryDate ? "#EF4444" : "#9CA3AF",
               fontSize: "14px",
               fontWeight: 400,
               width: "100%",
               "& input": { textAlign: "start", p: 0 }
             }}
           />
+          {errors.deliveryDate && (
+            <Typography sx={{ fontSize: "12px", color: "#EF4444" }}>{errors.deliveryDate}</Typography>
+          )}
         </Stack>
       </Box>
 
@@ -239,50 +260,59 @@ function RequestFormBlock({
             </TableRow>
           </TableHead>
           <TableBody>
-            {block.items.map((item) => (
-              <TableRow key={item.id} sx={{ height: "56px", "& td": { borderBottom: "1px solid #E2E8F0" }, "&:last-child td": { borderBottom: "none" } }}>
-                <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1.5 }}>
-                  <InputBase
-                    value={item.name}
-                    onChange={(e) => updateItem(item.id, "name", e.target.value)}
-                    placeholder={t("item_placeholder")}
-                    sx={{ color: "#16A34A", fontSize: "14px", fontWeight: 500, width: "100%", "& input": { textAlign: "center", p: 0 } }}
-                  />
-                </TableCell>
-                <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1.5 }}>
-                  <InputBase
-                    type="text"
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 1 }}
-                    value={item.quantity}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === "" || /^[1-9]\d*$/.test(val)) {
-                        updateItem(item.id, "quantity", val);
-                      }
-                    }}
-                    placeholder="0"
-                    sx={{ color: "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
-                  />
-                </TableCell>
-                <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1.5 }}>
-                  <InputBase
-                    value={item.details}
-                    onChange={(e) => updateItem(item.id, "details", e.target.value)}
-                    placeholder={t("details_placeholder")}
-                    sx={{ color: "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
-                  />
-                </TableCell>
-                <TableCell align="center" sx={{ py: 1.5 }}>
-                  <IconButton
-                    size="small"
-                    onClick={() => removeItem(item.id)}
-                    sx={{ color: "#EF4444" }}
-                  >
-                    <DeleteIcon sx={{ fontSize: "18px" }} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {block.items.map((item, idx) => {
+              const itemErr = errors.items?.[idx] || {};
+              return (
+                <TableRow key={item.id} sx={{ "& td": { borderBottom: "1px solid #E2E8F0" }, "&:last-child td": { borderBottom: "none" } }}>
+                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+                    <InputBase
+                      value={item.name}
+                      onChange={(e) => updateItem(item.id, "name", e.target.value)}
+                      placeholder={t("item_placeholder")}
+                      error={Boolean(itemErr.name)}
+                      sx={{ color: itemErr.name ? "#EF4444" : "#16A34A", fontSize: "14px", fontWeight: 500, width: "100%", "& input": { textAlign: "center", p: 0 } }}
+                    />
+                    {itemErr.name && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.name}</Typography>}
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+                    <InputBase
+                      type="text"
+                      inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 1 }}
+                      value={item.quantity}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || /^[1-9]\d*$/.test(val)) {
+                          updateItem(item.id, "quantity", val);
+                        }
+                      }}
+                      placeholder="0"
+                      error={Boolean(itemErr.quantity)}
+                      sx={{ color: itemErr.quantity ? "#EF4444" : "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
+                    />
+                    {itemErr.quantity && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.quantity}</Typography>}
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+                    <InputBase
+                      value={item.details}
+                      onChange={(e) => updateItem(item.id, "details", e.target.value)}
+                      placeholder={t("details_placeholder")}
+                      error={Boolean(itemErr.details)}
+                      sx={{ color: itemErr.details ? "#EF4444" : "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
+                    />
+                    {itemErr.details && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.details}</Typography>}
+                  </TableCell>
+                  <TableCell align="center" sx={{ py: 1 }}>
+                    <IconButton
+                      size="small"
+                      onClick={() => removeItem(item.id)}
+                      sx={{ color: "#EF4444" }}
+                    >
+                      <DeleteIcon sx={{ fontSize: "18px" }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </Box>
@@ -340,6 +370,7 @@ export default function CreateQuoteRequestView() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [blockErrors, setBlockErrors] = useState<BlockErrors[]>([{}]);
 
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -368,20 +399,87 @@ export default function CreateQuoteRequestView() {
     fetchCatalog();
   }, []);
 
-  const addRequest = () => setRequests((prev) => [...prev, createBlock()]);
+  const addRequest = () => {
+    setRequests((prev) => [...prev, createBlock()]);
+    setBlockErrors((prev) => [...prev, {}]);
+  };
 
-  const updateRequest = (updated: RequestBlock) =>
+  const updateRequest = (updated: RequestBlock) => {
     setRequests((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
+    // clear errors for the changed block
+    setBlockErrors((prev) =>
+      prev.map((e, i) => (requests[i]?.id === updated.id ? {} : e))
+    );
+  };
 
   const deleteRequest = (id: string) => {
+    const idx = requests.findIndex((r) => r.id === id);
     setRequests((prev) => {
       if (prev.length === 1) return [createBlock()];
       return prev.filter((r) => r.id !== id);
     });
+    setBlockErrors((prev) => {
+      if (prev.length === 1) return [{}];
+      return prev.filter((_, i) => i !== idx);
+    });
   };
 
-  const handleSubmit = () => {
-    setShowConfirm(true);
+  const buildSchema = () =>
+    Yup.array().of(
+      Yup.object({
+        categoryCode: Yup.string().required(t("validation_category")),
+        title: Yup.string().trim().required(t("validation_title")),
+        deliveryDate: Yup.string().required(t("validation_delivery_date")),
+        items: Yup.array()
+          .min(1, t("validation_no_items"))
+          .of(
+            Yup.object({
+              name: Yup.string().trim().required(t("validation_item_name")),
+              quantity: Yup.string()
+                .required(t("validation_item_quantity"))
+                .test("is-positive", t("validation_item_quantity"), (v) =>
+                  Boolean(v && parseInt(v) >= 1)
+                ),
+              details: Yup.string().trim().required(t("validation_item_details")),
+            })
+          ),
+      })
+    );
+
+  const handleSubmit = async () => {
+    try {
+      await buildSchema().validate(requests, { abortEarly: false });
+      setBlockErrors(requests.map(() => ({})));
+      setShowConfirm(true);
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        // Build per-block per-field errors from Yup inner errors
+        const newErrors: BlockErrors[] = requests.map(() => ({ items: [] }));
+        err.inner.forEach((e) => {
+          // path like "[0].categoryCode" or "[0].items[1].name"
+          const blockMatch = e.path?.match(/^\[(\d+)\]/);
+          if (!blockMatch) return;
+          const bi = parseInt(blockMatch[1]);
+          if (!newErrors[bi]) return;
+
+          const itemMatch = e.path?.match(/\.items\[(\d+)\]\.(.+)$/);
+          if (itemMatch) {
+            const ii = parseInt(itemMatch[1]);
+            const field = itemMatch[2] as keyof ItemErrors;
+            if (!newErrors[bi].items) newErrors[bi].items = [];
+            if (!newErrors[bi].items![ii]) newErrors[bi].items![ii] = {};
+            newErrors[bi].items![ii][field] = e.message;
+          } else {
+            const fieldMatch = e.path?.match(/\.([^.]+)$/);
+            if (fieldMatch) {
+              const field = fieldMatch[1] as keyof BlockErrors;
+              if (field !== "items") (newErrors[bi] as any)[field] = e.message;
+            }
+          }
+        });
+        setBlockErrors(newErrors);
+      }
+    }
   };
 
   const handleConfirmSubmit = async () => {
@@ -459,7 +557,7 @@ export default function CreateQuoteRequestView() {
       </Stack>
 
       <Stack spacing={3}>
-        {requests.map((request) => (
+        {requests.map((request, idx) => (
           <RequestFormBlock
             key={request.id}
             block={request}
@@ -467,6 +565,7 @@ export default function CreateQuoteRequestView() {
             onDelete={() => deleteRequest(request.id)}
             canDelete={requests.length > 1}
             catalog={catalog}
+            errors={blockErrors[idx] || {}}
           />
         ))}
       </Stack>

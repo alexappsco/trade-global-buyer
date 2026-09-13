@@ -500,7 +500,14 @@
     "cancel_success": "Order cancelled",
     "submit_error": "An error occurred while submitting the order. Please try again.",
     "send_success": "Quote request sent successfully",
-    "go_to_orders": "Go to Orders"
+    "go_to_orders": "Go to Orders",
+    "validation_category": "Please select a category",
+    "validation_title": "Please enter the order title",
+    "validation_delivery_date": "Please select a delivery date",
+    "validation_no_items": "Please add at least one item",
+    "validation_item_name": "Please enter the item name",
+    "validation_item_quantity": "Please enter a valid quantity for the item",
+    "validation_item_details": "Please enter the item details"
   },
   "Quotations": {
     "title": "Quotation Requests",
