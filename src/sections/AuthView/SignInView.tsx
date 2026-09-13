@@ -9,9 +9,19 @@ import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
 import { loginAction } from "src/actions/auth";
 import { UI_TO_ROLE } from "src/types/auth";
+import * as Yup from "yup";
+import { keyframes } from "@mui/system";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
+
+const shake = keyframes`
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+`;
 
 type UserRole = "buyer" | "supplier";
 
@@ -25,16 +35,35 @@ export default function SignInView() {
   const [password, setPassword] = useState("");
   const [role, setLocalRole] = useState<UserRole | null>(null);
   const [roleError, setRoleError] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setPhoneError("");
     if (!role) {
       setRoleError(true);
       return;
     }
-    if (!phone || !password) {
+    if (!password) {
       toast.error(t("signin_required"));
       return;
+    }
+
+    const LoginSchema = Yup.object().shape({
+      phone: Yup.string()
+        .required(t("phone_required") || "Phone is required")
+        .min(9, t("phone_invalid") || "Invalid phone number")
+        .max(15, t("phone_invalid") || "Invalid phone number")
+        .matches(/^\+?[0-9\s\-]+$/, t("phone_invalid") || "Invalid phone number"),
+    });
+
+    try {
+      await LoginSchema.validate({ phone });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        setPhoneError(err.message);
+        return;
+      }
     }
 
     setLoading(true);
@@ -83,10 +112,13 @@ export default function SignInView() {
                   sx={{
                     py: 1.25,
                     borderRadius: "8px",
-                    bgcolor: active ? GREEN : "#F3F4F6",
-                    color: active ? "#fff" : "#6B7280",
+                    bgcolor: active ? GREEN : (roleError ? "#FDEDED" : "#F3F4F6"),
+                    color: active ? "#fff" : (roleError ? "#D32F2F" : "#6B7280"),
+                    border: roleError ? "1px solid #D32F2F" : "1px solid transparent",
+                    animation: roleError ? `${shake} 0.4s ease-in-out` : "none",
+                    transition: "all 0.3s ease",
                     "&:hover": {
-                      bgcolor: active ? GREEN_HOVER : "#E5E7EB",
+                      bgcolor: active ? GREEN_HOVER : (roleError ? "#F8DADA" : "#E5E7EB"),
                     },
                   }}
                 >
@@ -96,9 +128,11 @@ export default function SignInView() {
             })}
           </Stack>
           {roleError && (
-            <Typography sx={{ fontSize: 12, color: "#D32F2F", mt: 0.5, textAlign: "center" }}>
-              {t("role_required")}
-            </Typography>
+            <Stack direction="row" spacing={0.5} sx={{ alignItems: "center", mt: 0.5, px: 1 }}>
+              <Typography sx={{ fontSize: 12, color: "#D32F2F", fontWeight: 600 }}>
+                ⚠️ {t("role_required")}
+              </Typography>
+            </Stack>
           )}
         </Box>
 
@@ -111,7 +145,12 @@ export default function SignInView() {
             size="small"
             value={phone}
             placeholder="+966 5 1234 5678"
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              setPhoneError("");
+            }}
+            error={!!phoneError}
+            helperText={phoneError}
           />
         </Box>
 

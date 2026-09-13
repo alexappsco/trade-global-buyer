@@ -290,6 +290,8 @@
     "password": "كلمة السر",
     "forgot_prefix": "هل نسيت كلمة السر؟",
     "forgot_link": "استعادة",
+    "phone_required": "رقم الجوال مطلوب",
+    "phone_invalid": "رقم الجوال غير صالح",
     "signin_cta": "تسجيل",
     "signin_success": "تم تسجيل الدخول بنجاح",
     "role_required": "يجب اختيار نوع الحساب",

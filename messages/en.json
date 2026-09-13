@@ -290,6 +290,8 @@
     "password": "Password",
     "forgot_prefix": "Forgot your password?",
     "forgot_link": "Recover",
+    "phone_required": "Phone number is required",
+    "phone_invalid": "Invalid phone number",
     "signin_cta": "Sign Up",
     "signin_success": "Signed in successfully",
     "role_required": "You must select an account type",
