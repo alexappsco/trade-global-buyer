@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Link, Stack, Typography } from "@mui/material";
+import PasswordField from "./PasswordField";
 import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
@@ -77,10 +78,9 @@ export default function ChangePasswordView() {
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
             {t("new_password")}
           </Typography>
-          <TextField
+          <PasswordField
             fullWidth
             size="small"
-            type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
@@ -90,10 +90,9 @@ export default function ChangePasswordView() {
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
             {t("confirm_password")}
           </Typography>
-          <TextField
+          <PasswordField
             fullWidth
             size="small"
-            type="password"
             value={confirmPassword}
             error={Boolean(confirmPassword) && confirmPassword !== newPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
