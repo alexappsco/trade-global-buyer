@@ -237,6 +237,7 @@ export default function OrdersListView() {
     { id: "classificationNameEn", label: t("table.classification"), align: cellAlignment.left },
     { id: "deliveryDate", label: t("table.delivery_date"), align: cellAlignment.left },
     { id: "creationTime", label: t("table.creation_date"), align: cellAlignment.left },
+    { id: "offers", label: t("table.offers"), align: cellAlignment.center },
     { id: "status", label: t("table.status"), align: cellAlignment.center },
     { id: "actions", label: t("table.actions"), align: cellAlignment.center },
   ];
@@ -247,6 +248,24 @@ export default function OrdersListView() {
       locale === "ar" ? row.classificationNameAr : row.classificationNameEn,
     deliveryDate: (row: Order) => new Date(row.deliveryDate).toLocaleDateString(locale),
     creationTime: (row: Order) => new Date(row.creationTime).toLocaleDateString(locale),
+    offers: (row: Order) => (
+      <Box
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          borderRadius: "8px",
+          px: 1.5,
+          py: 0.5,
+          fontSize: "0.75rem",
+          fontWeight: 700,
+          ...(row.offerCount > 0
+            ? { bgcolor: "#E2ECE9", color: "#006838" }
+            : { bgcolor: "#F4F6F8", color: "#6B7280" }),
+        }}
+      >
+        {row.offerCount > 0 ? t("table.offers_count", { count: row.offerCount }) : t("table.no_offers")}
+      </Box>
+    ),
     actions: (row: Order) => (
       <OrdersRowActions row={row} role={role} onCloseOrder={(r) => setCloseTarget(r)} />
     ),
