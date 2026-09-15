@@ -237,7 +237,9 @@ export default function OrdersListView() {
     { id: "classificationNameEn", label: t("table.classification"), align: cellAlignment.left },
     { id: "deliveryDate", label: t("table.delivery_date"), align: cellAlignment.left },
     { id: "creationTime", label: t("table.creation_date"), align: cellAlignment.left },
-    { id: "offers", label: t("table.offers"), align: cellAlignment.center },
+    ...(role === "buyer"
+      ? [{ id: "offers", label: t("table.offers"), align: cellAlignment.center }]
+      : []),
     { id: "status", label: t("table.status"), align: cellAlignment.center },
     { id: "actions", label: t("table.actions"), align: cellAlignment.center },
   ];
