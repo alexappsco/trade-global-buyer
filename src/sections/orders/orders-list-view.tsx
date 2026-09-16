@@ -44,7 +44,7 @@ function OrdersRowActions({
 
   if (role === "supplier") {
     const canSubmit =
-      row.status === "open" && !row.isOwnOrder && !row.hasSubmittedQuotation;
+      row.status === "open" && !row.isOwnOrder && !row.canSubmitQuotation;
     if (!canSubmit) return null;
     return (
       <Button
