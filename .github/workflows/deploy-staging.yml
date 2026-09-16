@@ -9,6 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: staging
+
     steps:
       - name: Deploy staging via SSH
         uses: appleboy/ssh-action@v1.2.2
@@ -18,8 +19,14 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -euo pipefail
+
             cd /var/www/tradeglobal-buyer-staging
+
             git fetch origin
             git checkout development
             git pull origin development
-            docker compose -f docker-compose.staging.yml --env-file .env.staging up -d --build
+
+            docker compose \
+              --env-file .env.staging \
+              -f docker-compose.staging.yml \
+              up -d --build
