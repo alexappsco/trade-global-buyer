@@ -34,9 +34,11 @@ function cookieMaxAge(expiresAt?: string): number | undefined {
 
 function buildCookieOptions(expiresAt?: string) {
   const maxAge = cookieMaxAge(expiresAt);
+  // Default to secure in production, unless explicitly disabled via environment variable
+  const isSecure = process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_ALLOW_INSECURE_COOKIES !== "true";
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecure,
     sameSite: "lax" as const,
     path: "/",
     ...(maxAge !== undefined ? { maxAge } : {}),
