@@ -45,7 +45,7 @@ export async function updateMyInfo(
     formData.append('LegalCompanyName', payload.legalCompanyName);
     formData.append('PhoneNumber', payload.phoneNumber);
     formData.append('Email', payload.email);
-    formData.append('Sector', payload.sector);
+    formData.append('CategoryCode', payload.categoryCode);
     formData.append('TaxNumber', payload.taxNumber);
     formData.append('CommercialRecord', payload.commercialRecord);
     formData.append('City', payload.city);

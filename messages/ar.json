@@ -226,12 +226,12 @@
     "account_individual": "فرد",
     "account_type": "نوع الحساب",
     "quick_actions": "إجراءات سريعة",
-    "fields": {
+"fields": {
       "name": "الاسم",
       "company": "اسم الشركة",
       "phone": "رقم الجوال",
       "email": "البريد الإلكتروني",
-      "sector": "القطاع",
+      "category": "الفئة",
       "tax_number": "الرقم الضريبي",
       "commercial_record": "السجل التجاري",
       "company_address": "عنوان الشركة",
@@ -323,7 +323,7 @@
     "account_info_title": "بيانات الحساب",
     "legal_company_name": "اسم الشركة القانوني",
     "email": "البريد الالكتروني",
-    "sector": "القطاع",
+    "category": "الفئة",
     "tax_number": "الرقم الضريبي",
     "commercial_record": "السجل التجاري",
     "city": "المدينة",

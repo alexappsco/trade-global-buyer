@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -15,6 +15,8 @@ import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
 import { completeProfileAction } from "src/actions/auth";
+import { getOrdersCatalog } from "src/actions/orders";
+import type { OrderCatalogItem } from "src/types/order";
 
 const GREEN = "#1E8E59";
 
@@ -42,21 +44,28 @@ export default function CompleteProfileView() {
   const toast = useToast();
   const { authFlow, clearAuthFlow } = useAuth();
 
-  const sectors =
-    locale === "ar"
-      ? ["تجارة إلكترونية", "تجزئة", "جملة", "صناعة", "خدمات"]
-      : ["E-commerce", "Retail", "Wholesale", "Manufacturing", "Services"];
   const cities =
     locale === "ar" ? ["القاهرة", "الرياض", "دبي"] : ["Cairo", "Riyadh", "Dubai"];
 
   const completionToken = authFlow?.completionToken;
   const registeredPhone = authFlow?.phoneNumber ?? "";
 
+  const [categories, setCategories] = useState<OrderCatalogItem[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getOrdersCatalog();
+      if (res.success && res.data) {
+        setCategories(res.data);
+      }
+    })();
+  }, []);
+
   const [form, setForm] = useState({
     legalName: "",
     phone: registeredPhone,
     email: "",
-    sector: "",
+    categoryCode: "",
     taxNumber: "",
     commercialRecord: "",
     city: "",
@@ -79,7 +88,7 @@ export default function CompleteProfileView() {
       "legalName",
       "phone",
       "email",
-      "sector",
+      "categoryCode",
       "taxNumber",
       "commercialRecord",
       "city",
@@ -98,7 +107,7 @@ export default function CompleteProfileView() {
           legalCompanyName: form.legalName,
           phoneNumber: form.phone,
           email: form.email,
-          sector: form.sector,
+          categoryCode: form.categoryCode,
           taxNumber: form.taxNumber,
           commercialRecord: form.commercialRecord,
           city: form.city,
@@ -161,17 +170,17 @@ export default function CompleteProfileView() {
               onChange={(e) => update("email", e.target.value)}
             />
           </Field>
-          <Field label={t("sector")}>
+          <Field label={t("category")}>
             <TextField
               select
               fullWidth
               size="small"
-              value={form.sector}
-              onChange={(e) => update("sector", e.target.value)}
+              value={form.categoryCode}
+              onChange={(e) => update("categoryCode", e.target.value)}
             >
-              {sectors.map((sector) => (
-                <MenuItem key={sector} value={sector}>
-                  {sector}
+              {categories.map((cat) => (
+                <MenuItem key={cat.code} value={cat.code}>
+                  {locale === "ar" ? cat.nameAr : cat.nameEn}
                 </MenuItem>
               ))}
             </TextField>

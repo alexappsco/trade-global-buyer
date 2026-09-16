@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import {
   Box,
   Card,
@@ -10,6 +10,7 @@ import {
   Typography,
   Button,
   TextField,
+  MenuItem,
   Grid,
   Container,
   Stack,
@@ -22,15 +23,17 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { paths } from '@/routes/paths';
 import { getMyInfo, updateMyInfo } from '@/actions/profile';
+import { getOrdersCatalog } from '@/actions/orders';
 import { useToast } from 'src/components/toast';
 import type { MyInfo } from '@/types/auth';
+import type { OrderCatalogItem } from '@/types/order';
 
 const fieldKeys = [
   'name',
   'company',
   'phone',
   'email',
-  'sector',
+  'category',
   'tax_number',
   'commercial_record',
   'company_address',
@@ -43,7 +46,7 @@ function profileToForm(profile: MyInfo): Record<(typeof fieldKeys)[number], stri
     company: profile.legalCompanyName ?? '',
     phone: profile.phoneNumber ?? '',
     email: profile.email ?? '',
-    sector: profile.sector ?? '',
+    category: profile.categoryCode ?? '',
     tax_number: profile.taxNumber ?? '',
     commercial_record: profile.commercialRecord ?? '',
     company_address: profile.companyAddress ?? '',
@@ -65,15 +68,26 @@ function getInitials(name?: string): string {
 export default function EditProfile() {
   const router = useRouter();
   const t = useTranslations('Profile');
+  const locale = useLocale();
   const toast = useToast();
 
   const [profile, setProfile] = useState<MyInfo | null>(null);
+  const [categories, setCategories] = useState<OrderCatalogItem[]>([]);
   const [form, setForm] = useState<Record<(typeof fieldKeys)[number], string>>(
     Object.fromEntries(fieldKeys.map((key) => [key, ''])) as Record<(typeof fieldKeys)[number], string>
   );
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getOrdersCatalog();
+      if (res.success && res.data) {
+        setCategories(res.data);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -118,7 +132,7 @@ export default function EditProfile() {
         legalCompanyName: form.company,
         phoneNumber: form.phone,
         email: form.email,
-        sector: form.sector,
+        categoryCode: form.category,
         taxNumber: form.tax_number,
         commercialRecord: form.commercial_record,
         city: form.city,
@@ -276,6 +290,33 @@ export default function EditProfile() {
                         >
                           {t(`fields.${key}`)}
                         </Typography>
+                        {key === 'category' ? (
+                          <TextField
+                            select
+                            fullWidth
+                            size="small"
+                            value={form[key]}
+                            onChange={(e) => handleChange(key, e.target.value)}
+                            slotProps={{
+                              input: {
+                                sx: {
+                                  borderRadius: 2,
+                                  bgcolor: '#FAFAFA',
+                                  fontSize: '0.875rem',
+                                  '& fieldset': { borderColor: '#E5E7EB' },
+                                  '&:hover fieldset': { borderColor: '#1B8354' },
+                                  '&.Mui-focused fieldset': { borderColor: '#1B8354' },
+                                },
+                              },
+                            }}
+                          >
+                            {categories.map((cat) => (
+                              <MenuItem key={cat.code} value={cat.code}>
+                                {locale === 'ar' ? cat.nameAr : cat.nameEn}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        ) : (
                         <TextField
                           fullWidth
                           size="small"
@@ -295,6 +336,7 @@ export default function EditProfile() {
                             },
                           }}
                         />
+                        )}
                       </Grid>
                     ))}
                   </Grid>
