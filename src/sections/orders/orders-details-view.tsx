@@ -25,7 +25,8 @@ import {
 
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
-import { getOrderDetails, closeOrder, confirmDelivery } from 'src/actions/orders';
+import { useToast } from 'src/components/toast';
+import { getOrderDetails, closeOrder, confirmDelivery, downloadQuotationOffersPdf } from 'src/actions/orders';
 import { getOrderQuotationOffers } from 'src/actions/quotations';
 import { useAuth } from 'src/contexts/AuthContext';
 import type { Order } from 'src/types/order';
@@ -40,6 +41,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const locale = useLocale();
   const router = useRouter();
   const { role } = useAuth();
+  const toast = useToast();
   const isRtl = locale === 'ar';
   const currency = locale === 'ar' ? 'ر.س' : 'SAR';
   const formatMoney = (value: number) =>
@@ -167,6 +169,33 @@ export default function ConfirmOrderStatus({ id }: Props) {
       setSelectedRows((prev) => [...prev, offerId]);
     } else {
       setSelectedRows((prev) => prev.filter((rid) => rid !== offerId));
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    try {
+      const res = await downloadQuotationOffersPdf(id);
+      if (!res.success) {
+        toast.error(res.error || t('table.pdf_download_error'));
+        return;
+      }
+      const binary = atob(res.data.base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `offers-${id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success(t('table.pdf_download_success'));
+    } catch {
+      toast.error(t('table.pdf_download_error'));
     }
   };
 
@@ -428,6 +457,9 @@ export default function ConfirmOrderStatus({ id }: Props) {
         sx={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 2,
           borderRight: isRtl ? '4px solid #10754E' : 'none',
           borderLeft: isRtl ? 'none' : '4px solid #10754E',
           pr: isRtl ? 1.5 : 0,
@@ -438,6 +470,27 @@ export default function ConfirmOrderStatus({ id }: Props) {
         <Typography variant="h6" sx={{ fontWeight: 700, color: '#161C24' }}>
           {t('details.offers_title')}
         </Typography>
+
+        {order.offerCount > 0 && (
+          <Button
+            variant="outlined"
+            onClick={handleDownloadPdf}
+            sx={{
+              borderColor: '#10754E',
+              color: '#10754E',
+              fontWeight: 600,
+              borderRadius: '8px',
+              px: 2.5,
+              py: 1,
+              gap: 1,
+              textTransform: 'none',
+              '&:hover': { borderColor: '#0c5b3c', bgcolor: 'rgba(16,117,78,0.04)' },
+            }}
+          >
+            <Iconify icon="solar:download-bold" width={16} />
+            {t('table.download_pdf')}
+          </Button>
+        )}
       </Box>
 
       {/* Offers Card (Search & Filters + Table) */}

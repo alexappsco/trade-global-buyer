@@ -53,3 +53,16 @@ export async function confirmDelivery(id: string): Promise<ApiResponse<Order>> {
 export async function markDelivered(id: string): Promise<ApiResponse<Order>> {
   return await postData<Order, undefined>(endpoints.orders.markDelivered(id), undefined);
 }
+
+export async function downloadQuotationOffersPdf(
+  orderId: string
+): Promise<ApiResponse<{ base64: string }>> {
+  const res = await getData<Blob>(endpoints.orders.quotationOffersPdf(orderId), {
+    headers: { Accept: 'application/pdf' },
+  });
+  if (!res.success) {
+    return res;
+  }
+  const buffer = Buffer.from(await res.data.arrayBuffer());
+  return { success: true, data: { base64: buffer.toString('base64') }, message: 'Success', status: 200 };
+}

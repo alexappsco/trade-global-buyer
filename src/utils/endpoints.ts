@@ -14,6 +14,7 @@ export const endpoints = {
     confirmDelivery: (id: string) => `/orders/${id}/confirm-delivery`,
     markDelivered: (id: string) => `/orders/${id}/mark-delivered`,
     quotationOffers: (orderId: string) => `/orders/${orderId}/quotation-offers`,
+    quotationOffersPdf: (orderId: string) => `/orders/${orderId}/quotation-offers/pdf`,
   },
   quotationOffers: {
     list: '/quotation-offers',
