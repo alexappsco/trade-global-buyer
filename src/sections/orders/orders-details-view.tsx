@@ -387,7 +387,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
               {order.status === 'open' ? t('status.open') : t('status.closed')}
             </Typography>
           </Box>
-
+          {order.offerCount > 0 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.delivery_status')}
@@ -406,6 +406,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 : t('details.delivery.not_delivered')}
             </Typography>
           </Box>
+          )}
         </Box>
       </Card>
 
