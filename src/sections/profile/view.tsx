@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import {
   Box,
   Card,
@@ -53,6 +53,7 @@ const coverFallback =
 export default function ProfileView() {
   const router = useRouter();
   const t = useTranslations('Profile');
+  const locale = useLocale();
   const toast = useToast();
 
   const [profile, setProfile] = useState<MyInfo | null>(null);
@@ -99,7 +100,7 @@ export default function ProfileView() {
         legalCompanyName: profile.legalCompanyName,
         phoneNumber: profile.phoneNumber,
         email: profile.email,
-        sector: profile.sector,
+        categoryCode: profile.categoryCode,
         taxNumber: profile.taxNumber,
         commercialRecord: profile.commercialRecord,
         city: profile.city,
@@ -179,7 +180,7 @@ export default function ProfileView() {
     { label: t('fields.company'), value: profile.legalCompanyName, icon: <BusinessOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.phone'), value: profile.phoneNumber, icon: <PhoneOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.email'), value: profile.email, icon: <MailOutlineOutlinedIcon sx={{ fontSize: 20 }} /> },
-    { label: t('fields.sector'), value: profile.sector, icon: <MonitorOutlinedIcon sx={{ fontSize: 20 }} /> },
+    { label: t('fields.category'), value: locale === 'ar' ? profile.categoryNameAr : profile.categoryNameEn, icon: <MonitorOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.commercial_record'), value: profile.commercialRecord, icon: <CardTravelOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.tax_number'), value: profile.taxNumber, icon: <AccountBalanceOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.city'), value: profile.city, icon: <LocationOnOutlinedIcon sx={{ fontSize: 20 }} /> },

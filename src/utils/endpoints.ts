@@ -11,7 +11,10 @@ export const endpoints = {
     catalog: '/orders/catalog',
     details: (id: string) => `/orders/${id}`,
     close: (id: string) => `/orders/${id}/close`,
+    confirmDelivery: (id: string) => `/orders/${id}/confirm-delivery`,
+    markDelivered: (id: string) => `/orders/${id}/mark-delivered`,
     quotationOffers: (orderId: string) => `/orders/${orderId}/quotation-offers`,
+    quotationOffersPdf: (orderId: string) => `/orders/${orderId}/quotation-offers/pdf`,
   },
   quotationOffers: {
     list: '/quotation-offers',

@@ -17,7 +17,10 @@ import {
 } from "@mui/material";
 
 import Iconify from "src/components/iconify";
+import ConfirmationDialog from "src/components/dialog/ConfirmationDialog";
+import { useToast } from "src/components/toast";
 import { getQuotationOfferDetails } from "src/actions/quotations";
+import { markDelivered } from "src/actions/orders";
 import type { QuotationOffer, QuotationOfferStatus } from "src/types/quotation";
 
 interface Props {
@@ -58,11 +61,13 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
   const t = useTranslations("Orders");
   const locale = useLocale();
   const router = useRouter();
+  const toast = useToast();
   const isRtl = locale === "ar";
   const currency = t("submit_offer.currency");
 
   const [offer, setOffer] = useState<QuotationOffer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [openMarkDeliveredConfirm, setOpenMarkDeliveredConfirm] = useState(false);
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -73,6 +78,17 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
     };
     fetchOffer();
   }, [offerId]);
+
+  const handleMarkDelivered = async () => {
+    setOpenMarkDeliveredConfirm(false);
+    const res = await markDelivered(id);
+    if (!res.success) {
+      toast.error(res.error || (locale === "ar" ? "تعذر تسجيل التوصيل" : "Unable to mark as delivered"));
+      return;
+    }
+    toast.success(t("dialog.success_mark_delivered"));
+    setOffer((prev) => (prev ? { ...prev, isDelivered: true, deliveryStatus: "delivered" } : prev));
+  };
 
   const formatDate = (value: string) =>
     value ? new Date(value).toLocaleDateString(locale) : "—";
@@ -143,24 +159,48 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
         <Typography variant="h5" sx={{ fontWeight: 700, color: "#161C24" }}>
           {t("submit_offer.view_title")}
         </Typography>
-        <Button
-          variant="outlined"
-          onClick={() => router.push("/quotation-requests")}
-          sx={{
-            borderColor: "#10754E",
-            color: "#10754E",
-            borderRadius: "8px",
-            fontWeight: 600,
-            px: 2.5,
-            py: 1,
-            textTransform: "none",
-            gap: 1,
-            "&:hover": { borderColor: "#0c5b3c", bgcolor: "rgba(16,117,78,0.04)" },
-          }}
-        >
-          <Iconify icon="solar:arrow-left-bold" width={16} />
-          {t("submit_offer.back_to_requests")}
-        </Button>
+        <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+          {!offer.isDelivered && (
+            <Button
+              variant="contained"
+              onClick={() => setOpenMarkDeliveredConfirm(true)}
+              sx={{
+                bgcolor: "#10754E",
+                color: "white",
+                borderRadius: "8px",
+                fontWeight: 600,
+                px: 2.5,
+                py: 1,
+                textTransform: "none",
+                gap: 1,
+                boxShadow: "none",
+                "&:hover": { bgcolor: "#0c5b3c", boxShadow: "none" },
+              }}
+            >
+              <Iconify icon="solar:delivery-bold" width={16} />
+              {t("details.delivery.mark_delivered")}
+            </Button>
+          )}
+
+          <Button
+            variant="outlined"
+            onClick={() => router.push("/quotation-requests")}
+            sx={{
+              borderColor: "#10754E",
+              color: "#10754E",
+              borderRadius: "8px",
+              fontWeight: 600,
+              px: 2.5,
+              py: 1,
+              textTransform: "none",
+              gap: 1,
+              "&:hover": { borderColor: "#0c5b3c", bgcolor: "rgba(16,117,78,0.04)" },
+            }}
+          >
+            <Iconify icon="solar:arrow-left-bold" width={16} />
+            {t("submit_offer.back_to_requests")}
+          </Button>
+        </Box>
       </Box>
 
       {/* Order Info */}
@@ -225,6 +265,36 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
               {t("submit_offer.offer_status")}
             </Typography>
             <StatusBadge status={offer.status} locale={locale} />
+          </Box>
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+              {t("details.info.delivery_status")}
+            </Typography>
+            <Box
+              component="span"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.5,
+                px: 1.5,
+                py: 0.5,
+                borderRadius: "12px",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                ...(offer.isDelivered
+                  ? { bgcolor: "rgba(0, 104, 56, 0.08)", color: "#006838" }
+                  : offer.deliveryStatus === "pending"
+                  ? { bgcolor: "rgba(255, 171, 0, 0.08)", color: "#B76E00" }
+                  : { bgcolor: "rgba(255, 171, 0, 0.08)", color: "#B76E00" }),
+              }}
+            >
+              <Iconify icon="solar:delivery-bold" width={14} />
+              {offer.isDelivered
+                ? t("details.delivery.delivered")
+                : offer.deliveryStatus === "pending"
+                ? t("details.delivery.pending")
+                : t("details.delivery.not_delivered")}
+            </Box>
           </Box>
         </Box>
       </Card>
@@ -389,6 +459,17 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
           </Box>
         </Box>
       </Card>
+
+      {/* Mark Delivered Confirmation Dialog */}
+      <ConfirmationDialog
+        open={openMarkDeliveredConfirm}
+        onClose={() => setOpenMarkDeliveredConfirm(false)}
+        variant="warning"
+        title={t("dialog.confirm_mark_delivered")}
+        confirmLabel={t("dialog.confirm")}
+        cancelLabel={t("dialog.cancel")}
+        onConfirm={handleMarkDelivered}
+      />
     </Box>
   );
 }

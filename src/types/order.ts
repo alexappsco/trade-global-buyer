@@ -17,6 +17,11 @@ export type Order = {
   title: string;
   deliveryDate: string; // datetime string
   status: string;
+  deliveryStatus: "pending" | "delivered" | null;
+  isDelivered: boolean;
+  acceptedAt: string | null;
+  supplierMarkedDeliveredAt: string | null;
+  buyerConfirmedDeliveredAt: string | null;
   creationTime: string; // datetime string
   lastModificationTime: string; // datetime string
   offerCount: number;

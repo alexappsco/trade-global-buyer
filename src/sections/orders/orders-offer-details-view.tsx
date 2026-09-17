@@ -90,6 +90,17 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
     },
   };
 
+  const getDeliveryStatusMeta = () => {
+    if (!offer) return { label: '', color: '#B76E00', bg: 'rgba(255, 171, 0, 0.08)' };
+    if (offer.isDelivered) {
+      return { label: t('details.delivery.delivered'), color: '#006838', bg: 'rgba(0, 104, 56, 0.08)' };
+    }
+    if (offer.deliveryStatus === 'pending') {
+      return { label: t('details.delivery.pending'), color: '#B76E00', bg: 'rgba(255, 171, 0, 0.08)' };
+    }
+    return { label: t('details.delivery.not_delivered'), color: '#B76E00', bg: 'rgba(255, 171, 0, 0.08)' };
+  };
+
   const handleAccept = async () => {
     setOpenAcceptConfirm(false);
     setIsActing(true);
@@ -185,24 +196,26 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
           {t('details.title', { id: offer.orderNumber })}
         </Typography>
 
-        <Button
-          variant="outlined"
-          onClick={() => router.push('/orders')}
-          sx={{
-            borderColor: '#10754E',
-            color: '#10754E',
-            fontWeight: 600,
-            borderRadius: '8px',
-            px: 2.5,
-            py: 1,
-            gap: 1,
-            textTransform: 'none',
-            '&:hover': { borderColor: '#0c5b3c', bgcolor: 'rgba(16,117,78,0.04)' },
-          }}
-        >
-          <Iconify icon="solar:arrow-left-bold" width={16} />
-          {t('dialog.go_to_orders')}
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          <Button
+            variant="outlined"
+            onClick={() => router.push('/orders')}
+            sx={{
+              borderColor: '#10754E',
+              color: '#10754E',
+              fontWeight: 600,
+              borderRadius: '8px',
+              px: 2.5,
+              py: 1,
+              gap: 1,
+              textTransform: 'none',
+              '&:hover': { borderColor: '#0c5b3c', bgcolor: 'rgba(16,117,78,0.04)' },
+            }}
+          >
+            <Iconify icon="solar:arrow-left-bold" width={16} />
+            {t('dialog.go_to_orders')}
+          </Button>
+        </Box>
       </Box>
 
       {/* Order Info Card */}
@@ -217,7 +230,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(3, 1fr)', md: 'repeat(5, 1fr)' },
+            gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' },
             gap: 3,
             textAlign: 'center',
           }}
@@ -264,6 +277,28 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             >
               {offer.orderStatus === 'open' ? t('status.open') : t('status.closed')}
             </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+              {t('details.info.delivery_status')}
+            </Typography>
+            <Box
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 0.5,
+                borderRadius: '8px',
+                px: 1.5,
+                py: 0.5,
+                bgcolor: getDeliveryStatusMeta().bg,
+                color: getDeliveryStatusMeta().color,
+                fontWeight: 700,
+                fontSize: '0.875rem',
+              }}
+            >
+              <Iconify icon="solar:delivery-bold" width={16} />
+              {getDeliveryStatusMeta().label}
+            </Box>
           </Box>
         </Box>
       </Card>

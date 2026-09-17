@@ -79,6 +79,9 @@
       "offers": "العروض",
       "offers_count": "{count} عروض",
       "no_offers": "لا يوجد عروض",
+      "download_pdf": "تحميل PDF",
+      "pdf_download_success": "تم تحميل ملف PDF بنجاح",
+      "pdf_download_error": "فشل تحميل ملف PDF",
       "actions": "اجراءات",
       "action_view": "عرض",
       "action_close": "إغلاق",
@@ -101,6 +104,7 @@
         "created_at": "تاريخ الانشاء",
         "delivery_date": "تاريخ التسليم المتوقع",
         "status": "الحالة",
+        "delivery_status": "حالة التوصيل",
         "order_title": "عنوان الطلب",
         "category": "الفئة"
       },
@@ -127,7 +131,14 @@
       "filters": {
         "price": "السعر",
         "delivery": "التوصيل"
-      }
+      },
+      "delivery": {
+        "delivered": "تم التوصيل",
+        "not_delivered": "لم يتم التوصيل",
+        "pending": "قيد الانتظار",
+        "mark_delivered": "تسجيل التوصيل"
+      },
+      "confirm_delivery": "تأكيد التوصيل"
     },
     "offer_details": {
       "alert_message": "هل تم استلام المنتج أو الخدمة المطلوبة بنجاح؟ يرجى تأكيد حالة الطلب لتحديثه داخل النظام حتى تتمكن من اضافة طلبات أخرى.",
@@ -199,6 +210,10 @@
     "dialog": {
       "confirm_close_order": "انت على وشك اغلاق الطلب",
       "success_close_order": "تم اغلاق الطلب بنجاح",
+      "confirm_delivery": "انت على وشك تأكيد توصيل هذا الطلب",
+      "success_confirm_delivery": "تم تأكيد التوصيل بنجاح",
+      "confirm_mark_delivered": "انت على وشك تسجيل هذا الطلب كموصّل",
+      "success_mark_delivered": "تم تسجيل الطلب كموصّل بنجاح",
       "confirm_accept_offer": "انت على وشك قبول هذا العرض",
       "confirm_reject_offer": "انت على وشك رفض هذا العرض",
       "confirm": "تأكيد",
@@ -226,12 +241,12 @@
     "account_individual": "فرد",
     "account_type": "نوع الحساب",
     "quick_actions": "إجراءات سريعة",
-    "fields": {
+"fields": {
       "name": "الاسم",
       "company": "اسم الشركة",
       "phone": "رقم الجوال",
       "email": "البريد الإلكتروني",
-      "sector": "القطاع",
+      "category": "الفئة",
       "tax_number": "الرقم الضريبي",
       "commercial_record": "السجل التجاري",
       "company_address": "عنوان الشركة",
@@ -323,7 +338,7 @@
     "account_info_title": "بيانات الحساب",
     "legal_company_name": "اسم الشركة القانوني",
     "email": "البريد الالكتروني",
-    "sector": "القطاع",
+    "category": "الفئة",
     "tax_number": "الرقم الضريبي",
     "commercial_record": "السجل التجاري",
     "city": "المدينة",

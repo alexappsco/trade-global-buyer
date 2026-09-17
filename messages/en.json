@@ -79,6 +79,9 @@
       "offers": "Offers",
       "offers_count": "{count} Offer(s)",
       "no_offers": "No Offers",
+      "download_pdf": "Download PDF",
+      "pdf_download_success": "PDF downloaded successfully",
+      "pdf_download_error": "Failed to download PDF",
       "actions": "Actions",
       "action_view": "View",
       "action_close": "Close",
@@ -101,6 +104,7 @@
         "created_at": "Creation Date",
         "delivery_date": "Expected Delivery Date",
         "status": "Status",
+        "delivery_status": "Delivery Status",
         "order_title": "Order Title",
         "category": "Category"
       },
@@ -127,7 +131,14 @@
       "filters": {
         "price": "Price",
         "delivery": "Delivery"
-      }
+      },
+      "delivery": {
+        "delivered": "Delivered",
+        "not_delivered": "Not Delivered",
+        "pending": "Pending",
+        "mark_delivered": "Mark Delivered"
+      },
+      "confirm_delivery": "Confirm Delivery"
     },
     "offer_details": {
       "alert_message": "Was the requested product or service received successfully? Please confirm the order status to update it in the system so you can add other requests.",
@@ -199,6 +210,10 @@
     "dialog": {
       "confirm_close_order": "You are about to close the order",
       "success_close_order": "The order has been closed successfully",
+      "confirm_delivery": "You are about to confirm delivery of this order",
+      "success_confirm_delivery": "Delivery confirmed successfully",
+      "confirm_mark_delivered": "You are about to mark this order as delivered",
+      "success_mark_delivered": "Order marked as delivered successfully",
       "confirm_accept_offer": "You are about to accept this offer",
       "confirm_reject_offer": "You are about to reject this offer",
       "confirm": "Confirm",
@@ -226,12 +241,12 @@
     "account_individual": "Individual",
     "account_type": "Account Type",
     "quick_actions": "Quick Actions",
-    "fields": {
+"fields": {
       "name": "Name",
       "company": "Company Name",
       "phone": "Phone Number",
       "email": "Email",
-      "sector": "Sector",
+      "category": "Category",
       "tax_number": "Tax Number",
       "commercial_record": "Commercial Record",
       "company_address": "Company Address",
@@ -323,7 +338,7 @@
     "account_info_title": "Account Information",
     "legal_company_name": "Legal Company Name",
     "email": "Email",
-    "sector": "Sector",
+    "category": "Category",
     "tax_number": "Tax Number",
     "commercial_record": "Commercial Record",
     "city": "City",

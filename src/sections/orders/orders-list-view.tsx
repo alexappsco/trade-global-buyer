@@ -26,7 +26,7 @@ import { useQuery } from "src/components/use-query";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 import SharedTable from "src/components/SharedTable/SharedTable";
 import { cellAlignment } from "src/components/SharedTable/types";
-import { getOrders, getOrdersCatalog, closeOrder } from "src/actions/orders";
+import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
 import type { Order, OrderCatalogItem } from "src/types/order";
 
 function OrdersRowActions({
@@ -44,7 +44,7 @@ function OrdersRowActions({
 
   if (role === "supplier") {
     const canSubmit =
-      row.status === "open" && !row.isOwnOrder && !row.hasSubmittedQuotation;
+      row.status === "open" && !row.isOwnOrder && !row.canSubmitQuotation;
     if (!canSubmit) return null;
     return (
       <Button
@@ -230,6 +230,33 @@ export default function OrdersListView() {
     }
   };
 
+  const handleDownloadPdf = async (orderId: string) => {
+    try {
+      const res = await downloadQuotationOffersPdf(orderId);
+      if (!res.success) {
+        toast.error(res.error || t("table.pdf_download_error"));
+        return;
+      }
+      const binary = atob(res.data.base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `offers-${orderId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success(t("table.pdf_download_success"));
+    } catch {
+      toast.error(t("table.pdf_download_error"));
+    }
+  };
+
   const tableHead = [
     { id: "orderNumber", label: t("table.order_id"), align: cellAlignment.left },
     { id: "title", label: t("table.order_title"), align: cellAlignment.left },
@@ -251,21 +278,36 @@ export default function OrdersListView() {
     deliveryDate: (row: Order) => new Date(row.deliveryDate).toLocaleDateString(locale),
     creationTime: (row: Order) => new Date(row.creationTime).toLocaleDateString(locale),
     offers: (row: Order) => (
-      <Box
-        sx={{
-          display: "inline-flex",
-          alignItems: "center",
-          borderRadius: "8px",
-          px: 1.5,
-          py: 0.5,
-          fontSize: "0.75rem",
-          fontWeight: 700,
-          ...(row.offerCount > 0
-            ? { bgcolor: "#E2ECE9", color: "#006838" }
-            : { bgcolor: "#F4F6F8", color: "#6B7280" }),
-        }}
-      >
-        {row.offerCount > 0 ? t("table.offers_count", { count: row.offerCount }) : t("table.no_offers")}
+      <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}>
+        <Box
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            borderRadius: "8px",
+            px: 1.5,
+            py: 0.5,
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            ...(row.offerCount > 0
+              ? { bgcolor: "#E2ECE9", color: "#006838" }
+              : { bgcolor: "#F4F6F8", color: "#6B7280" }),
+          }}
+        >
+          {row.offerCount > 0 ? t("table.offers_count", { count: row.offerCount }) : t("table.no_offers")}
+        </Box>
+        {row.offerCount > 0 && (
+          <IconButton
+            size="small"
+            onClick={() => handleDownloadPdf(row.id)}
+            title={t("table.download_pdf")}
+            sx={{
+              color: "#10754E",
+              "&:hover": { bgcolor: "rgba(16,117,78,0.08)" },
+            }}
+          >
+            <Iconify icon="solar:download-bold" width={16} />
+          </IconButton>
+        )}
       </Box>
     ),
     actions: (row: Order) => (

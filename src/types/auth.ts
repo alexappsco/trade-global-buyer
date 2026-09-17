@@ -38,7 +38,9 @@ export interface MyInfo {
   role: AuthRole;
   accountType: AuthAccountType;
   legalCompanyName: string;
-  sector: string;
+  categoryCode: string;
+  categoryNameEn: string;
+  categoryNameAr: string;
   taxNumber: string;
   commercialRecord: string;
   city: string;
@@ -53,7 +55,7 @@ export interface UpdateMyInfoPayload {
   legalCompanyName: string;
   phoneNumber: string;
   email: string;
-  sector: string;
+  categoryCode: string;
   taxNumber: string;
   commercialRecord: string;
   city: string;
