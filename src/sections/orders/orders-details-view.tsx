@@ -25,8 +25,9 @@ import {
 
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
-import { getOrderDetails, closeOrder } from 'src/actions/orders';
+import { getOrderDetails, closeOrder, confirmDelivery } from 'src/actions/orders';
 import { getOrderQuotationOffers } from 'src/actions/quotations';
+import { useAuth } from 'src/contexts/AuthContext';
 import type { Order } from 'src/types/order';
 import type { QuotationOffer } from 'src/types/quotation';
 
@@ -38,6 +39,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const t = useTranslations('Orders');
   const locale = useLocale();
   const router = useRouter();
+  const { role } = useAuth();
   const isRtl = locale === 'ar';
   const currency = locale === 'ar' ? 'ر.س' : 'SAR';
   const formatMoney = (value: number) =>
@@ -80,6 +82,8 @@ export default function ConfirmOrderStatus({ id }: Props) {
   // Dialog States
   const [openCloseConfirm, setOpenCloseConfirm] = useState(false);
   const [openCloseSuccess, setOpenCloseSuccess] = useState(false);
+  const [openDeliveryConfirm, setOpenDeliveryConfirm] = useState(false);
+  const [openDeliverySuccess, setOpenDeliverySuccess] = useState(false);
 
   // Offers Table State
   const [searchQuery, setSearchQuery] = useState('');
@@ -250,25 +254,49 @@ export default function ConfirmOrderStatus({ id }: Props) {
           {t('details.title', { id: order.orderNumber })}
         </Typography>
 
-        <Button
-          variant="contained"
-          onClick={() => setOpenCloseConfirm(true)}
-          sx={{
-            bgcolor: '#FF3B30',
-            color: 'white',
-            fontWeight: 600,
-            borderRadius: '8px',
-            px: 3,
-            py: 1,
-            boxShadow: 'none',
-            '&:hover': {
-              bgcolor: '#d32f2f',
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          {role === 'buyer' && !order.isDelivered && (
+            <Button
+              variant="contained"
+              onClick={() => setOpenDeliveryConfirm(true)}
+              sx={{
+                bgcolor: '#10754E',
+                color: 'white',
+                fontWeight: 600,
+                borderRadius: '8px',
+                px: 3,
+                py: 1,
+                boxShadow: 'none',
+                '&:hover': {
+                  bgcolor: '#0c5b3c',
+                  boxShadow: 'none',
+                },
+              }}
+            >
+              {t('details.confirm_delivery')}
+            </Button>
+          )}
+
+          <Button
+            variant="contained"
+            onClick={() => setOpenCloseConfirm(true)}
+            sx={{
+              bgcolor: '#FF3B30',
+              color: 'white',
+              fontWeight: 600,
+              borderRadius: '8px',
+              px: 3,
+              py: 1,
               boxShadow: 'none',
-            },
-          }}
-        >
-          {t('details.close')}
-        </Button>
+              '&:hover': {
+                bgcolor: '#d32f2f',
+                boxShadow: 'none',
+              },
+            }}
+          >
+            {t('details.close')}
+          </Button>
+        </Box>
       </Box>
 
       {/* Order Info Card */}
@@ -328,6 +356,25 @@ export default function ConfirmOrderStatus({ id }: Props) {
               }}
             >
               {order.status === 'open' ? t('status.open') : t('status.closed')}
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+              {t('details.info.delivery_status')}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 700,
+                ...(order.isDelivered
+                  ? { color: '#006838' }
+                  : { color: '#B76E00' }),
+              }}
+            >
+              {order.isDelivered
+                ? t('details.delivery.delivered')
+                : t('details.delivery.not_delivered')}
             </Typography>
           </Box>
         </Box>
@@ -837,6 +884,34 @@ export default function ConfirmOrderStatus({ id }: Props) {
           setOpenCloseSuccess(false);
           router.push('/orders');
         }}
+      />
+
+      {/* Confirm Delivery Dialog */}
+      <ConfirmationDialog
+        open={openDeliveryConfirm}
+        onClose={() => setOpenDeliveryConfirm(false)}
+        variant="warning"
+        title={t('dialog.confirm_delivery')}
+        confirmLabel={t('dialog.confirm')}
+        cancelLabel={t('dialog.cancel')}
+        onConfirm={async () => {
+          setOpenDeliveryConfirm(false);
+          const res = await confirmDelivery(id);
+          if (res.success) {
+            setOpenDeliverySuccess(true);
+            setOrder(res.data as Order);
+          }
+        }}
+      />
+
+      {/* Confirm Delivery Success Dialog */}
+      <ConfirmationDialog
+        open={openDeliverySuccess}
+        onClose={() => setOpenDeliverySuccess(false)}
+        variant="success"
+        title={t('dialog.success_confirm_delivery')}
+        confirmLabel={t('dialog.confirm')}
+        onConfirm={() => setOpenDeliverySuccess(false)}
       />
     </Box>
   );

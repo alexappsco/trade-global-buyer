@@ -45,3 +45,11 @@ export async function getOrderDetails(id: string): Promise<ApiResponse<Order>> {
 export async function closeOrder(id: string): Promise<ApiResponse<Order>> {
   return await postData<Order, undefined>(endpoints.orders.close(id), undefined);
 }
+
+export async function confirmDelivery(id: string): Promise<ApiResponse<Order>> {
+  return await postData<Order, undefined>(endpoints.orders.confirmDelivery(id), undefined);
+}
+
+export async function markDelivered(id: string): Promise<ApiResponse<Order>> {
+  return await postData<Order, undefined>(endpoints.orders.markDelivered(id), undefined);
+}

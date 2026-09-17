@@ -23,6 +23,11 @@ export interface QuotationOffer {
   orderNumber: number;
   orderTitle: string;
   orderStatus: "open" | "closed";
+  deliveryStatus: "pending" | "delivered" | null;
+  isDelivered: boolean;
+  acceptedAt: string | null;
+  supplierMarkedDeliveredAt: string | null;
+  buyerConfirmedDeliveredAt: string | null;
   categoryCode: string;
   categoryNameEn: string;
   categoryNameAr: string;
