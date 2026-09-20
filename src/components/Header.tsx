@@ -79,11 +79,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <MenuIcon />
           </IconButton>
 
-          <Box
+         <Box
             component="img"
-            src="/logo.svg"
+            src="/logo_2.png"
             alt="Trade Global"
-            sx={{ height: 36, marginInlineStart: { xs: 0, md: "60px" } }}
+            sx={{ height: 66, marginInlineStart: { xs: 0, md: "60px" } }}
           />
         </Box>
 

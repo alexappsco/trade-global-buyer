@@ -386,25 +386,35 @@
     },
     "table": {
       "invoice_number": "Invoice No.",
-      "transaction_title": "Transaction Title",
+      "order_title": "Order Title",
       "order_number": "Order No.",
-      "registered_at": "Registered At",
-      "amount_paid": "Amount Paid",
+      "issued_at": "Issued At",
+      "commission_amount": "Commission Amount",
       "actions": "Actions",
-      "view": "View"
+      "view": "View",
+      "load_error": "Failed to load invoices",
+      "pdf_download_success": "PDF downloaded successfully",
+      "pdf_download_error": "Failed to download PDF"
     },
     "pagination": {
       "showing": "Showing {from}-{to} of {count}"
     },
     "no_data": "No invoices found",
+    "not_found": "Invoice not found",
+    "back_to_invoices": "Back to Invoices",
     "details": {
       "title": "Invoice #{id}",
       "info": {
         "invoice_number": "Invoice Number",
-        "transaction_title": "Transaction Title",
+        "order_title": "Order Title",
         "order_number": "Order Number",
-        "registered_at": "Registered At",
-        "amount_paid": "Amount Paid",
+        "issued_at": "Issued At",
+        "requested_from": "Requested From",
+        "city": "City",
+        "company_address": "Company Address",
+        "creation_time": "Creation Time",
+        "category": "Category",
+        "date": "Date",
         "status": "Status"
       },
       "table": {
@@ -414,7 +424,11 @@
         "total": "Total"
       },
       "total": "Total",
-      "print": "Print"
+      "download_pdf": "Download PDF",
+      "downloading": "Downloading...",
+      "order_header": "Order #{number}",
+      "view_order": "View Order Details",
+      "offer_section_header": "Your Submitted Offer"
     }
   },
   "Metadata": {

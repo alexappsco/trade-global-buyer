@@ -542,7 +542,7 @@ export default function OrdersListView() {
             </Menu>
 
             {/* Date Filter */}
-            <Button
+            {/* <Button
               variant="outlined"
               onClick={(e) => setDateAnchor(e.currentTarget)}
               sx={{
@@ -594,7 +594,7 @@ export default function OrdersListView() {
               >
                 2026-04-10
               </MenuItem>
-            </Menu>
+            </Menu> */}
 
             {/* Status Filter */}
             <Button

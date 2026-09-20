@@ -386,25 +386,35 @@
     },
     "table": {
       "invoice_number": "رقم الفاتورة",
-      "transaction_title": "عنوان المعاملة",
+      "order_title": "عنوان الطلب",
       "order_number": "رقم الطلب",
-      "registered_at": "وقت تسجيل الفاتورة",
-      "amount_paid": "المبلغ المدفوع",
+      "issued_at": "تاريخ الإصدار",
+      "commission_amount": "قيمة العمولة",
       "actions": "اجراءات",
-      "view": "عرض"
+      "view": "عرض",
+      "load_error": "فشل تحميل الفواتير",
+      "pdf_download_success": "تم تحميل ملف PDF بنجاح",
+      "pdf_download_error": "فشل تحميل ملف PDF"
     },
     "pagination": {
       "showing": "عرض {from}-{to} من {count}"
     },
     "no_data": "لا توجد فواتير",
+    "not_found": "الفاتورة غير موجودة",
+    "back_to_invoices": "العودة للفواتير",
     "details": {
       "title": "فاتورة #{id}",
       "info": {
         "invoice_number": "رقم الفاتورة",
-        "transaction_title": "عنوان المعاملة",
+        "order_title": "عنوان الطلب",
         "order_number": "رقم الطلب",
-        "registered_at": "وقت التسجيل",
-        "amount_paid": "المبلغ المدفوع",
+        "issued_at": "تاريخ الإصدار",
+        "requested_from": "المطلوب من",
+        "city": "المدينة",
+        "company_address": "عنوان الشركة",
+        "creation_time": "تاريخ الإنشاء",
+        "category": "الفئة",
+        "date": "التاريخ",
         "status": "الحالة"
       },
       "table": {
@@ -414,7 +424,11 @@
         "total": "الاجمالي"
       },
       "total": "الاجمالي",
-      "print": "طباعة"
+      "download_pdf": "تحميل PDF",
+      "downloading": "جاري التحميل...",
+      "order_header": "الطلب رقم #{number}",
+      "view_order": "تصفح تفاصيل المشترين",
+      "offer_section_header": "العرض المقدم من خلالك"
     }
   },
   "Metadata": {
