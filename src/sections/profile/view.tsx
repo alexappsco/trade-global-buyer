@@ -288,114 +288,116 @@ export default function ProfileView() {
                 </Box>
               </Box>
 
-              {/* Avatar with hover actions */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: { xs: 100, sm: 155 },
-                  right: { xs: 20, md: 32 },
+              {/* Avatar and Hero content */}
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={{ xs: 2, sm: 3 }}
+                sx={{ 
+                  px: { xs: 3, md: 4 }, 
+                  pb: 3, 
+                  mt: { xs: -5, md: -6 },
+                  position: 'relative',
+                  zIndex: 2,
                 }}
               >
-                <input
-                  accept="image/*"
-                  type="file"
-                  id="profile-image-edit-input"
-                  hidden
-                  onChange={(e) => {
-                    handleImageEdit('profile', e.target.files?.[0]);
-                    e.currentTarget.value = '';
-                  }}
-                />
-                <Box sx={{ position: 'relative' }}>
-                  <Badge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                    variant="dot"
-                    sx={{
-                      '& .MuiBadge-badge': {
-                        backgroundColor: '#7CB342',
-                        color: '#7CB342',
-                        boxShadow: '0 0 0 2px #fff',
-                        width: 14,
-                        height: 14,
-                        borderRadius: '50%',
-                      },
+                {/* Avatar Container */}
+                <Box>
+                  <input
+                    accept="image/*"
+                    type="file"
+                    id="profile-image-edit-input"
+                    hidden
+                    onChange={(e) => {
+                      handleImageEdit('profile', e.target.files?.[0]);
+                      e.currentTarget.value = '';
                     }}
-                  >
-                    <Avatar
-                      src={profile.profileImageUrl}
+                  />
+                  <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                    <Badge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                      variant="dot"
                       sx={{
-                        width: { xs: 80, md: 96 },
-                        height: { xs: 80, md: 96 },
-                        bgcolor: '#2E6D59',
-                        border: '3px solid #ffffff',
-                        fontSize: '1.6rem',
-                        fontWeight: 'bold',
-                        color: '#ffffff',
+                        '& .MuiBadge-badge': {
+                          backgroundColor: '#7CB342',
+                          color: '#7CB342',
+                          boxShadow: '0 0 0 2px #fff',
+                          width: 14,
+                          height: 14,
+                          borderRadius: '50%',
+                        },
                       }}
                     >
-                      {initials}
-                    </Avatar>
-                  </Badge>
+                      <Avatar
+                        src={profile.profileImageUrl}
+                        sx={{
+                          width: { xs: 80, md: 96 },
+                          height: { xs: 80, md: 96 },
+                          bgcolor: '#2E6D59',
+                          border: '3px solid #ffffff',
+                          fontSize: '1.6rem',
+                          fontWeight: 'bold',
+                          color: '#ffffff',
+                        }}
+                      >
+                        {initials}
+                      </Avatar>
+                    </Badge>
 
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 0.5,
-                      bgcolor: 'rgba(0,0,0,0.35)',
-                      opacity: 0,
-                      transition: 'opacity 0.2s',
-                      '&:hover': { opacity: 1 },
-                    }}
-                  >
-                    {profile.profileImageUrl && (
-                      <Tooltip title={t('view_image')}>
-                        <IconButton
-                          size="small"
-                          disabled={isUploading}
-                          onClick={() => setPreviewImage(profile.profileImageUrl ?? null)}
-                          sx={{ bgcolor: 'rgba(255,255,255,0.92)', '&:hover': { bgcolor: '#ffffff' } }}
-                        >
-                          <VisibilityOutlinedIcon sx={{ fontSize: 18 }} />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    <Tooltip title={t('edit_image')}>
-                      <span>
-                        <label htmlFor="profile-image-edit-input">
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 0.5,
+                        bgcolor: 'rgba(0,0,0,0.35)',
+                        opacity: 0,
+                        transition: 'opacity 0.2s',
+                        '&:hover': { opacity: 1 },
+                      }}
+                    >
+                      {profile.profileImageUrl && (
+                        <Tooltip title={t('view_image')}>
                           <IconButton
-                            component="span"
                             size="small"
                             disabled={isUploading}
+                            onClick={() => setPreviewImage(profile.profileImageUrl ?? null)}
                             sx={{ bgcolor: 'rgba(255,255,255,0.92)', '&:hover': { bgcolor: '#ffffff' } }}
                           >
-                            <EditOutlinedIcon sx={{ fontSize: 18 }} />
+                            <VisibilityOutlinedIcon sx={{ fontSize: 18 }} />
                           </IconButton>
-                        </label>
-                      </span>
-                    </Tooltip>
+                        </Tooltip>
+                      )}
+                      <Tooltip title={t('edit_image')}>
+                        <span>
+                          <label htmlFor="profile-image-edit-input">
+                            <IconButton
+                              component="span"
+                              size="small"
+                              disabled={isUploading}
+                              sx={{ bgcolor: 'rgba(255,255,255,0.92)', '&:hover': { bgcolor: '#ffffff' } }}
+                            >
+                              <EditOutlinedIcon sx={{ fontSize: 18 }} />
+                            </IconButton>
+                          </label>
+                        </span>
+                      </Tooltip>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
 
-              {/* Hero content */}
-              <Stack
-                direction={{ xs: 'column-reverse', sm: 'row' }}
-                sx={{ px: { xs: 3, md: 4 }, pt: { xs: 8, sm: 3 }, pb: 3, gap: 2 }}
-              >
-                <Box sx={{ flex: 1 }}>
+                {/* Hero text content */}
+                <Box sx={{ flex: 1, pt: { xs: 0, sm: 6, md: 7 } }}>
                   <Typography variant="h5" sx={{ fontWeight: '800', color: '#1A1A1A' }}>
                     {profile.name}
                   </Typography>
                   <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     spacing={{ xs: 0.5, sm: 2 }}
-                    sx={{ color: '#889892', fontSize: '0.8rem', alignItems: 'center', mt: 0.5 }}
+                    sx={{ color: '#889892', fontSize: '0.8rem', alignItems: { xs: 'flex-start', sm: 'center' }, mt: 0.5 }}
                   >
                     {profile.city && (
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
