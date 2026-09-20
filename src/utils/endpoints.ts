@@ -36,4 +36,9 @@ export const endpoints = {
     create: '/support-requests',
     delete: (id: string) => `/support-requests/${id}`,
   },
+  invoices: {
+    list: '/invoices',
+    details: (id: string) => `/invoices/${id}`,
+    pdf: (id: string) => `/invoices/${id}/pdf`,
+  },
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "src/i18n/routing";
 import {
@@ -14,56 +14,92 @@ import {
   InputAdornment,
 } from "@mui/material";
 import Iconify from "src/components/iconify";
+import { useToast } from "src/components/toast";
 import SimpleTable, { HeadCell } from "src/components/SimpleTable";
-import { MOCK_INVOICES, Invoice } from "./invoices-mock";
+import { getInvoices } from "src/actions/invoices";
+import type { InvoiceListItem } from "src/types/invoice";
+
+const PAGE_SIZE = 10;
 
 export default function InvoicesListView() {
   const t = useTranslations("Invoices");
   const locale = useLocale();
   const router = useRouter();
+  const toast = useToast();
   const isRtl = locale === "ar";
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<"paid" | "unpaid" | null>(null);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [selectedStatus, setSelectedStatus] = useState<"unpaid" | null>(null);
   const [statusAnchor, setStatusAnchor] = useState<null | HTMLElement>(null);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const filteredInvoices = useMemo(() => {
-    return MOCK_INVOICES.filter((invoice) => {
-      const q = searchQuery.toLowerCase();
-      const matchesSearch =
-        invoice.invoiceNumber.includes(q) ||
-        invoice.transactionTitle.toLowerCase().includes(q) ||
-        invoice.orderNumber.includes(q);
+  const [invoices, setInvoices] = useState<InvoiceListItem[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(PAGE_SIZE);
+  const [loading, setLoading] = useState(false);
 
-      const matchesStatus = !selectedStatus || invoice.status === selectedStatus;
+  useEffect(() => {
+    if (searchTimerRef.current) {
+      clearTimeout(searchTimerRef.current);
+    }
+    searchTimerRef.current = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(0);
+    }, 400);
+    return () => {
+      if (searchTimerRef.current) {
+        clearTimeout(searchTimerRef.current);
+      }
+    };
+  }, [searchQuery]);
 
-      return matchesSearch && matchesStatus;
-    });
-  }, [searchQuery, selectedStatus]);
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      setLoading(true);
+      const res = await getInvoices({
+        search: debouncedSearch || undefined,
+        status: selectedStatus || undefined,
+        sorting: "issuedAt desc",
+        skipCount: page * rowsPerPage,
+        maxResultCount: rowsPerPage,
+      });
+      setLoading(false);
+      if (res.success) {
+        setInvoices(res.data?.items ?? []);
+        setTotalCount(res.data?.totalCount ?? 0);
+        setSelectedRows([]);
+      } else {
+        toast.error(res.error || t("table.load_error"));
+      }
+    };
+    fetchInvoices();
+  }, [debouncedSearch, selectedStatus, page, rowsPerPage, toast, t]);
 
   const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedRows(filteredInvoices.map((invoice) => invoice.id));
-    } else {
-      setSelectedRows([]);
-    }
+    setSelectedRows(checked ? invoices.map((invoice) => invoice.id) : []);
   };
 
   const handleSelectRow = (id: string, checked: boolean) => {
-    if (checked) {
-      setSelectedRows((prev) => [...prev, id]);
-    } else {
-      setSelectedRows((prev) => prev.filter((rowId) => rowId !== id));
-    }
+    setSelectedRows((prev) =>
+      checked ? [...prev, id] : prev.filter((rowId) => rowId !== id)
+    );
   };
 
   const isAllSelected =
-    filteredInvoices.length > 0 && selectedRows.length === filteredInvoices.length;
+    invoices.length > 0 && selectedRows.length === invoices.length;
 
   const align = isRtl ? "right" : "left";
 
-  const headCells: HeadCell<Invoice>[] = [
+  const formatDate = (value: string) =>
+    value ? new Date(value).toLocaleDateString(locale) : "—";
+  const formatAmount = (value?: number, currency?: string) =>
+    `${(value ?? 0).toLocaleString(locale, { maximumFractionDigits: 2 })} ${currency || ""}`.trim();
+
+  const headCells: HeadCell<InvoiceListItem>[] = [
     {
       id: "select",
       label: "",
@@ -73,7 +109,7 @@ export default function InvoicesListView() {
           size="small"
           checked={isAllSelected}
           indeterminate={
-            selectedRows.length > 0 && selectedRows.length < filteredInvoices.length
+            selectedRows.length > 0 && selectedRows.length < invoices.length
           }
           onChange={(e) => handleSelectAll(e.target.checked)}
           sx={{ color: "#C4CDD5", "&.Mui-checked": { color: "#006838" } }}
@@ -96,8 +132,8 @@ export default function InvoicesListView() {
       width: 190,
     },
     {
-      id: "transactionTitle",
-      label: t("table.transaction_title"),
+      id: "orderTitle",
+      label: t("table.order_title"),
       align,
       renderCell: (row) => (
         <Box
@@ -109,7 +145,7 @@ export default function InvoicesListView() {
             "&:hover": { textDecoration: "underline" },
           }}
         >
-          {row.transactionTitle}
+          {row.orderTitle}
         </Box>
       ),
     },
@@ -120,16 +156,18 @@ export default function InvoicesListView() {
       width: 110,
     },
     {
-      id: "registeredAt",
-      label: t("table.registered_at"),
+      id: "issuedAt",
+      label: t("table.issued_at"),
       align,
       width: 170,
+      renderCell: (row) => formatDate(row.issuedAt),
     },
     {
-      id: "amountPaid",
-      label: t("table.amount_paid"),
+      id: "commissionAmount",
+      label: t("table.commission_amount"),
       align,
-      width: 120,
+      width: 150,
+      renderCell: (row) => formatAmount(row.commissionAmount, row.currency),
     },
     {
       id: "rowActions",
@@ -242,6 +280,7 @@ export default function InvoicesListView() {
             onClick={() => {
               setSelectedStatus(null);
               setStatusAnchor(null);
+              setPage(0);
             }}
             selected={selectedStatus === null}
           >
@@ -249,17 +288,9 @@ export default function InvoicesListView() {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              setSelectedStatus("paid");
-              setStatusAnchor(null);
-            }}
-            selected={selectedStatus === "paid"}
-          >
-            {t("status.paid")}
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
               setSelectedStatus("unpaid");
               setStatusAnchor(null);
+              setPage(0);
             }}
             selected={selectedStatus === "unpaid"}
           >
@@ -276,11 +307,22 @@ export default function InvoicesListView() {
           overflow: "hidden",
         }}
       >
-        <SimpleTable<Invoice>
-          key={`${searchQuery}-${selectedStatus}`}
-          data={filteredInvoices}
+        <SimpleTable<InvoiceListItem>
+          key={`${debouncedSearch}-${selectedStatus}`}
+          data={invoices}
           headCells={headCells}
           emptyMessage={t("no_data")}
+          loading={loading}
+          serverPagination={{
+            count: totalCount,
+            page,
+            rowsPerPage,
+            onPageChange: (_event, newPage) => setPage(newPage),
+            onRowsPerPageChange: (event) => {
+              setRowsPerPage(parseInt(event.target.value, 10));
+              setPage(0);
+            },
+          }}
         />
       </Box>
     </Box>
