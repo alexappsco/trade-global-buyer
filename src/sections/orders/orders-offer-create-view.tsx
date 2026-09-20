@@ -15,6 +15,7 @@ import {
   TableContainer,
   TextField,
   Typography,
+  Checkbox,
 } from "@mui/material";
 
 import Iconify from "src/components/iconify";
@@ -48,6 +49,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [submittedId, setSubmittedId] = useState<string | null>(null);
+  const [commissionTermsAccepted, setCommissionTermsAccepted] = useState(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -134,6 +136,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
     const payload = {
       deliveryFee: Number(deliveryFee || 0),
       deliveryDurationDays: Number(durationDays),
+      commissionTermsAccepted,
       items: (order.items ?? []).map((item) => ({
         orderItemId: item.id,
         unitPrice: Number(unitPrices[item.id]),
@@ -506,7 +509,34 @@ export default function OrdersOfferCreateView({ id }: Props) {
         cancelLabel={t("submit_offer.cancel")}
         cancelVariant="gray"
         onConfirm={handleSubmit}
-      />
+        confirmDisabled={!commissionTermsAccepted}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            bgcolor: "#F9FAFB",
+            borderRadius: 2,
+            p: 1.5,
+            mt: 1,
+          }}
+        >
+          <Checkbox
+            checked={commissionTermsAccepted}
+            onChange={(e) => setCommissionTermsAccepted(e.target.checked)}
+            sx={{
+              color: "#10754E",
+              "&.Mui-checked": {
+                color: "#10754E",
+              },
+            }}
+          />
+          <Typography variant="body2" sx={{ fontWeight: 600, color: "#161C24" }}>
+            {t("submit_offer.commission_terms")}
+          </Typography>
+        </Box>
+      </ConfirmationDialog>
 
       {/* Success Dialog */}
       <ConfirmationDialog

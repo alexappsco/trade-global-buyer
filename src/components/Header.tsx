@@ -28,13 +28,39 @@ interface HeaderProps {
   onMenuClick?: () => void;
 }
 
+function formatDisplayPhone(phone?: string): string {
+  if (!phone) return "";
+  const clean = phone.replace(/[\s\-()]/g, "");
+  let national = clean;
+  if (clean.startsWith("+966")) national = clean.slice(4);
+  else if (clean.startsWith("966")) national = clean.slice(3);
+
+  if (/^\d{9}$/.test(national)) {
+    return `+966 ${national.slice(0, 2)} ${national.slice(2, 5)} ${national.slice(5)}`;
+  }
+  if (/^\d{10}$/.test(national)) {
+    return `+966 ${national.slice(0, 3)} ${national.slice(3, 6)} ${national.slice(6)}`;
+  }
+  return phone;
+}
+
+function getNameInitials(name?: string): string {
+  if (!name) return "";
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0))
+    .join("");
+}
+
 export default function Header({ onMenuClick }: HeaderProps) {
   const t = useTranslations("Auth");
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
   const currentLocaleSetting = localesSettings[locale as LocaleType];
-  const { logout } = useAuth();
+  const { logout, session } = useAuth();
 
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null);
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
@@ -179,16 +205,75 @@ export default function Header({ onMenuClick }: HeaderProps) {
           paper: {
             sx: {
               mt: 1,
-              minWidth: 180,
+              minWidth: 220,
               borderRadius: "12px",
               boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+              overflow: "hidden",
             },
           },
         }}
       >
+        <Box
+          sx={{
+            px: 2.5,
+            py: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 0.75,
+            textAlign: "center",
+            bgcolor: "#F8FBFA",
+            borderBottom: "1px solid #E6EFEA",
+          }}
+        >
+          <Avatar
+            sx={{
+              width: 46,
+              height: 46,
+              bgcolor: "#1B8354",
+              fontSize: 17,
+              fontWeight: 700,
+            }}
+          >
+            {getNameInitials(session?.name) || <PersonIcon />}
+          </Avatar>
+          <Typography
+            sx={{
+              color: "#161C24",
+              fontSize: 14,
+              fontWeight: 700,
+              lineHeight: 1.2,
+              mt: 0.5,
+            }}
+          >
+            {session?.name || "—"}
+          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Iconify icon="solar:phone-calling-rounded-bold" width={16} sx={{ color: "#10754E" }} />
+            <Typography
+              sx={{
+                color: "#637381",
+                fontSize: 13,
+                fontWeight: 500,
+                direction: "ltr",
+                unicodeBidi: "plaintext",
+                letterSpacing: 0.3,
+              }}
+            >
+              {formatDisplayPhone(session?.phoneNumber)}
+            </Typography>
+          </Box>
+        </Box>
+
         <MenuItem
           onClick={handleLogout}
-          sx={{ color: "#D32F2F", "&:hover": { bgcolor: "rgba(211, 47, 47, 0.08)" } }}
+          sx={{
+            mx: 1,
+            my: 0.75,
+            borderRadius: "8px",
+            color: "#D32F2F",
+            "&:hover": { bgcolor: "rgba(211, 47, 47, 0.08)" },
+          }}
         >
           <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
             <LogoutRoundedIcon fontSize="small" />

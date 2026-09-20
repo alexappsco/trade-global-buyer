@@ -87,7 +87,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
       return;
     }
     toast.success(t("dialog.success_mark_delivered"));
-    setOffer((prev) => (prev ? { ...prev, isDelivered: true, deliveryStatus: "delivered" } : prev));
+    setOffer((prev) => (prev ? { ...prev, deliveryStatus: "delivered" } : prev));
   };
 
   const formatDate = (value: string) =>
@@ -160,7 +160,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
           {t("submit_offer.view_title")}
         </Typography>
         <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-          {!offer.isDelivered && (
+          {offer.deliveryStatus !== "delivered" && (
             <Button
               variant="contained"
               onClick={() => setOpenMarkDeliveredConfirm(true)}
@@ -281,15 +281,13 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
                 borderRadius: "12px",
                 fontSize: "0.75rem",
                 fontWeight: 700,
-                ...(offer.isDelivered
+                ...(offer.deliveryStatus === "delivered"
                   ? { bgcolor: "rgba(0, 104, 56, 0.08)", color: "#006838" }
-                  : offer.deliveryStatus === "pending"
-                  ? { bgcolor: "rgba(255, 171, 0, 0.08)", color: "#B76E00" }
                   : { bgcolor: "rgba(255, 171, 0, 0.08)", color: "#B76E00" }),
               }}
             >
               <Iconify icon="solar:delivery-bold" width={14} />
-              {offer.isDelivered
+              {offer.deliveryStatus === "delivered"
                 ? t("details.delivery.delivered")
                 : offer.deliveryStatus === "pending"
                 ? t("details.delivery.pending")
