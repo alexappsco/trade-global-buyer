@@ -19,6 +19,8 @@ type ConfirmationDialogProps = {
   confirmLabel: string;
   cancelLabel?: string; // If omitted, only one button is displayed
   cancelVariant?: 'outlined' | 'gray'; // Outlined green or solid gray
+  children?: React.ReactNode;
+  confirmDisabled?: boolean;
 };
 
 export default function ConfirmationDialog({
@@ -30,6 +32,8 @@ export default function ConfirmationDialog({
   confirmLabel,
   cancelLabel,
   cancelVariant = 'outlined',
+  children,
+  confirmDisabled = false,
 }: ConfirmationDialogProps) {
   return (
     <Dialog
@@ -98,6 +102,8 @@ export default function ConfirmationDialog({
           {title}
         </Typography>
 
+        {children}
+
         {/* Buttons Stack (Vertical) */}
         <Box
           sx={{
@@ -112,6 +118,7 @@ export default function ConfirmationDialog({
             variant="contained"
             fullWidth
             onClick={onConfirm}
+            disabled={confirmDisabled}
             sx={{
               bgcolor: '#10754E',
               color: 'white',
