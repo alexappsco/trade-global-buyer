@@ -191,12 +191,12 @@ export default function InvoicesDetailsView({ id }: Props) {
               </Typography>
             </Box>
             {/* Logo Image */}
-            <Box
+            {/* <Box
               component="img"
               src="/logo.png"
               alt="TradeGlobal Logo"
               sx={{ height: 48, objectFit: 'contain' }}
-            />
+            /> */}
           </Box>
         </Box>
 
