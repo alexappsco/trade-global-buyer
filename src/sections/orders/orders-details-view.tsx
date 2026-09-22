@@ -284,7 +284,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-          {role === 'buyer' && !order.isDelivered && order.offerCount > 0 && (
+          {role === 'buyer' && order.deliveryStatus === "delivered" && !order.isDelivered && (
             <Button
               variant="contained"
               onClick={() => setOpenDeliveryConfirm(true)}
