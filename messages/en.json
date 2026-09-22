@@ -244,7 +244,8 @@
     "account_individual": "Individual",
     "account_type": "Account Type",
     "quick_actions": "Quick Actions",
-    "counterparty_profile": "Buyer Details",
+    "counterparty_buyer": "Buyer Details",
+    "counterparty_supplier": "Supplier Details",
     "back": "Back",
 "fields": {
       "name": "Name",
@@ -506,8 +507,10 @@
       "description": "View your profile"
     },
     "CounterpartyProfile": {
-      "title": "Buyer Details - Trade Global",
-      "description": "View counterparty profile details"
+      "buyerTitle": "Buyer Details - Trade Global",
+      "buyerDescription": "View buyer profile details",
+      "supplierTitle": "Supplier Details - Trade Global",
+      "supplierDescription": "View supplier profile details"
     },
     "QuotationRequests": {
       "title": "Quotation Requests - Trade Global",

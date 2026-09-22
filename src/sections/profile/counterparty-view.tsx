@@ -48,9 +48,10 @@ const coverFallback =
 interface Props {
   orderId: string;
   offerId?: string;
+  from?: 'supplier' | 'buyer';
 }
 
-export default function CounterpartyProfileView({ orderId, offerId }: Props) {
+export default function CounterpartyProfileView({ orderId, offerId, from }: Props) {
   const router = useRouter();
   const t = useTranslations('Profile');
   const locale = useLocale();
@@ -92,7 +93,11 @@ export default function CounterpartyProfileView({ orderId, offerId }: Props) {
 
   const handleBack = () => {
     if (offerId) {
-      router.push(`/orders/${orderId}/${offerId}?role=supplier`);
+      if (from === 'supplier') {
+        router.push(`/orders/${orderId}/${offerId}?role=supplier`);
+      } else {
+        router.push(`/orders/${orderId}/${offerId}`);
+      }
     } else {
       router.push(`/orders/${orderId}`);
     }
@@ -177,7 +182,7 @@ export default function CounterpartyProfileView({ orderId, offerId }: Props) {
           sx={{ mb: 3, alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}
         >
           <Typography variant="h5" sx={{ fontWeight: '800', color: '#1A1A1A' }}>
-            {t('counterparty_profile')}
+            {from === 'supplier' ? t('counterparty_buyer') : t('counterparty_supplier')}
           </Typography>
           <Button
             variant="outlined"

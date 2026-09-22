@@ -244,7 +244,8 @@
     "account_individual": "فرد",
     "account_type": "نوع الحساب",
     "quick_actions": "إجراءات سريعة",
-    "counterparty_profile": "تفاصيل المشتري",
+    "counterparty_buyer": "تفاصيل المشتري",
+    "counterparty_supplier": "تفاصيل المورد",
     "back": "رجوع",
 "fields": {
       "name": "الاسم",
@@ -506,8 +507,10 @@
       "description": "عرض الملف الشخصي"
     },
     "CounterpartyProfile": {
-      "title": "تفاصيل المشتري - تجارة عالمية",
-      "description": "عرض بيانات الملف الشخصي للطرف الآخر"
+      "buyerTitle": "تفاصيل المشتري - تجارة عالمية",
+      "buyerDescription": "عرض بيانات المشتري",
+      "supplierTitle": "تفاصيل المورد - تجارة عالمية",
+      "supplierDescription": "عرض بيانات المورد"
     },
     "QuotationRequests": {
       "title": "طلبات عروض الأسعار - تجارة عالمية",

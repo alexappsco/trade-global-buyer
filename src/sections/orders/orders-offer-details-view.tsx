@@ -461,7 +461,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
       <Box
         onClick={() => {
           if (canBrowseSupplier) {
-            router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}`);
+            router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}&from=buyer`);
           }
         }}
         sx={{
@@ -507,7 +507,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             variant="contained"
             onClick={(e) => {
               e.stopPropagation();
-              router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}`);
+              router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}&from=buyer`);
             }}
             sx={{
               bgcolor: '#10754E',

@@ -303,7 +303,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
       <Card
         onClick={() => {
           if (canBrowseBuyer) {
-            router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}`);
+            router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}&from=supplier`);
           }
         }}
         sx={{
@@ -343,7 +343,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
               variant="contained"
               onClick={(e) => {
                 e.stopPropagation();
-                router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}`);
+                router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}&from=supplier`);
               }}
               sx={{
                 bgcolor: "#10754E",

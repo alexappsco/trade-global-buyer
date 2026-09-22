@@ -8,22 +8,38 @@ type Props = {
   }>;
   searchParams: Promise<{
     offerId?: string;
+    from?: string;
   }>;
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ from?: string }>;
+}) {
   const { locale } = await params;
+  const { from } = await searchParams;
   const t = await getTranslations({ locale, namespace: 'Metadata.CounterpartyProfile' });
 
+  const isSupplier = from === 'supplier';
+
   return {
-    title: t('title'),
-    description: t('description'),
+    title: isSupplier ? t('buyerTitle') : t('supplierTitle'),
+    description: isSupplier ? t('buyerDescription') : t('supplierDescription'),
   };
 }
 
 export default async function CounterpartyProfilePage({ params, searchParams }: Props) {
   const { id } = await params;
-  const { offerId } = await searchParams;
+  const { offerId, from } = await searchParams;
 
-  return <CounterpartyProfileView orderId={id} offerId={offerId} />;
+  return (
+    <CounterpartyProfileView
+      orderId={id}
+      offerId={offerId}
+      from={from === 'supplier' ? 'supplier' : 'buyer'}
+    />
+  );
 }
