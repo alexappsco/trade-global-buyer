@@ -207,7 +207,8 @@
       "city": "المدينة",
       "company_address": "العنوان",
       "item_total": "إجمالي الصنف",
-      "browse_buyer": "تصفح المشتري"
+      "browse_buyer": "تصفح المشتري",
+      "browse_supplier": "تصفح المورد"
     },
     "dialog": {
       "confirm_close_order": "انت على وشك اغلاق الطلب",
