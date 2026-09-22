@@ -141,6 +141,8 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
     );
   }
 
+  const canBrowseBuyer = offer.status === "accepted";
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       {/* Banner */}
@@ -299,16 +301,68 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
 
       {/* Buyer Details */}
       <Card
+        onClick={() => {
+          if (canBrowseBuyer) {
+            router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}`);
+          }
+        }}
         sx={{
           borderRadius: 3,
           p: 3,
           boxShadow: "0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05)",
           border: "1px solid #F4F6F8",
+          transition: "box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease",
+          ...(canBrowseBuyer
+            ? {
+                cursor: "pointer",
+                "&:hover": {
+                  boxShadow: "0 8px 20px 0 rgba(16,117,78,0.12), 0 2px 8px -2px rgba(16,117,78,0.10)",
+                  borderColor: "#10754E",
+                  transform: "translateY(-3px)",
+                  bgcolor: "#F7FDF9",
+                },
+              }
+            : {}),
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 700, color: "#161C24", mb: 2 }}>
-          {t("submit_offer.buyer_details")}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 1.5,
+            mb: 2,
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 700, color: "#161C24" }}>
+            {t("submit_offer.buyer_details")}
+          </Typography>
+          {canBrowseBuyer && (
+            <Button
+              variant="contained"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}`);
+              }}
+              sx={{
+                bgcolor: "#10754E",
+                color: "white",
+                borderRadius: "8px",
+                fontWeight: 600,
+                px: 2,
+                py: 0.75,
+                textTransform: "none",
+                gap: 1,
+                boxShadow: "none",
+                "&:hover": { bgcolor: "#0c5b3c", boxShadow: "none" },
+              }}
+            >
+              <Iconify icon="solar:user-circle-bold" width={16} />
+              {t("submit_offer.browse_buyer")}
+            </Button>
+          )}
+        </Box>
         <Box
           sx={{
             display: "grid",

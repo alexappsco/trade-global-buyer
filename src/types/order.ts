@@ -74,3 +74,22 @@ export type CreateOrderRequest = {
 export type CreateOrderResponse = {
   orders: Order[];
 };
+
+export type CounterpartyProfile = {
+  userId: string;
+  name: string;
+  role: string;
+  accountType: string;
+  legalCompanyName: string;
+  email: string;
+  phoneNumber: string;
+  taxNumber: string;
+  commercialRecord: string;
+  city: string;
+  companyAddress: string;
+  categoryCode: string;
+  categoryNameEn: string;
+  categoryNameAr: string;
+  profileImageUrl?: string | null;
+  coverImageUrl?: string | null;
+};

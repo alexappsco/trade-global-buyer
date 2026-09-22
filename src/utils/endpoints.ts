@@ -13,6 +13,7 @@ export const endpoints = {
     close: (id: string) => `/orders/${id}/close`,
     confirmDelivery: (id: string) => `/orders/${id}/confirm-delivery`,
     markDelivered: (id: string) => `/orders/${id}/mark-delivered`,
+    counterpartyDetails: (id: string) => `/orders/${id}/counterparty-details`,
     quotationOffers: (orderId: string) => `/orders/${orderId}/quotation-offers`,
     quotationOffersPdf: (orderId: string) => `/orders/${orderId}/quotation-offers/pdf`,
   },

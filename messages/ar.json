@@ -206,7 +206,8 @@
       "company": "اسم الشركة",
       "city": "المدينة",
       "company_address": "العنوان",
-      "item_total": "إجمالي الصنف"
+      "item_total": "إجمالي الصنف",
+      "browse_buyer": "تصفح المشتري"
     },
     "dialog": {
       "confirm_close_order": "انت على وشك اغلاق الطلب",
@@ -242,6 +243,8 @@
     "account_individual": "فرد",
     "account_type": "نوع الحساب",
     "quick_actions": "إجراءات سريعة",
+    "counterparty_profile": "تفاصيل المشتري",
+    "back": "رجوع",
 "fields": {
       "name": "الاسم",
       "company": "اسم الشركة",
@@ -500,6 +503,10 @@
     "Profile": {
       "title": "الملف الشخصي - تجارة عالمية",
       "description": "عرض الملف الشخصي"
+    },
+    "CounterpartyProfile": {
+      "title": "تفاصيل المشتري - تجارة عالمية",
+      "description": "عرض بيانات الملف الشخصي للطرف الآخر"
     },
     "QuotationRequests": {
       "title": "طلبات عروض الأسعار - تجارة عالمية",

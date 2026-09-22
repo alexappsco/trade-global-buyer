@@ -206,7 +206,8 @@
       "company": "Company Name",
       "city": "City",
       "company_address": "Address",
-      "item_total": "Item Total"
+      "item_total": "Item Total",
+      "browse_buyer": "Browse Buyer"
     },
     "dialog": {
       "confirm_close_order": "You are about to close the order",
@@ -242,6 +243,8 @@
     "account_individual": "Individual",
     "account_type": "Account Type",
     "quick_actions": "Quick Actions",
+    "counterparty_profile": "Buyer Details",
+    "back": "Back",
 "fields": {
       "name": "Name",
       "company": "Company Name",
@@ -500,6 +503,10 @@
     "Profile": {
       "title": "Profile - Trade Global",
       "description": "View your profile"
+    },
+    "CounterpartyProfile": {
+      "title": "Buyer Details - Trade Global",
+      "description": "View counterparty profile details"
     },
     "QuotationRequests": {
       "title": "Quotation Requests - Trade Global",
