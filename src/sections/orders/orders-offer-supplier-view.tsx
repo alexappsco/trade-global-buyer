@@ -162,7 +162,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
           {t("submit_offer.view_title")}
         </Typography>
         <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-          {offer.deliveryStatus !== "delivered" && (
+          {offer.deliveryStatus !== "delivered" && offer.status === "accepted" && (
             <Button
               variant="contained"
               onClick={() => setOpenMarkDeliveredConfirm(true)}
