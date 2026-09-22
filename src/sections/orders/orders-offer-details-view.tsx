@@ -150,6 +150,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
   const status = statusMeta[offer.status];
   const supplier = offer.counterparty;
   const showDecision = offer.status === 'pending' && !isActing;
+  const canBrowseSupplier = offer.status === 'accepted';
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -458,6 +459,11 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
 
       {/* Supplier & Address Strip */}
       <Box
+        onClick={() => {
+          if (canBrowseSupplier) {
+            router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}&from=buyer`);
+          }
+        }}
         sx={{
           bgcolor: '#EAEFEA',
           borderRadius: 1,
@@ -466,21 +472,60 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
           display: 'flex',
           gap: 4,
           alignItems: 'center',
+          justifyContent: 'space-between',
           flexWrap: 'wrap',
+          transition: 'box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease',
+          ...(canBrowseSupplier
+            ? {
+                cursor: 'pointer',
+                '&:hover': {
+                  boxShadow: '0 8px 20px 0 rgba(16,117,78,0.12), 0 2px 8px -2px rgba(16,117,78,0.10)',
+                  transform: 'translateY(-3px)',
+                  bgcolor: '#F7FDF9',
+                },
+              }
+            : {}),
         }}
       >
-        <Typography variant="body2" sx={{ fontWeight: 700, color: '#161C24' }}>
-          {t('offer_details.cards.supplier')}:{' '}
-          <Box component="span" sx={{ color: '#006838', fontWeight: 700 }}>
-            {supplier?.legalCompanyName || '—'}
-          </Box>
-        </Typography>
-        <Typography variant="body2" sx={{ fontWeight: 700, color: '#161C24' }}>
-          {t('offer_details.cards.address')}:{' '}
-          <Box component="span" sx={{ color: '#006838', fontWeight: 700 }}>
-            {supplier?.companyAddress || supplier?.city || '—'}
-          </Box>
-        </Typography>
+        <Box sx={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
+          <Typography variant="body2" sx={{ fontWeight: 700, color: '#161C24' }}>
+            {t('offer_details.cards.supplier')}:{' '}
+            <Box component="span" sx={{ color: '#006838', fontWeight: 700 }}>
+              {supplier?.legalCompanyName || '—'}
+            </Box>
+          </Typography>
+          <Typography variant="body2" sx={{ fontWeight: 700, color: '#161C24' }}>
+            {t('offer_details.cards.address')}:{' '}
+            <Box component="span" sx={{ color: '#006838', fontWeight: 700 }}>
+              {supplier?.companyAddress || supplier?.city || '—'}
+            </Box>
+          </Typography>
+        </Box>
+
+        {canBrowseSupplier && (
+          <Button
+            variant="contained"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/orders/${id}/counterparty-profile?offerId=${offerId}&from=buyer`);
+            }}
+            sx={{
+              bgcolor: '#10754E',
+              color: 'white',
+              borderRadius: '8px',
+              fontWeight: 600,
+              px: 2,
+              py: 0.75,
+              textTransform: 'none',
+              gap: 1,
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#0c5b3c', boxShadow: 'none' },
+            }}
+          >
+            <Iconify icon="solar:user-circle-bold" width={16} />
+            {t('submit_offer.browse_supplier')}
+          </Button>
+        )}
       </Box>
 
       {/* Offer Calculations Table Card */}

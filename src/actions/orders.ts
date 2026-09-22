@@ -3,7 +3,7 @@
 import { getData, postData } from 'src/utils/crud-fetch-api';
 import { endpoints } from 'src/utils/endpoints';
 import type { ApiResponse } from 'src/types/crud-types';
-import type { Order, OrderListResponse, OrderCatalogItem, CreateOrderRequest, CreateOrderResponse } from 'src/types/order';
+import type { Order, OrderListResponse, OrderCatalogItem, CreateOrderRequest, CreateOrderResponse, CounterpartyProfile } from 'src/types/order';
 
 export async function getOrdersCatalog(): Promise<ApiResponse<OrderCatalogItem[]>> {
   return await getData<OrderCatalogItem[]>(endpoints.orders.catalog);
@@ -40,6 +40,10 @@ export async function getOrders(params?: {
 
 export async function getOrderDetails(id: string): Promise<ApiResponse<Order>> {
   return await getData<Order>(endpoints.orders.details(id));
+}
+
+export async function getCounterpartyDetails(id: string): Promise<ApiResponse<CounterpartyProfile>> {
+  return await getData<CounterpartyProfile>(endpoints.orders.counterpartyDetails(id));
 }
 
 export async function closeOrder(id: string): Promise<ApiResponse<Order>> {
