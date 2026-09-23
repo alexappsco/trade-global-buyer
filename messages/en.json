@@ -66,6 +66,8 @@
   },
   "Orders": {
     "title": "Orders",
+    "reason_order_closed": "This order is no longer open for submitting offers.",
+    "reason_pending_delivery": "You must confirm previous pending deliveries first to submit new offers.",
     "add_new": "Add New Order",
     "search": "Search",
     "filter_category": "Category",

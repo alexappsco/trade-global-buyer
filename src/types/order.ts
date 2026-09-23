@@ -30,6 +30,7 @@ export type Order = {
   quotationActionState: string | null;
   canSubmitQuotation: boolean;
   hasSubmittedQuotation: boolean;
+  hasPendingDelivery?: boolean;
   isOwnOrder: boolean;
   isOrderClosed: boolean;
   items: OrderItem[];
