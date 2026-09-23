@@ -15,16 +15,13 @@ type LoaderProps = {
 };
 
 const DEFAULT_COLOR = '#1E8057';
-const BRAND_LOGO = '/logo_2.png';
 
 function BrandSpinner({
   size,
   color,
-  center,
 }: {
   size: number;
   color: string;
-  center?: React.ReactNode;
 }) {
   return (
     <Box
@@ -53,7 +50,6 @@ function BrandSpinner({
           '& .MuiCircularProgress-circle': { strokeLinecap: 'round' },
         }}
       />
-      {center}
     </Box>
   );
 }
@@ -84,24 +80,7 @@ export function Loader({
           ...sx,
         }}
       >
-        <BrandSpinner
-          size={size ?? 84}
-          color={color}
-          center={
-            <Box
-              component="img"
-              src={BRAND_LOGO}
-              alt="Trade Global"
-              sx={{
-                width: size ? size * 0.55 : 46,
-                height: size ? size * 0.55 : 46,
-                borderRadius: '50%',
-                objectFit: 'cover',
-                bgcolor: '#ffffff',
-              }}
-            />
-          }
-        />
+        <BrandSpinner size={size ?? 60} color={color} />
         {label && (
           <Typography variant="body2" sx={{ color: '#63706A', fontWeight: 600 }}>
             {label}
