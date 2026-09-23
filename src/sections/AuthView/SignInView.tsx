@@ -7,6 +7,7 @@ import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
+import { Loader } from "src/components/Loader/Loader";
 import { useAuth } from "src/contexts/AuthContext";
 import { loginAction } from "src/actions/auth";
 import { UI_TO_ROLE } from "src/types/auth";
@@ -194,7 +195,14 @@ export default function SignInView() {
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
-          {loading ? t("loading") : t("signin_cta")}
+          {loading ? (
+            <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}>
+              <Loader variant="inline" size={18} color="inherit" />
+              {t("loading")}
+            </Box>
+          ) : (
+            t("signin_cta")
+          )}
         </Button>
       </Stack>
     </AuthShell>

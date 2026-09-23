@@ -21,6 +21,7 @@ export default function TableHeadCustom({ headLabel, enableActions = false }: Pr
             align={headCell.align || 'left'}
             sx={{
               width: headCell.width,
+              p: '9px 16px',
               whiteSpace: 'nowrap',
               borderBottom: 'none',
               color: '#6b7280',

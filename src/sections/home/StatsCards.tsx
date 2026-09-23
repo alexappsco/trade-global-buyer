@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Grid, Card, Typography, Box, CircularProgress } from '@mui/material';
+import { Grid, Card, Typography, Box } from '@mui/material';
 import { useTranslations } from 'next-intl';
+import { Loader } from 'src/components/Loader/Loader';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
@@ -48,6 +49,10 @@ export default function StatsCards() {
 
   const getCount = (field: keyof DashboardMetrics) => (metrics ? metrics[field] : 0);
 
+  if (isLoading) {
+    return <Loader variant="section" minHeight={150} sx={{ mb: 4 }} />;
+  }
+
   return (
     <Grid container spacing={2} sx={{ mb: 4 }}>
       {statKeys.map((stat) => (
@@ -77,11 +82,7 @@ export default function StatsCards() {
             </Box>
             <Box sx={{ textAlign: 'right', mt: 1 }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
-                {isLoading ? (
-                  <CircularProgress size={18} sx={{ color: '#889892' }} />
-                ) : (
-                  t('stats.orders_count', { count: getCount(stat.field) })
-                )}
+                {t('stats.orders_count', { count: getCount(stat.field) })}
               </Typography>
               <Typography variant="caption" sx={{ color: '#889892' }}>
                 {t(`stats.${stat.key}`)}

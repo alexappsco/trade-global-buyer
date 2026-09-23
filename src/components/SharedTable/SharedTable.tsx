@@ -51,6 +51,7 @@ function SharedTable<T extends { id: string }>({
                 <SharedTableRow<T>
                   key={row.id}
                   row={row}
+                  dense={table.dense}
                   actions={actions}
                   customRender={customRender}
                   tableHead={tableHead}

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
 import DeleteDialog from "src/components/dialog/delete";
 import { useToast } from "src/components/toast";
+import { Loader } from "src/components/Loader/Loader";
 import { useTranslations } from "next-intl";
 import type { CreateSupportRequestInput, SupportPageView, SupportRequest } from "src/types/support";
 import {
@@ -84,11 +84,7 @@ export default function SupportView() {
   return (
     <>
       {isLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {t("loading")}
-          </Typography>
-        </Box>
+        <Loader variant="section" minHeight={240} label={t("loading")} />
       ) : (
         <SupportRequestList
           requests={requests}

@@ -14,10 +14,10 @@ import {
   TableHead,
   TableContainer,
   Typography,
-  CircularProgress,
 } from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { useToast } from 'src/components/toast';
+import { Loader } from 'src/components/Loader/Loader';
 import { getInvoiceDetails, downloadInvoicePdf } from 'src/actions/invoices';
 import type { InvoiceDetail } from 'src/types/invoice';
 
@@ -90,11 +90,7 @@ export default function InvoicesDetailsView({ id }: Props) {
   };
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader variant="section" minHeight={320} label={t('loading')} />;
   }
 
   if (!invoice) {

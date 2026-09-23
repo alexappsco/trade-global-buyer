@@ -6,6 +6,7 @@ import { alpha } from "@mui/material/styles";
 import { useTranslations } from "next-intl";
 import EmptyContent from "src/components/empty-content";
 import { useToast } from "src/components/toast";
+import { Loader } from "src/components/Loader/Loader";
 import type { AppNotification } from "src/types/notification";
 import {
   getNotifications,
@@ -152,11 +153,7 @@ export default function NotificationsView() {
       </Box>
 
       {isLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {t("loading")}
-          </Typography>
-        </Box>
+        <Loader variant="section" minHeight={200} label={t("loading")} />
       ) : notifications.length === 0 ? (
         <EmptyContent title={t("empty")} sx={{ py: 8 }} />
       ) : (

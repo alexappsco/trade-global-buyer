@@ -12,7 +12,6 @@ import {
   Container,
   Stack,
   Badge,
-  CircularProgress,
   Alert,
   Dialog,
   Grid,
@@ -28,6 +27,7 @@ import CardTravelOutlinedIcon from '@mui/icons-material/CardTravelOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import { useToast } from 'src/components/toast';
+import { Loader } from 'src/components/Loader/Loader';
 import { getCounterpartyDetails } from 'src/actions/orders';
 import type { CounterpartyProfile } from 'src/types/order';
 
@@ -104,21 +104,7 @@ export default function CounterpartyProfileView({ orderId, offerId, from }: Prop
   };
 
   if (isLoading) {
-    return (
-      <Box
-        sx={{
-          bgcolor: '#F3F6F5',
-          minHeight: '100vh',
-          py: 4,
-          px: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <CircularProgress size={40} sx={{ color: '#1E8057' }} />
-      </Box>
-    );
+    return <Loader variant="section" minHeight={400} label={t('loading')} />;
   }
 
   if (error || !profile) {

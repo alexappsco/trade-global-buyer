@@ -9,7 +9,6 @@ import {
   TableCell,
   Box,
   IconButton,
-  CircularProgress,
   Typography,
   MenuItem,
   MenuList,
@@ -18,6 +17,7 @@ import {
 } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Iconify from "src/components/iconify";
+import { Loader } from "src/components/Loader/Loader";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 import TablePaginationCustom from "src/components/SharedTable/table-pagination-custom";
 import { SimpleTableProps } from "./types";
@@ -98,11 +98,7 @@ function SimpleTable<T extends { id: string | number }>({
   const paginationRowsPerPage = serverPagination?.rowsPerPage ?? rowsPerPage;
 
   if (loading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader variant="section" minHeight={200} />;
   }
 
   return (
@@ -129,7 +125,7 @@ function SimpleTable<T extends { id: string | number }>({
                             textAlign:
           (headCell.align as React.CSSProperties["textAlign"]) ||
           "center",
-                    py: dense ? 0.5 : 1,
+                    py: dense ? 0.5 : 0.75,
                     px: dense ? 1.5 : 2,
                     borderBottom: "1px solid #e5e7eb",
                     fontSize: "0.875rem",
@@ -190,7 +186,7 @@ function SimpleTable<T extends { id: string | number }>({
                         textAlign:
                         (headCell.align as React.CSSProperties["textAlign"]) ||
                         "center",
-                        py: dense ? 0.5 : 1,
+                        py: dense ? 0.5 : 0.75,
                         px: dense ? 1.5 : 2,
                         color: index === 0 ? "#111827" : "#4b5563",
                         fontWeight: index === 0 ? 600 : 500,

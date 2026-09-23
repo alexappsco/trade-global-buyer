@@ -12,7 +12,6 @@ import {
   Container,
   Stack,
   Badge,
-  CircularProgress,
   Alert,
   Dialog,
   Tooltip,
@@ -34,6 +33,7 @@ import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import { paths } from '@/routes/paths';
 import { getMyInfo, updateMyInfo } from '@/actions/profile';
 import { useToast } from 'src/components/toast';
+import { Loader } from 'src/components/Loader/Loader';
 import type { MyInfo } from '@/types/auth';
 
 function getInitials(name?: string): string {
@@ -123,21 +123,7 @@ export default function ProfileView() {
   };
 
   if (isLoading) {
-    return (
-      <Box
-        sx={{
-          bgcolor: '#F3F6F5',
-          minHeight: '100vh',
-          py: 4,
-          px: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <CircularProgress size={40} sx={{ color: '#1E8057' }} />
-      </Box>
-    );
+    return <Loader variant="section" minHeight={400} label={t('loading')} />;
   }
 
   if (error || !profile) {
