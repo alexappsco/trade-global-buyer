@@ -25,6 +25,7 @@ import { getMyInfo, updateMyInfo } from '@/actions/profile';
 import { getOrdersCatalog } from '@/actions/orders';
 import { useToast } from 'src/components/toast';
 import { Loader } from 'src/components/Loader/Loader';
+import PageHeader from 'src/components/PageHeader/PageHeader';
 import type { MyInfo } from '@/types/auth';
 import type { OrderCatalogItem } from '@/types/order';
 
@@ -66,6 +67,7 @@ function getInitials(name?: string): string {
 export default function EditProfile() {
   const router = useRouter();
   const t = useTranslations('Profile');
+  const tSidebar = useTranslations('Sidebar');
   const locale = useLocale();
   const toast = useToast();
 
@@ -171,6 +173,14 @@ export default function EditProfile() {
       }}
     >
       <Container maxWidth="xl">
+        {/* Page Header with Breadcrumb */}
+        <Box sx={{ mb: 3 }}>
+          <PageHeader
+            title={t('edit_profile')}
+            crumbs={[{ label: tSidebar('profile'), href: '/profile' }]}
+          />
+        </Box>
+
         {loadError ? (
           <Alert
             severity="error"

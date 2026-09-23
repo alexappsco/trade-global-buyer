@@ -25,6 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslations } from "next-intl";
 import { useToast } from "src/components/toast";
+import PageHeader from "src/components/PageHeader/PageHeader";
 import { useRouter } from "src/i18n/routing";
 import * as Yup from "yup";
 const GREEN = "#1E8E59";
@@ -363,6 +364,7 @@ function RequestFormBlock({
 
 export default function CreateQuoteRequestView() {
   const t = useTranslations("CreateQuoteRequest");
+  const tSidebar = useTranslations("Sidebar");
   const toast = useToast();
   const router = useRouter();
   const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
@@ -522,18 +524,11 @@ export default function CreateQuoteRequestView() {
 
   return (
     <Box>
-      <Box
-        sx={{
-          bgcolor: "#EDF4F2",
-          borderRadius: "12px",
-          px: { xs: 2, md: 3 },
-          py: 2.5,
-        }}
-      >
-        <Typography variant="h6" sx={{ fontWeight: 700, color: "#171717" }}>
-          {t("page_title")}
-        </Typography>
-      </Box>
+      <PageHeader
+        title={t("page_title")}
+        crumbs={[{ label: tSidebar("my_orders"), href: "/orders" }]}
+        back="/orders"
+      />
 
       <Stack
         direction={{ xs: "column", sm: "row" }}

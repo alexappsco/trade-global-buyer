@@ -25,6 +25,7 @@ import {
 
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
+import PageHeader from 'src/components/PageHeader/PageHeader';
 import { useToast } from 'src/components/toast';
 import { Loader } from 'src/components/Loader/Loader';
 import { getOrderDetails, closeOrder, confirmDelivery, downloadQuotationOffersPdf } from 'src/actions/orders';
@@ -39,6 +40,7 @@ interface Props {
 
 export default function ConfirmOrderStatus({ id }: Props) {
   const t = useTranslations('Orders');
+  const tSidebar = useTranslations('Sidebar');
   const locale = useLocale();
   const router = useRouter();
   const { role } = useAuth();
@@ -257,31 +259,13 @@ export default function ConfirmOrderStatus({ id }: Props) {
         </Box>
       </Collapse>
 
-      {/* Order Title Banner */}
-      <Box
-        sx={{
-          bgcolor: '#EAEFEA',
-          borderRadius: 2,
-          p: 2.5,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 2,
-        }}
-      >
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 700,
-            color: '#161C24',
-          }}
-        >
-          {t('details.title', { id: order.orderNumber })}
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-          <Button
+      {/* Page Header with Breadcrumb */}
+      <PageHeader
+        title={t('details.title', { id: order.orderNumber })}
+        crumbs={[{ label: tSidebar('my_orders'), href: '/orders' }]}
+        action={
+          <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+            <Button
               variant="contained"
               disabled={!canConfirmDelivery}
               onClick={() => setOpenDeliveryConfirm(true)}
@@ -292,6 +276,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 borderRadius: '8px',
                 px: 3,
                 py: 1,
+                gap: 1,
                 boxShadow: 'none',
                 '&:hover': {
                   bgcolor: '#0c5b3c',
@@ -304,30 +289,34 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 },
               }}
             >
+              <Iconify icon="solar:delivery-bold" width={16} />
               {t('details.confirm_delivery')}
             </Button>
 
-          <Button
-            variant="contained"
-            onClick={() => setOpenCloseConfirm(true)}
-            sx={{
-              bgcolor: '#FF3B30',
-              color: 'white',
-              fontWeight: 600,
-              borderRadius: '8px',
-              px: 3,
-              py: 1,
-              boxShadow: 'none',
-              '&:hover': {
-                bgcolor: '#d32f2f',
+            <Button
+              variant="contained"
+              onClick={() => setOpenCloseConfirm(true)}
+              sx={{
+                bgcolor: '#FF3B30',
+                color: 'white',
+                fontWeight: 600,
+                borderRadius: '8px',
+                px: 3,
+                py: 1,
+                gap: 1,
                 boxShadow: 'none',
-              },
-            }}
-          >
-            {t('details.close')}
-          </Button>
-        </Box>
-      </Box>
+                '&:hover': {
+                  bgcolor: '#d32f2f',
+                  boxShadow: 'none',
+                },
+              }}
+            >
+              <Iconify icon="solar:lock-bold" width={16} />
+              {t('details.close')}
+            </Button>
+          </Box>
+        }
+      />
 
       {/* Order Info Card */}
       <Card

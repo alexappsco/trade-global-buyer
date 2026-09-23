@@ -16,7 +16,6 @@ import {
   Dialog,
   Grid,
 } from '@mui/material';
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
@@ -28,6 +27,7 @@ import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlin
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import { useToast } from 'src/components/toast';
 import { Loader } from 'src/components/Loader/Loader';
+import PageHeader from 'src/components/PageHeader/PageHeader';
 import { getCounterpartyDetails } from 'src/actions/orders';
 import type { CounterpartyProfile } from 'src/types/order';
 
@@ -54,6 +54,7 @@ interface Props {
 export default function CounterpartyProfileView({ orderId, offerId, from }: Props) {
   const router = useRouter();
   const t = useTranslations('Profile');
+  const tSidebar = useTranslations('Sidebar');
   const locale = useLocale();
   const toast = useToast();
 
@@ -160,34 +161,14 @@ export default function CounterpartyProfileView({ orderId, offerId, from }: Prop
       }}
     >
       <Container maxWidth="xl">
-        {/* Header */}
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{ mb: 3, alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: '800', color: '#1A1A1A' }}>
-            {from === 'supplier' ? t('counterparty_buyer') : t('counterparty_supplier')}
-          </Typography>
-          <Button
-            variant="outlined"
-            onClick={handleBack}
-            sx={{
-              borderColor: '#1E8057',
-              color: '#1E8057',
-              borderRadius: '8px',
-              fontWeight: 600,
-              px: 2.5,
-              py: 1,
-              textTransform: 'none',
-              gap: 1,
-              '&:hover': { borderColor: '#166343', bgcolor: 'rgba(30,128,87,0.04)' },
-            }}
-          >
-            <ArrowBackOutlinedIcon sx={{ fontSize: 18 }} />
-            {t('back')}
-          </Button>
-        </Stack>
+        {/* Page Header with Breadcrumb */}
+        <Box sx={{ mb: 3 }}>
+          <PageHeader
+            title={from === 'supplier' ? t('counterparty_buyer') : t('counterparty_supplier')}
+            crumbs={[{ label: tSidebar('my_orders'), href: '/orders' }]}
+            back={handleBack}
+          />
+        </Box>
 
         <Grid container spacing={3}>
           {/* Header / Hero Card */}
