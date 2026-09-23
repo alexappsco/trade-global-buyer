@@ -10,12 +10,12 @@ import {
   Button,
   MenuItem,
   TextField,
-  Typography,
   InputAdornment,
 } from "@mui/material";
 
 import Iconify from "src/components/iconify";
 import SharedTable from "src/components/SharedTable/SharedTable";
+import PageHeader from "src/components/PageHeader/PageHeader";
 import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
 import { useQuery } from "src/components/use-query";
@@ -181,20 +181,7 @@ actions_cell: (row: QuotationOffer) => (
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       {/* Banner */}
-      <Box
-        sx={{
-          bgcolor: "#EAEFEA",
-          borderRadius: 2,
-          p: 2.5,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h5" sx={{ fontWeight: 700, color: "#161C24" }}>
-          {t("title")}
-        </Typography>
-      </Box>
+      <PageHeader title={t("title")} back={null} />
 
       {/* Filter and Table Card */}
       <Card

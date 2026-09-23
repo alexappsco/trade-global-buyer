@@ -25,6 +25,7 @@ import { useAuth } from "src/contexts/AuthContext";
 import { useQuery } from "src/components/use-query";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 import SharedTable from "src/components/SharedTable/SharedTable";
+import PageHeader from "src/components/PageHeader/PageHeader";
 import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
 import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
@@ -337,52 +338,35 @@ export default function OrdersListView() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       {/* Banner / Header */}
-      <Box
-        sx={{
-          bgcolor: "#EAEFEA",
-          borderRadius: 2,
-          p: 2.5,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 2,
-        }}
-      >
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 700,
-            color: "#006838",
-          }}
-        >
-          {t("title")}
-        </Typography>
-
-        {role === "buyer" && (
-          <Button
-            variant="contained"
-            onClick={() => router.push("/orders/create")}
-            sx={{
-              bgcolor: "#10754E",
-              color: "white",
-              fontWeight: 600,
-              borderRadius: "8px",
-              px: 2.5,
-              py: 1,
-              gap: 1,
-              boxShadow: "none",
-              "&:hover": {
-                bgcolor: "#0c5b3c",
+      <PageHeader
+        title={t("title")}
+        back={null}
+        action={
+          role === "buyer" ? (
+            <Button
+              variant="contained"
+              onClick={() => router.push("/orders/create")}
+              sx={{
+                bgcolor: "#10754E",
+                color: "white",
+                fontWeight: 600,
+                borderRadius: "8px",
+                px: 2.5,
+                py: 0.9,
+                gap: 1,
                 boxShadow: "none",
-              },
-            }}
-          >
-            <Iconify icon="mingcute:add-line" width={18} />
-            {t("add_new")}
-          </Button>
-        )}
-      </Box>
+                "&:hover": {
+                  bgcolor: "#0c5b3c",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              <Iconify icon="mingcute:add-line" width={18} />
+              {t("add_new")}
+            </Button>
+          ) : undefined
+        }
+      />
 
       {/* Main Content Card (Filters + Table) */}
       <Card

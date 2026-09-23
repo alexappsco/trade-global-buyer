@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { useToast } from 'src/components/toast';
+import PageHeader from 'src/components/PageHeader/PageHeader';
 import { Loader } from 'src/components/Loader/Loader';
 import { getInvoiceDetails, downloadInvoicePdf } from 'src/actions/invoices';
 import type { InvoiceDetail } from 'src/types/invoice';
@@ -27,6 +28,7 @@ interface Props {
 
 export default function InvoicesDetailsView({ id }: Props) {
   const t = useTranslations('Invoices');
+  const tSidebar = useTranslations('Sidebar');
   const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
@@ -134,6 +136,12 @@ export default function InvoicesDetailsView({ id }: Props) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {/* Page Header with Breadcrumb */}
+      <PageHeader
+        title={t('details.title', { id: invoice.invoiceNumber })}
+        crumbs={[{ label: tSidebar('invoices'), href: '/invoices' }]}
+      />
+
       {/* Upper Main Invoice Card */}
       <Card
         sx={{

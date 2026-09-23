@@ -18,6 +18,7 @@ import {
 
 import Iconify from "src/components/iconify";
 import ConfirmationDialog from "src/components/dialog/ConfirmationDialog";
+import PageHeader from "src/components/PageHeader/PageHeader";
 import { useToast } from "src/components/toast";
 import { Loader } from "src/components/Loader/Loader";
 import { getQuotationOfferDetails } from "src/actions/quotations";
@@ -60,6 +61,7 @@ function StatusBadge({ status, locale }: { status: QuotationOfferStatus; locale:
 
 export default function OrdersOfferSupplierView({ id, offerId }: Props) {
   const t = useTranslations("Orders");
+  const tSidebar = useTranslations("Sidebar");
   const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
@@ -143,24 +145,13 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      {/* Banner */}
-      <Box
-        sx={{
-          bgcolor: "#EAEFEA",
-          borderRadius: 2,
-          p: 2.5,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 2,
-        }}
-      >
-        <Typography variant="h5" sx={{ fontWeight: 700, color: "#161C24" }}>
-          {t("submit_offer.view_title")}
-        </Typography>
-        <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-          <Button
+      {/* Page Header with Breadcrumb */}
+      <PageHeader
+        title={t("submit_offer.view_title")}
+        crumbs={[{ label: tSidebar("quotation_requests"), href: "/quotation-requests" }]}
+        action={
+          <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+            <Button
               variant="contained"
               disabled={!canMarkDelivered}
               onClick={() => setOpenMarkDeliveredConfirm(true)}
@@ -182,26 +173,27 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
               {t("details.delivery.mark_delivered")}
             </Button>
 
-          <Button
-            variant="outlined"
-            onClick={() => router.push("/quotation-requests")}
-            sx={{
-              borderColor: "#10754E",
-              color: "#10754E",
-              borderRadius: "8px",
-              fontWeight: 600,
-              px: 2.5,
-              py: 1,
-              textTransform: "none",
-              gap: 1,
-              "&:hover": { borderColor: "#0c5b3c", bgcolor: "rgba(16,117,78,0.04)" },
-            }}
-          >
-            <Iconify icon="solar:arrow-left-bold" width={16} />
-            {t("submit_offer.back_to_requests")}
-          </Button>
-        </Box>
-      </Box>
+            <Button
+              variant="outlined"
+              onClick={() => router.push("/quotation-requests")}
+              sx={{
+                borderColor: "#10754E",
+                color: "#10754E",
+                borderRadius: "8px",
+                fontWeight: 600,
+                px: 2.5,
+                py: 1,
+                textTransform: "none",
+                gap: 1,
+                "&:hover": { borderColor: "#0c5b3c", bgcolor: "rgba(16,117,78,0.04)" },
+              }}
+            >
+              <Iconify icon="solar:list-bold" width={16} />
+              {t("submit_offer.back_to_requests")}
+            </Button>
+          </Box>
+        }
+      />
 
       {/* Order Info */}
       <Card

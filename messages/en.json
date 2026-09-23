@@ -10,6 +10,10 @@
     "Label": {
       "no_data": "No data"
     },
+    "PageHeader": {
+      "home": "Home",
+      "back": "Back"
+    },
     "Server": {
       "not_found": "Resource not found",
       "unauthorized": "Unauthorized. Please log in again.",

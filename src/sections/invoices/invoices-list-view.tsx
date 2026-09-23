@@ -9,10 +9,10 @@ import {
   Menu,
   MenuItem,
   TextField,
-  Typography,
   InputAdornment,
 } from "@mui/material";
 import Iconify from "src/components/iconify";
+import PageHeader from "src/components/PageHeader/PageHeader";
 import { Loader } from "src/components/Loader/Loader";
 import { useToast } from "src/components/toast";
 import SharedTable from "src/components/SharedTable/SharedTable";
@@ -135,19 +135,7 @@ export default function InvoicesListView() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       {/* Banner Header */}
-      <Box
-        sx={{
-          bgcolor: "#E6EFEA",
-          borderRadius: 2,
-          p: 2.5,
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h5" sx={{ fontWeight: 700, color: "#006838" }}>
-          {t("title")}
-        </Typography>
-      </Box>
+      <PageHeader title={t("title")} back={null} />
 
       {/* Filter Bar */}
       <Box
