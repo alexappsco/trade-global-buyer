@@ -142,6 +142,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
   }
 
   const canBrowseBuyer = offer.status === "accepted";
+  const canMarkDelivered = offer.deliveryStatus !== "delivered" && offer.status === "accepted";
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -162,9 +163,9 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
           {t("submit_offer.view_title")}
         </Typography>
         <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-          {offer.deliveryStatus !== "delivered" && offer.status === "accepted" && (
-            <Button
+          <Button
               variant="contained"
+              disabled={!canMarkDelivered}
               onClick={() => setOpenMarkDeliveredConfirm(true)}
               sx={{
                 bgcolor: "#10754E",
@@ -177,12 +178,12 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
                 gap: 1,
                 boxShadow: "none",
                 "&:hover": { bgcolor: "#0c5b3c", boxShadow: "none" },
+                "&.Mui-disabled": { bgcolor: "#C4CDD5", color: "#fff", boxShadow: "none" },
               }}
             >
               <Iconify icon="solar:delivery-bold" width={16} />
               {t("details.delivery.mark_delivered")}
             </Button>
-          )}
 
           <Button
             variant="outlined"

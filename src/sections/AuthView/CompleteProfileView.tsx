@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   MenuItem,
@@ -65,7 +66,7 @@ export default function CompleteProfileView() {
     legalName: "",
     phone: registeredPhone,
     email: "",
-    categoryCode: "",
+    categoryCodes: [] as string[],
     taxNumber: "",
     commercialRecord: "",
     city: "",
@@ -74,7 +75,7 @@ export default function CompleteProfileView() {
 
   const [loading, setLoading] = useState(false);
 
-  const update = (field: keyof typeof form, value: string) =>
+  const update = <K extends keyof typeof form>(field: K, value: (typeof form)[K]) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleSave = async () => {
@@ -88,13 +89,12 @@ export default function CompleteProfileView() {
       "legalName",
       "phone",
       "email",
-      "categoryCode",
       "taxNumber",
       "commercialRecord",
       "city",
       "address",
     ];
-    if (required.some((field) => !form[field])) {
+    if (required.some((field) => !form[field]) || form.categoryCodes.length === 0) {
       toast.error(t("profile_required"));
       return;
     }
@@ -107,7 +107,7 @@ export default function CompleteProfileView() {
           legalCompanyName: form.legalName,
           phoneNumber: form.phone,
           email: form.email,
-          categoryCode: form.categoryCode,
+          categoryCodes: form.categoryCodes,
           taxNumber: form.taxNumber,
           commercialRecord: form.commercialRecord,
           city: form.city,
@@ -171,19 +171,33 @@ export default function CompleteProfileView() {
             />
           </Field>
           <Field label={t("category")}>
-            <TextField
-              select
+            <Autocomplete
+              multiple
               fullWidth
               size="small"
-              value={form.categoryCode}
-              onChange={(e) => update("categoryCode", e.target.value)}
-            >
-              {categories.map((cat) => (
-                <MenuItem key={cat.code} value={cat.code}>
-                  {locale === "ar" ? cat.nameAr : cat.nameEn}
-                </MenuItem>
-              ))}
-            </TextField>
+              options={categories}
+              getOptionLabel={(cat) => (locale === "ar" ? cat.nameAr : cat.nameEn)}
+              value={categories.filter((cat) => form.categoryCodes.includes(cat.code))}
+              onChange={(_, value) => update("categoryCodes", value.map((v) => v.code))}
+              isOptionEqualToValue={(option, value) => option.code === value.code}
+              slotProps={{
+                chip: {
+                  size: "small",
+                  sx: {
+                    bgcolor: "#EAF3EF",
+                    color: "#1E8057",
+                    fontWeight: 600,
+                    "& .MuiChip-deleteIcon": { color: "#1E8057" },
+                  },
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder={t("category_placeholder_multi")}
+                />
+              )}
+            />
           </Field>
           <Field label={t("tax_number")}>
             <TextField

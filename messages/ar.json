@@ -30,7 +30,7 @@
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
     "invoices": "الفواتير",
-    "quotation_requests": "طلبات عروض الأسعار",
+    "quotation_requests": "عروض الأسعار",
     "role": {
       "buyer": "مشتري",
       "supplier": "مورد"
@@ -345,6 +345,7 @@
     "legal_company_name": "اسم الشركة القانوني",
     "email": "البريد الالكتروني",
     "category": "الفئة",
+    "category_placeholder_multi": "اختر فئة واحدة أو أكثر",
     "tax_number": "الرقم الضريبي",
     "commercial_record": "السجل التجاري",
     "city": "المدينة",

@@ -62,7 +62,7 @@ export interface CompleteProfilePayload {
   legalCompanyName: string;
   phoneNumber: string;
   email: string;
-  categoryCode: string;
+  categoryCodes: string[];
   taxNumber: string;
   commercialRecord: string;
   city: string;
