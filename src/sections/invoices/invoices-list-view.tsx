@@ -6,7 +6,6 @@ import { useRouter } from "src/i18n/routing";
 import {
   Box,
   Button,
-  Checkbox,
   Menu,
   MenuItem,
   TextField,
@@ -14,19 +13,20 @@ import {
   InputAdornment,
 } from "@mui/material";
 import Iconify from "src/components/iconify";
+import { Loader } from "src/components/Loader/Loader";
 import { useToast } from "src/components/toast";
-import SimpleTable, { HeadCell } from "src/components/SimpleTable";
+import SharedTable from "src/components/SharedTable/SharedTable";
+import { cellAlignment } from "src/components/SharedTable/types";
+import { useQuery } from "src/components/use-query";
 import { getInvoices } from "src/actions/invoices";
 import type { InvoiceListItem } from "src/types/invoice";
-
-const PAGE_SIZE = 10;
 
 export default function InvoicesListView() {
   const t = useTranslations("Invoices");
   const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
-  const isRtl = locale === "ar";
+  const { set } = useQuery(["page", "limit"]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -34,12 +34,9 @@ export default function InvoicesListView() {
 
   const [selectedStatus, setSelectedStatus] = useState<"unpaid" | null>(null);
   const [statusAnchor, setStatusAnchor] = useState<null | HTMLElement>(null);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const [invoices, setInvoices] = useState<InvoiceListItem[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(PAGE_SIZE);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -48,7 +45,7 @@ export default function InvoicesListView() {
     }
     searchTimerRef.current = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-      setPage(0);
+      set({ page: null });
     }, 400);
     return () => {
       if (searchTimerRef.current) {
@@ -64,140 +61,75 @@ export default function InvoicesListView() {
         search: debouncedSearch || undefined,
         status: selectedStatus || undefined,
         sorting: "issuedAt desc",
-        skipCount: page * rowsPerPage,
-        maxResultCount: rowsPerPage,
+        skipCount: 0,
+        maxResultCount: 1000,
       });
       setLoading(false);
       if (res.success) {
         setInvoices(res.data?.items ?? []);
         setTotalCount(res.data?.totalCount ?? 0);
-        setSelectedRows([]);
       } else {
         toast.error(res.error || t("table.load_error"));
       }
     };
     fetchInvoices();
-  }, [debouncedSearch, selectedStatus, page, rowsPerPage, toast, t]);
-
-  const handleSelectAll = (checked: boolean) => {
-    setSelectedRows(checked ? invoices.map((invoice) => invoice.id) : []);
-  };
-
-  const handleSelectRow = (id: string, checked: boolean) => {
-    setSelectedRows((prev) =>
-      checked ? [...prev, id] : prev.filter((rowId) => rowId !== id)
-    );
-  };
-
-  const isAllSelected =
-    invoices.length > 0 && selectedRows.length === invoices.length;
-
-  const align = isRtl ? "right" : "left";
+  }, [debouncedSearch, selectedStatus, toast, t]);
 
   const formatDate = (value: string) =>
     value ? new Date(value).toLocaleDateString(locale) : "—";
   const formatAmount = (value?: number, currency?: string) =>
     `${(value ?? 0).toLocaleString(locale, { maximumFractionDigits: 2 })} ${currency || ""}`.trim();
 
-  const headCells: HeadCell<InvoiceListItem>[] = [
-    {
-      id: "select",
-      label: "",
-      width: 48,
-      renderHeader: () => (
-        <Checkbox
-          size="small"
-          checked={isAllSelected}
-          indeterminate={
-            selectedRows.length > 0 && selectedRows.length < invoices.length
-          }
-          onChange={(e) => handleSelectAll(e.target.checked)}
-          sx={{ color: "#C4CDD5", "&.Mui-checked": { color: "#006838" } }}
-        />
-      ),
-      renderCell: (row) => (
-        <Checkbox
-          size="small"
-          checked={selectedRows.includes(row.id)}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) => handleSelectRow(row.id, e.target.checked)}
-          sx={{ color: "#C4CDD5", "&.Mui-checked": { color: "#006838" } }}
-        />
-      ),
-    },
-    {
-      id: "invoiceNumber",
-      label: t("table.invoice_number"),
-      align,
-      width: 190,
-    },
-    {
-      id: "orderTitle",
-      label: t("table.order_title"),
-      align,
-      renderCell: (row) => (
-        <Box
-          onClick={() => router.push(`/invoices/${row.id}`)}
-          sx={{
-            color: "#10754E",
-            fontWeight: 600,
-            cursor: "pointer",
-            "&:hover": { textDecoration: "underline" },
-          }}
-        >
-          {row.orderTitle}
-        </Box>
-      ),
-    },
-    {
-      id: "orderNumber",
-      label: t("table.order_number"),
-      align,
-      width: 110,
-    },
-    {
-      id: "issuedAt",
-      label: t("table.issued_at"),
-      align,
-      width: 170,
-      renderCell: (row) => formatDate(row.issuedAt),
-    },
-    {
-      id: "commissionAmount",
-      label: t("table.commission_amount"),
-      align,
-      width: 150,
-      renderCell: (row) => formatAmount(row.commissionAmount, row.currency),
-    },
-    {
-      id: "rowActions",
-      label: t("table.actions"),
-      align,
-      width: 130,
-      renderCell: (row) => (
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => router.push(`/invoices/${row.id}`)}
-          sx={{
-            bgcolor: "#fff",
-            borderColor: "#DFE3E8",
-            color: "#637381",
-            borderRadius: "16px",
-            fontWeight: 600,
-            px: 1.5,
-            py: 0.5,
-            gap: 1,
-            textTransform: "none",
-            "&:hover": { borderColor: "#919EAB", bgcolor: "#F4F6F8" },
-          }}
-        >
-          <Iconify icon="solar:eye-bold" width={16} />
-          {t("table.view")}
-        </Button>
-      ),
-    },
+  const tableHead = [
+    { id: "invoiceNumber", label: t("table.invoice_number"), align: cellAlignment.center },
+    { id: "orderTitle", label: t("table.order_title"), align: cellAlignment.left },
+    { id: "orderNumber", label: t("table.order_number"), align: cellAlignment.center },
+    { id: "issuedAt", label: t("table.issued_at"), align: cellAlignment.center },
+    { id: "commissionAmount", label: t("table.commission_amount"), align: cellAlignment.left },
+    { id: "actions", label: t("table.actions"), align: cellAlignment.center },
   ];
+
+  const customRender = {
+    orderTitle: (row: InvoiceListItem) => (
+      <Box
+        onClick={() => router.push(`/invoices/${row.id}`)}
+        sx={{
+          color: "#10754E",
+          fontWeight: 600,
+          cursor: "pointer",
+          "&:hover": { textDecoration: "underline" },
+        }}
+      >
+        {row.orderTitle}
+      </Box>
+    ),
+    orderNumber: (row: InvoiceListItem) => `#${row.orderNumber}`,
+    issuedAt: (row: InvoiceListItem) => formatDate(row.issuedAt),
+    commissionAmount: (row: InvoiceListItem) =>
+      formatAmount(row.commissionAmount, row.currency),
+    actions: (row: InvoiceListItem) => (
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={() => router.push(`/invoices/${row.id}`)}
+        sx={{
+          bgcolor: "#fff",
+          borderColor: "#DFE3E8",
+          color: "#637381",
+          borderRadius: "16px",
+          fontWeight: 600,
+          px: 1.5,
+          py: 0.5,
+          gap: 1,
+          textTransform: "none",
+          "&:hover": { borderColor: "#919EAB", bgcolor: "#F4F6F8" },
+        }}
+      >
+        <Iconify icon="solar:eye-bold" width={16} />
+        {t("table.view")}
+      </Button>
+    ),
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -280,7 +212,7 @@ export default function InvoicesListView() {
             onClick={() => {
               setSelectedStatus(null);
               setStatusAnchor(null);
-              setPage(0);
+              set({ page: null });
             }}
             selected={selectedStatus === null}
           >
@@ -290,7 +222,7 @@ export default function InvoicesListView() {
             onClick={() => {
               setSelectedStatus("unpaid");
               setStatusAnchor(null);
-              setPage(0);
+              set({ page: null });
             }}
             selected={selectedStatus === "unpaid"}
           >
@@ -299,32 +231,18 @@ export default function InvoicesListView() {
         </Menu>
       </Box>
 
+      {/* Loading */}
+      {loading && <Loader variant="section" minHeight={240} />}
+
       {/* Table */}
-      <Box
-        sx={{
-          border: "1px solid #DFE3E8",
-          borderRadius: "8px",
-          overflow: "hidden",
-        }}
-      >
-        <SimpleTable<InvoiceListItem>
-          key={`${debouncedSearch}-${selectedStatus}`}
+      {!loading && (
+        <SharedTable
           data={invoices}
-          headCells={headCells}
-          emptyMessage={t("no_data")}
-          loading={loading}
-          serverPagination={{
-            count: totalCount,
-            page,
-            rowsPerPage,
-            onPageChange: (_event, newPage) => setPage(newPage),
-            onRowsPerPageChange: (event) => {
-              setRowsPerPage(parseInt(event.target.value, 10));
-              setPage(0);
-            },
-          }}
+          tableHead={tableHead}
+          customRender={customRender}
+          count={totalCount}
         />
-      </Box>
+      )}
     </Box>
   );
 }
