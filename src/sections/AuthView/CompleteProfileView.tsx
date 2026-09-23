@@ -187,14 +187,36 @@ export default function CompleteProfileView() {
                     bgcolor: "#EAF3EF",
                     color: "#1E8057",
                     fontWeight: 600,
-                    "& .MuiChip-deleteIcon": { color: "#1E8057" },
+                    transition: "background-color 0.2s",
+                    "&:hover": {
+                      bgcolor: "#D94141",
+                      color: "#fff",
+                      "& .MuiChip-deleteIcon": { color: "#fff" },
+                    },
+                    "& .MuiChip-deleteIcon": {
+                      color: "#1E8057",
+                      marginInlineStart: "4px",
+                      marginInlineEnd: "2px",
+                    },
+                  },
+                },
+                listbox: {
+                  sx: {
+                    "& .MuiAutocomplete-option": {
+                      "&:hover": { bgcolor: "#F4F9F7" },
+                      "&.Mui-focused": { bgcolor: "#F4F9F7" },
+                    },
                   },
                 },
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder={t("category_placeholder_multi")}
+                  placeholder={
+                    form.categoryCodes.length > 0
+                      ? ""
+                      : t("category_placeholder_multi")
+                  }
                 />
               )}
             />

@@ -247,6 +247,8 @@
     "counterparty_buyer": "تفاصيل المشتري",
     "counterparty_supplier": "تفاصيل المورد",
     "back": "رجوع",
+    "category_placeholder_multi": "اختر فئة واحدة أو أكثر",
+    "category_required": "الرجاء اختيار فئة واحدة على الأقل",
 "fields": {
       "name": "الاسم",
       "company": "اسم الشركة",

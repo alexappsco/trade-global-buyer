@@ -247,6 +247,8 @@
     "counterparty_buyer": "Buyer Details",
     "counterparty_supplier": "Supplier Details",
     "back": "Back",
+    "category_placeholder_multi": "Select one or more categories",
+    "category_required": "Please select at least one category",
 "fields": {
       "name": "Name",
       "company": "Company Name",

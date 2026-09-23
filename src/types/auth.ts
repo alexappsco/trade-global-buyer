@@ -1,6 +1,12 @@
 export type AuthRole = "Buyer" | "Supplier";
 export type AuthAccountType = "Company" | "Individual";
 
+export interface CategoryInfo {
+  code: string;
+  nameEn: string;
+  nameAr: string;
+}
+
 export interface OtpChallenge {
   challengeId: string;
   maskedPhone: string;
@@ -38,9 +44,7 @@ export interface MyInfo {
   role: AuthRole;
   accountType: AuthAccountType;
   legalCompanyName: string;
-  categoryCode: string;
-  categoryNameEn: string;
-  categoryNameAr: string;
+  categories: CategoryInfo[];
   taxNumber: string;
   commercialRecord: string;
   city: string;
@@ -55,7 +59,7 @@ export interface UpdateMyInfoPayload {
   legalCompanyName: string;
   phoneNumber: string;
   email: string;
-  categoryCode: string;
+  categoryCodes: string[];
   taxNumber: string;
   commercialRecord: string;
   city: string;

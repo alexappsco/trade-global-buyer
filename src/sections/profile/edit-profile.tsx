@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import {
+  Autocomplete,
   Box,
   Card,
   Avatar,
   Typography,
   Button,
   TextField,
-  MenuItem,
   Grid,
   Container,
   Stack,
@@ -33,7 +33,6 @@ const fieldKeys = [
   'company',
   'phone',
   'email',
-  'category',
   'tax_number',
   'commercial_record',
   'company_address',
@@ -46,7 +45,6 @@ function profileToForm(profile: MyInfo): Record<(typeof fieldKeys)[number], stri
     company: profile.legalCompanyName ?? '',
     phone: profile.phoneNumber ?? '',
     email: profile.email ?? '',
-    category: profile.categoryCode ?? '',
     tax_number: profile.taxNumber ?? '',
     commercial_record: profile.commercialRecord ?? '',
     company_address: profile.companyAddress ?? '',
@@ -73,6 +71,7 @@ export default function EditProfile() {
 
   const [profile, setProfile] = useState<MyInfo | null>(null);
   const [categories, setCategories] = useState<OrderCatalogItem[]>([]);
+  const [categoryCodes, setCategoryCodes] = useState<string[]>([]);
   const [form, setForm] = useState<Record<(typeof fieldKeys)[number], string>>(
     Object.fromEntries(fieldKeys.map((key) => [key, ''])) as Record<(typeof fieldKeys)[number], string>
   );
@@ -101,6 +100,7 @@ export default function EditProfile() {
       }
       setProfile(res.data);
       setForm(profileToForm(res.data));
+      setCategoryCodes((res.data.categories ?? []).map((c) => c.code));
       setIsLoading(false);
     };
     loadProfile();
@@ -117,6 +117,7 @@ export default function EditProfile() {
     }
     setProfile(res.data);
     setForm(profileToForm(res.data));
+    setCategoryCodes((res.data.categories ?? []).map((c) => c.code));
     setIsLoading(false);
   };
 
@@ -125,6 +126,10 @@ export default function EditProfile() {
   };
 
   const handleSave = async () => {
+    if (categoryCodes.length === 0) {
+      toast.error(t('category_required'));
+      return;
+    }
     setIsSaving(true);
     try {
       const res = await updateMyInfo({
@@ -132,7 +137,7 @@ export default function EditProfile() {
         legalCompanyName: form.company,
         phoneNumber: form.phone,
         email: form.email,
-        categoryCode: form.category,
+        categoryCodes,
         taxNumber: form.tax_number,
         commercialRecord: form.commercial_record,
         city: form.city,
@@ -290,33 +295,6 @@ export default function EditProfile() {
                         >
                           {t(`fields.${key}`)}
                         </Typography>
-                        {key === 'category' ? (
-                          <TextField
-                            select
-                            fullWidth
-                            size="small"
-                            value={form[key]}
-                            onChange={(e) => handleChange(key, e.target.value)}
-                            slotProps={{
-                              input: {
-                                sx: {
-                                  borderRadius: 2,
-                                  bgcolor: '#FAFAFA',
-                                  fontSize: '0.875rem',
-                                  '& fieldset': { borderColor: '#E5E7EB' },
-                                  '&:hover fieldset': { borderColor: '#1B8354' },
-                                  '&.Mui-focused fieldset': { borderColor: '#1B8354' },
-                                },
-                              },
-                            }}
-                          >
-                            {categories.map((cat) => (
-                              <MenuItem key={cat.code} value={cat.code}>
-                                {locale === 'ar' ? cat.nameAr : cat.nameEn}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-                        ) : (
                         <TextField
                           fullWidth
                           size="small"
@@ -336,9 +314,87 @@ export default function EditProfile() {
                             },
                           }}
                         />
-                        )}
                       </Grid>
                     ))}
+
+                    <Grid size={12}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          fontWeight: 'medium',
+                          color: 'text.secondary',
+                          mb: 0.8,
+                          display: 'block',
+                          textAlign: 'start',
+                        }}
+                      >
+                        {t('fields.category')}
+                      </Typography>
+                      <Autocomplete
+                        multiple
+                        fullWidth
+                        size="small"
+                        options={categories}
+                        getOptionLabel={(cat) => (locale === 'ar' ? cat.nameAr : cat.nameEn)}
+                        value={categories.filter((cat) => categoryCodes.includes(cat.code))}
+                        onChange={(_, value) => setCategoryCodes(value.map((v) => v.code))}
+                        isOptionEqualToValue={(option, value) => option.code === value.code}
+                        slotProps={{
+                          chip: {
+                            size: 'small',
+                            sx: {
+                              bgcolor: '#EAF3EF',
+                              color: '#1E8057',
+                              fontWeight: 600,
+                              transition: 'background-color 0.2s',
+                              '&:hover': {
+                                bgcolor: '#D94141',
+                                color: '#fff',
+                                '& .MuiChip-deleteIcon': { color: '#fff' },
+                              },
+                              '& .MuiChip-deleteIcon': {
+                                color: '#1E8057',
+                                marginInlineStart: '4px',
+                                marginInlineEnd: '2px',
+                              },
+                            },
+                          },
+                          listbox: {
+                            sx: {
+                              '& .MuiAutocomplete-option': {
+                                '&:hover': { bgcolor: '#F4F9F7' },
+                                '&.Mui-focused': { bgcolor: '#F4F9F7' },
+                              },
+                            },
+                          },
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            placeholder={
+                              categoryCodes.length > 0
+                                ? ''
+                                : t('category_placeholder_multi')
+                            }
+                            slotProps={{
+                              ...params.slotProps,
+                              input: {
+                                ...params.slotProps.input,
+                                sx: {
+                                  borderRadius: 2,
+                                  bgcolor: '#FAFAFA',
+                                  fontSize: '0.875rem',
+                                  '& input': { textAlign: 'start' },
+                                  '& fieldset': { borderColor: '#E5E7EB' },
+                                  '&:hover fieldset': { borderColor: '#1B8354' },
+                                  '&.Mui-focused fieldset': { borderColor: '#1B8354' },
+                                },
+                              },
+                            }}
+                          />
+                        )}
+                      />
+                    </Grid>
                   </Grid>
                 )}
               </Card>
