@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   MenuItem,
@@ -17,18 +18,21 @@ import { useAuth } from "src/contexts/AuthContext";
 import { completeProfileAction } from "src/actions/auth";
 import { getOrdersCatalog } from "src/actions/orders";
 import type { OrderCatalogItem } from "src/types/order";
+import type { SxProps, Theme } from "@mui/material";
 
 const GREEN = "#1E8E59";
 
 function Field({
   label,
   children,
+  sx,
 }: {
   label: string;
   children: React.ReactNode;
+  sx?: SxProps<Theme>;
 }) {
   return (
-    <Box>
+    <Box sx={sx}>
       <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
         {label}
       </Typography>
@@ -65,7 +69,7 @@ export default function CompleteProfileView() {
     legalName: "",
     phone: registeredPhone,
     email: "",
-    categoryCode: "",
+    categoryCodes: [] as string[],
     taxNumber: "",
     commercialRecord: "",
     city: "",
@@ -74,7 +78,7 @@ export default function CompleteProfileView() {
 
   const [loading, setLoading] = useState(false);
 
-  const update = (field: keyof typeof form, value: string) =>
+  const update = <K extends keyof typeof form>(field: K, value: (typeof form)[K]) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleSave = async () => {
@@ -88,13 +92,12 @@ export default function CompleteProfileView() {
       "legalName",
       "phone",
       "email",
-      "categoryCode",
       "taxNumber",
       "commercialRecord",
       "city",
       "address",
     ];
-    if (required.some((field) => !form[field])) {
+    if (required.some((field) => !form[field]) || form.categoryCodes.length === 0) {
       toast.error(t("profile_required"));
       return;
     }
@@ -107,7 +110,7 @@ export default function CompleteProfileView() {
           legalCompanyName: form.legalName,
           phoneNumber: form.phone,
           email: form.email,
-          categoryCode: form.categoryCode,
+          categoryCodes: form.categoryCodes,
           taxNumber: form.taxNumber,
           commercialRecord: form.commercialRecord,
           city: form.city,
@@ -170,21 +173,6 @@ export default function CompleteProfileView() {
               onChange={(e) => update("email", e.target.value)}
             />
           </Field>
-          <Field label={t("category")}>
-            <TextField
-              select
-              fullWidth
-              size="small"
-              value={form.categoryCode}
-              onChange={(e) => update("categoryCode", e.target.value)}
-            >
-              {categories.map((cat) => (
-                <MenuItem key={cat.code} value={cat.code}>
-                  {locale === "ar" ? cat.nameAr : cat.nameEn}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Field>
           <Field label={t("tax_number")}>
             <TextField
               fullWidth
@@ -222,6 +210,57 @@ export default function CompleteProfileView() {
               size="small"
               value={form.address}
               onChange={(e) => update("address", e.target.value)}
+            />
+          </Field>
+          <Field label={t("category")} sx={{ gridColumn: "1 / -1" }}>
+            <Autocomplete
+              multiple
+              fullWidth
+              size="small"
+              options={categories}
+              getOptionLabel={(cat) => (locale === "ar" ? cat.nameAr : cat.nameEn)}
+              value={categories.filter((cat) => form.categoryCodes.includes(cat.code))}
+              onChange={(_, value) => update("categoryCodes", value.map((v) => v.code))}
+              isOptionEqualToValue={(option, value) => option.code === value.code}
+              slotProps={{
+                chip: {
+                  size: "small",
+                  sx: {
+                    bgcolor: "#EAF3EF",
+                    color: "#1E8057",
+                    fontWeight: 600,
+                    transition: "background-color 0.2s",
+                    "&:hover": {
+                      bgcolor: "#D94141",
+                      color: "#fff",
+                      "& .MuiChip-deleteIcon": { color: "#fff" },
+                    },
+                    "& .MuiChip-deleteIcon": {
+                      color: "#1E8057",
+                      marginInlineStart: "4px",
+                      marginInlineEnd: "2px",
+                    },
+                  },
+                },
+                listbox: {
+                  sx: {
+                    "& .MuiAutocomplete-option": {
+                      "&:hover": { bgcolor: "#F4F9F7" },
+                      "&.Mui-focused": { bgcolor: "#F4F9F7" },
+                    },
+                  },
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder={
+                    form.categoryCodes.length > 0
+                      ? ""
+                      : t("category_placeholder_multi")
+                  }
+                />
+              )}
             />
           </Field>
         </Box>

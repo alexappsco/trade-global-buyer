@@ -247,6 +247,8 @@
     "counterparty_buyer": "Buyer Details",
     "counterparty_supplier": "Supplier Details",
     "back": "Back",
+    "category_placeholder_multi": "Select one or more categories",
+    "category_required": "Please select at least one category",
 "fields": {
       "name": "Name",
       "company": "Company Name",
@@ -345,6 +347,7 @@
     "legal_company_name": "Legal Company Name",
     "email": "Email",
     "category": "Category",
+    "category_placeholder_multi": "Select one or more categories",
     "tax_number": "Tax Number",
     "commercial_record": "Commercial Record",
     "city": "City",
@@ -419,7 +422,7 @@
         "city": "City",
         "company_address": "Company Address",
         "creation_time": "Creation Time",
-        "category": "Category",
+"category": "Category",
         "date": "Date",
         "status": "Status"
       },

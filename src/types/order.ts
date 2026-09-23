@@ -87,9 +87,7 @@ export type CounterpartyProfile = {
   commercialRecord: string;
   city: string;
   companyAddress: string;
-  categoryCode: string;
-  categoryNameEn: string;
-  categoryNameAr: string;
+  categories: { code: string; nameEn: string; nameAr: string }[];
   profileImageUrl?: string | null;
   coverImageUrl?: string | null;
 };

@@ -202,6 +202,8 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const isAllSelected =
     filteredOffers.length > 0 && selectedRows.length === filteredOffers.length;
 
+  const canConfirmDelivery = role === 'buyer' && order?.deliveryStatus === 'delivered' && !order?.isDelivered;
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
@@ -284,9 +286,9 @@ export default function ConfirmOrderStatus({ id }: Props) {
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-          {role === 'buyer' && !order.isDelivered && order.offerCount > 0 && (
-            <Button
+          <Button
               variant="contained"
+              disabled={!canConfirmDelivery}
               onClick={() => setOpenDeliveryConfirm(true)}
               sx={{
                 bgcolor: '#10754E',
@@ -300,11 +302,15 @@ export default function ConfirmOrderStatus({ id }: Props) {
                   bgcolor: '#0c5b3c',
                   boxShadow: 'none',
                 },
+                '&.Mui-disabled': {
+                  bgcolor: '#C4CDD5',
+                  color: '#fff',
+                  boxShadow: 'none',
+                },
               }}
             >
               {t('details.confirm_delivery')}
             </Button>
-          )}
 
           <Button
             variant="contained"

@@ -30,7 +30,7 @@
     "notifications": "الإشعارات",
     "support": "الدعم الفني",
     "invoices": "الفواتير",
-    "quotation_requests": "طلبات عروض الأسعار",
+    "quotation_requests": "عروض الأسعار",
     "role": {
       "buyer": "مشتري",
       "supplier": "مورد"
@@ -247,6 +247,8 @@
     "counterparty_buyer": "تفاصيل المشتري",
     "counterparty_supplier": "تفاصيل المورد",
     "back": "رجوع",
+    "category_placeholder_multi": "اختر فئة واحدة أو أكثر",
+    "category_required": "الرجاء اختيار فئة واحدة على الأقل",
 "fields": {
       "name": "الاسم",
       "company": "اسم الشركة",
@@ -345,6 +347,7 @@
     "legal_company_name": "اسم الشركة القانوني",
     "email": "البريد الالكتروني",
     "category": "الفئة",
+    "category_placeholder_multi": "اختر فئة واحدة أو أكثر",
     "tax_number": "الرقم الضريبي",
     "commercial_record": "السجل التجاري",
     "city": "المدينة",
