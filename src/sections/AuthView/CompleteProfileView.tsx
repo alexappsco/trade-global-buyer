@@ -18,18 +18,21 @@ import { useAuth } from "src/contexts/AuthContext";
 import { completeProfileAction } from "src/actions/auth";
 import { getOrdersCatalog } from "src/actions/orders";
 import type { OrderCatalogItem } from "src/types/order";
+import type { SxProps, Theme } from "@mui/material";
 
 const GREEN = "#1E8E59";
 
 function Field({
   label,
   children,
+  sx,
 }: {
   label: string;
   children: React.ReactNode;
+  sx?: SxProps<Theme>;
 }) {
   return (
-    <Box>
+    <Box sx={sx}>
       <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
         {label}
       </Typography>
@@ -170,7 +173,46 @@ export default function CompleteProfileView() {
               onChange={(e) => update("email", e.target.value)}
             />
           </Field>
-          <Field label={t("category")}>
+          <Field label={t("tax_number")}>
+            <TextField
+              fullWidth
+              size="small"
+              value={form.taxNumber}
+              onChange={(e) => update("taxNumber", e.target.value)}
+            />
+          </Field>
+          <Field label={t("commercial_record")}>
+            <TextField
+              fullWidth
+              size="small"
+              value={form.commercialRecord}
+              onChange={(e) => update("commercialRecord", e.target.value)}
+            />
+          </Field>
+          <Field label={t("city")}>
+            <TextField
+              select
+              fullWidth
+              size="small"
+              value={form.city}
+              onChange={(e) => update("city", e.target.value)}
+            >
+              {cities.map((city) => (
+                <MenuItem key={city} value={city}>
+                  {city}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Field>
+          <Field label={t("company_address")}>
+            <TextField
+              fullWidth
+              size="small"
+              value={form.address}
+              onChange={(e) => update("address", e.target.value)}
+            />
+          </Field>
+          <Field label={t("category")} sx={{ gridColumn: "1 / -1" }}>
             <Autocomplete
               multiple
               fullWidth
@@ -219,45 +261,6 @@ export default function CompleteProfileView() {
                   }
                 />
               )}
-            />
-          </Field>
-          <Field label={t("tax_number")}>
-            <TextField
-              fullWidth
-              size="small"
-              value={form.taxNumber}
-              onChange={(e) => update("taxNumber", e.target.value)}
-            />
-          </Field>
-          <Field label={t("commercial_record")}>
-            <TextField
-              fullWidth
-              size="small"
-              value={form.commercialRecord}
-              onChange={(e) => update("commercialRecord", e.target.value)}
-            />
-          </Field>
-          <Field label={t("city")}>
-            <TextField
-              select
-              fullWidth
-              size="small"
-              value={form.city}
-              onChange={(e) => update("city", e.target.value)}
-            >
-              {cities.map((city) => (
-                <MenuItem key={city} value={city}>
-                  {city}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Field>
-          <Field label={t("company_address")}>
-            <TextField
-              fullWidth
-              size="small"
-              value={form.address}
-              onChange={(e) => update("address", e.target.value)}
             />
           </Field>
         </Box>
