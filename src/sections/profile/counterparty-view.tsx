@@ -104,7 +104,7 @@ export default function CounterpartyProfileView({ orderId, offerId, from }: Prop
   };
 
   if (isLoading) {
-    return <Loader variant="fullscreen" label={t('loading')} />;
+    return <Loader variant="section" minHeight={400} label={t('loading')} />;
   }
 
   if (error || !profile) {

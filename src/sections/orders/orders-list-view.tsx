@@ -668,7 +668,7 @@ export default function OrdersListView() {
             tableHead={tableHead}
             customRender={customRender}
             count={totalCount}
-            maxHeight={520}
+            maxHeight={660}
           />
         )}
       </Card>

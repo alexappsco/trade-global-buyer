@@ -125,7 +125,7 @@ function SimpleTable<T extends { id: string | number }>({
                             textAlign:
           (headCell.align as React.CSSProperties["textAlign"]) ||
           "center",
-                    py: dense ? 0.5 : 1,
+                    py: dense ? 0.5 : 0.75,
                     px: dense ? 1.5 : 2,
                     borderBottom: "1px solid #e5e7eb",
                     fontSize: "0.875rem",
@@ -186,7 +186,7 @@ function SimpleTable<T extends { id: string | number }>({
                         textAlign:
                         (headCell.align as React.CSSProperties["textAlign"]) ||
                         "center",
-                        py: dense ? 0.5 : 1,
+                        py: dense ? 0.5 : 0.75,
                         px: dense ? 1.5 : 2,
                         color: index === 0 ? "#111827" : "#4b5563",
                         fontWeight: index === 0 ? 600 : 500,

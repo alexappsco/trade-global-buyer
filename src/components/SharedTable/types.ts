@@ -31,6 +31,7 @@ export interface SharedTableProps<T> {
 }
 export interface SharedTableRowProps<T> {
   row: T;
+  dense?: boolean;
   actions?: Action<T>[];
   customRender?:
     | Partial<Record<keyof T, (row: T) => ReactNode>>

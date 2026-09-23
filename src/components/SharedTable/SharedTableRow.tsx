@@ -11,6 +11,7 @@ import { SxStyle, SharedTableRowProps } from './types';
 
 function SharedTableRow<T extends { id: string }>({
   row,
+  dense,
   actions,
   customRender,
   headIds,
@@ -32,14 +33,14 @@ function SharedTableRow<T extends { id: string }>({
           const headCell = tableHead.find((h) => h.id === x);
           const align = headCell?.align || 'left';
           return (
-            <TableCell key={index} align={align} sx={{ whiteSpace: 'nowrap', borderBottom: 'none' }}>
+            <TableCell key={index} align={align} sx={{ p: dense ? '6px 16px' : '9px 16px', whiteSpace: 'nowrap', borderBottom: 'none' }}>
               {customRender && x in customRender ? customRender[x]!(row) : String((row as Record<string, unknown>)[x as string] ?? '')}
             </TableCell>
           );
         })}
 
         {!!visibleActions.length && (
-          <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap', borderBottom: 'none' }}>
+          <TableCell align="right" sx={{ p: dense ? '6px 8px' : '9px 8px', whiteSpace: 'nowrap', borderBottom: 'none' }}>
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
