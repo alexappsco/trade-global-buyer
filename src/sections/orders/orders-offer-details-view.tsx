@@ -21,6 +21,7 @@ import {
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
 import { useToast } from 'src/components/toast';
+import { Loader } from 'src/components/Loader/Loader';
 import {
   getQuotationOfferDetails,
   acceptQuotationOffer,
@@ -128,13 +129,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
   };
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}
-        </Typography>
-      </Box>
-    );
+    return <Loader variant="section" minHeight={360} label={locale === 'ar' ? 'جاري التحميل...' : 'Loading...'} />;
   }
 
   if (!offer) {

@@ -26,6 +26,7 @@ import {
 import Iconify from 'src/components/iconify';
 import ConfirmationDialog from 'src/components/dialog/ConfirmationDialog';
 import { useToast } from 'src/components/toast';
+import { Loader } from 'src/components/Loader/Loader';
 import { getOrderDetails, closeOrder, confirmDelivery, downloadQuotationOffersPdf } from 'src/actions/orders';
 import { getOrderQuotationOffers } from 'src/actions/quotations';
 import { useAuth } from 'src/contexts/AuthContext';
@@ -205,13 +206,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const canConfirmDelivery = role === 'buyer' && order?.deliveryStatus === 'delivered' && !order?.isDelivered;
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}
-        </Typography>
-      </Box>
-    );
+    return <Loader variant="section" minHeight={360} label={t('submit_offer.loading')} />;
   }
 
   if (!order) {

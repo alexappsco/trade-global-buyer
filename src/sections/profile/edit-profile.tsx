@@ -15,7 +15,6 @@ import {
   Container,
   Stack,
   Badge,
-  CircularProgress,
   Alert,
 } from '@mui/material';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
@@ -25,6 +24,7 @@ import { paths } from '@/routes/paths';
 import { getMyInfo, updateMyInfo } from '@/actions/profile';
 import { getOrdersCatalog } from '@/actions/orders';
 import { useToast } from 'src/components/toast';
+import { Loader } from 'src/components/Loader/Loader';
 import type { MyInfo } from '@/types/auth';
 import type { OrderCatalogItem } from '@/types/order';
 
@@ -276,9 +276,7 @@ export default function EditProfile() {
                 </Stack>
 
                 {isLoading ? (
-                  <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-                    <CircularProgress size={32} sx={{ color: '#1B8354' }} />
-                  </Box>
+                  <Loader variant="section" minHeight={200} label={t('loading')} />
                 ) : (
                   <Grid container spacing={2.5}>
                     {fieldKeys.map((key) => (

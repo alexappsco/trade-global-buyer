@@ -6,6 +6,7 @@ import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
+import { Loader } from "src/components/Loader/Loader";
 import { useAuth } from "src/contexts/AuthContext";
 import {
   resendForgetPasswordOtpAction,
@@ -168,7 +169,14 @@ export default function OtpView() {
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
-          {loading ? t("loading") : t("confirm")}
+          {loading ? (
+            <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}>
+              <Loader variant="inline" size={18} color="inherit" />
+              {t("loading")}
+            </Box>
+          ) : (
+            t("confirm")
+          )}
         </Button>
 
         <Typography

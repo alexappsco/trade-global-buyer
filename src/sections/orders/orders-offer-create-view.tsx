@@ -21,6 +21,7 @@ import {
 import Iconify from "src/components/iconify";
 import ConfirmationDialog from "src/components/dialog/ConfirmationDialog";
 import { useToast } from "src/components/toast";
+import { Loader } from "src/components/Loader/Loader";
 import { useAuth } from "src/contexts/AuthContext";
 import { getOrderDetails } from "src/actions/orders";
 import { submitQuotationOffer } from "src/actions/quotations";
@@ -191,11 +192,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
   }
 
   if (isLoading) {
-    return (
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {t("submit_offer.loading")}
-      </Typography>
-    );
+    return <Loader variant="section" minHeight={360} label={t("submit_offer.loading")} />;
   }
 
   if (!order) {

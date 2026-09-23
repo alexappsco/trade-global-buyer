@@ -25,6 +25,7 @@ import { useAuth } from "src/contexts/AuthContext";
 import { useQuery } from "src/components/use-query";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 import SharedTable from "src/components/SharedTable/SharedTable";
+import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
 import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
 import type { Order, OrderCatalogItem } from "src/types/order";
@@ -658,13 +659,7 @@ export default function OrdersListView() {
         </Box>
 
         {/* Loading */}
-        {isLoading && (
-          <Box sx={{ py: 4, textAlign: "center" }}>
-            <Typography variant="body2" color="text.secondary">
-              {locale === "ar" ? "جاري التحميل..." : "Loading..."}
-            </Typography>
-          </Box>
-        )}
+        {isLoading && <Loader variant="section" minHeight={240} />}
 
         {/* Table */}
         {!isLoading && (

@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogContent,
   IconButton,
@@ -12,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import Iconify from "src/components/iconify";
+import { Loader } from "src/components/Loader/Loader";
 
 export type PromoteDialogSubmitValues = {
   startDate: string;
@@ -254,7 +254,7 @@ export default function PromoteDialog({
               }}
             >
               {loading ? (
-                <CircularProgress size={18} color="inherit" />
+                <Loader variant="inline" size={18} color="inherit" />
               ) : (
                 <Iconify icon="solar:rocket-bold" />
               )}

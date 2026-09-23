@@ -17,6 +17,7 @@ import {
 
 import Iconify from "src/components/iconify";
 import SharedTable from "src/components/SharedTable/SharedTable";
+import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
 import { getQuotationOffers } from "src/actions/quotations";
 import type { QuotationOffer } from "src/types/quotation";
@@ -287,13 +288,7 @@ actions_cell: (row: QuotationOffer) => (
         </Box>
 
         {/* Loading */}
-        {isLoading && (
-          <Box sx={{ py: 4, textAlign: "center" }}>
-            <Typography variant="body2" color="text.secondary">
-              {locale === "ar" ? "جاري التحميل..." : "Loading..."}
-            </Typography>
-          </Box>
-        )}
+        {isLoading && <Loader variant="section" minHeight={240} />}
 
         {/* Table */}
         {!isLoading && (

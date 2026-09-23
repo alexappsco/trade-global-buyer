@@ -7,6 +7,7 @@ import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
+import { Loader } from "src/components/Loader/Loader";
 import { useAuth } from "src/contexts/AuthContext";
 import { changePasswordAction } from "src/actions/auth";
 
@@ -113,7 +114,14 @@ export default function ChangePasswordView() {
             "&:hover": { bgcolor: GREEN_HOVER },
           }}
         >
-          {loading ? t("loading") : t("save")}
+          {loading ? (
+            <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}>
+              <Loader variant="inline" size={18} color="inherit" />
+              {t("loading")}
+            </Box>
+          ) : (
+            t("save")
+          )}
         </Button>
 
         <Link
