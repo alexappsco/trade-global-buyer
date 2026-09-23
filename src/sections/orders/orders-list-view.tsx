@@ -11,6 +11,7 @@ import {
   MenuItem,
   TextField,
   Typography,
+  Tooltip,
   InputAdornment,
   IconButton,
   ListItemIcon,
@@ -47,7 +48,15 @@ function OrdersRowActions({
   if (role === "supplier") {
     const canSubmit =
       row.status === "open" && !row.isOwnOrder && row.canSubmitQuotation;
-    return (
+
+    let reason: string | null = null;
+    if (row.status !== "open") {
+      reason = t("reason_order_closed");
+    } else if (!row.isOwnOrder && (row.hasPendingDelivery || !row.canSubmitQuotation)) {
+      reason = t("reason_pending_delivery");
+    }
+
+    const submitButton = (
       <Button
         variant="contained"
         size="small"
@@ -76,6 +85,14 @@ function OrdersRowActions({
         <Iconify icon="mingcute:add-line" width={14} />
         {t("table.action_submit_quote")}
       </Button>
+    );
+
+    if (!reason) return submitButton;
+
+    return (
+      <Tooltip title={reason}>
+        <span style={{ display: "inline-block" }}>{submitButton}</span>
+      </Tooltip>
     );
   }
 
