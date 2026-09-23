@@ -47,11 +47,11 @@ function OrdersRowActions({
   if (role === "supplier") {
     const canSubmit =
       row.status === "open" && !row.isOwnOrder && row.canSubmitQuotation;
-    if (!canSubmit) return null;
     return (
       <Button
         variant="contained"
         size="small"
+        disabled={!canSubmit}
         onClick={() => router.push(`/orders/${row.id}/offer`)}
         sx={{
           bgcolor: "#10754E",
@@ -65,6 +65,12 @@ function OrdersRowActions({
           textTransform: "none",
           boxShadow: "none",
           "&:hover": { bgcolor: "#0c5b3c", boxShadow: "none" },
+          "&.Mui-disabled": {
+            bgcolor: "#C4CDD5",
+            color: "#FFFFFF",
+            boxShadow: "none",
+            opacity: 1,
+          },
         }}
       >
         <Iconify icon="mingcute:add-line" width={14} />
