@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "src/i18n/routing";
 import {
@@ -9,7 +9,6 @@ import {
   Menu,
   Button,
   MenuItem,
-  Checkbox,
   TextField,
   Typography,
   InputAdornment,
@@ -19,28 +18,26 @@ import Iconify from "src/components/iconify";
 import SharedTable from "src/components/SharedTable/SharedTable";
 import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
+import { useQuery } from "src/components/use-query";
 import { getQuotationOffers } from "src/actions/quotations";
 import type { QuotationOffer } from "src/types/quotation";
-
-const PAGE_SIZE = 10;
 
 export default function QuotationsListView() {
   const t = useTranslations("Quotations");
   const tOrders = useTranslations("Orders");
   const locale = useLocale();
   const router = useRouter();
+  const { set } = useQuery(["page", "limit"]);
 
   // Data state
   const [offers, setOffers] = useState<QuotationOffer[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(0);
 
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   // Dropdown Anchors
   const [statusAnchor, setStatusAnchor] = useState<null | HTMLElement>(null);
@@ -51,7 +48,8 @@ export default function QuotationsListView() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-      setPage(0);
+      set({ page: null });
+      setIsLoading(true);
     }, 400);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -59,34 +57,37 @@ export default function QuotationsListView() {
   }, [searchQuery]);
 
   // Fetch data
-  const fetchOffers = useCallback(async () => {
-    setIsLoading(true);
-    const res = await getQuotationOffers({
-      search: debouncedSearch || undefined,
-      status: selectedStatus || undefined,
-      skipCount: page * PAGE_SIZE,
-      maxResultCount: PAGE_SIZE,
-      sorting: "creationTime desc",
-    });
-    if (res.success && res.data) {
-      const data = res.data as any;
-      if (Array.isArray(data)) {
-        setOffers(data);
-        setTotalCount(data.length);
-      } else {
-        setOffers(data.items || []);
-        setTotalCount(data.totalCount || 0);
-      }
-    } else {
-      setOffers([]);
-      setTotalCount(0);
-    }
-    setIsLoading(false);
-  }, [debouncedSearch, selectedStatus, page]);
-
   useEffect(() => {
+    let cancelled = false;
+    const fetchOffers = async () => {
+      const res = await getQuotationOffers({
+        search: debouncedSearch || undefined,
+        status: selectedStatus || undefined,
+        skipCount: 0,
+        maxResultCount: 1000,
+        sorting: "creationTime desc",
+      });
+      if (cancelled) return;
+      if (res.success && res.data) {
+        const data = res.data as any;
+        if (Array.isArray(data)) {
+          setOffers(data);
+          setTotalCount(data.length);
+        } else {
+          setOffers(data.items || []);
+          setTotalCount(data.totalCount || 0);
+        }
+      } else {
+        setOffers([]);
+        setTotalCount(0);
+      }
+      setIsLoading(false);
+    };
     fetchOffers();
-  }, [fetchOffers]);
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedSearch, selectedStatus]);
 
   // Status options
   const statusOptions = [
@@ -113,7 +114,6 @@ export default function QuotationsListView() {
 
   // Table headers
   const tableHead = [
-    { id: "select", label: "", align: cellAlignment.left },
     { id: "orderNumber", label: tOrders("table.order_id"), align: cellAlignment.center },
     { id: "orderTitle", label: tOrders("table.order_title"), align: cellAlignment.left },
     { id: "category", label: tOrders("table.category"), align: cellAlignment.left },
@@ -126,20 +126,6 @@ export default function QuotationsListView() {
 
   // Custom renders
   const customRender = {
-    select: (row: QuotationOffer) => (
-      <Checkbox
-        size="small"
-        checked={selectedRows.includes(row.id)}
-        onChange={(e) => {
-          if (e.target.checked) {
-            setSelectedRows((prev) => [...prev, row.id]);
-          } else {
-            setSelectedRows((prev) => prev.filter((id) => id !== row.id));
-          }
-        }}
-        sx={{ color: "#C4CDD5", "&.Mui-checked": { color: "#006838" } }}
-      />
-    ),
     orderNumber: (row: QuotationOffer) => `#${row.orderNumber}`,
     orderTitle: (row: QuotationOffer) => row.orderTitle,
     category: (row: QuotationOffer) =>
@@ -276,7 +262,8 @@ actions_cell: (row: QuotationOffer) => (
                   key={opt.value ?? "all"}
                   onClick={() => {
                     setSelectedStatus(opt.value);
-                    setPage(0);
+                    set({ page: null });
+                    setIsLoading(true);
                     setStatusAnchor(null);
                   }}
                 >

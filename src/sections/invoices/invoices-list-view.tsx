@@ -37,7 +37,7 @@ export default function InvoicesListView() {
 
   const [invoices, setInvoices] = useState<InvoiceListItem[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (searchTimerRef.current) {
@@ -46,6 +46,7 @@ export default function InvoicesListView() {
     searchTimerRef.current = setTimeout(() => {
       setDebouncedSearch(searchQuery);
       set({ page: null });
+      setLoading(true);
     }, 400);
     return () => {
       if (searchTimerRef.current) {
@@ -56,7 +57,6 @@ export default function InvoicesListView() {
 
   useEffect(() => {
     const fetchInvoices = async () => {
-      setLoading(true);
       const res = await getInvoices({
         search: debouncedSearch || undefined,
         status: selectedStatus || undefined,
@@ -64,13 +64,14 @@ export default function InvoicesListView() {
         skipCount: 0,
         maxResultCount: 1000,
       });
-      setLoading(false);
-      if (res.success) {
-        setInvoices(res.data?.items ?? []);
-        setTotalCount(res.data?.totalCount ?? 0);
-      } else {
+      if (!res.success) {
+        setLoading(false);
         toast.error(res.error || t("table.load_error"));
+        return;
       }
+      setInvoices(res.data?.items ?? []);
+      setTotalCount(res.data?.totalCount ?? 0);
+      setLoading(false);
     };
     fetchInvoices();
   }, [debouncedSearch, selectedStatus, toast, t]);
@@ -213,6 +214,7 @@ export default function InvoicesListView() {
               setSelectedStatus(null);
               setStatusAnchor(null);
               set({ page: null });
+              setLoading(true);
             }}
             selected={selectedStatus === null}
           >
@@ -223,6 +225,7 @@ export default function InvoicesListView() {
               setSelectedStatus("unpaid");
               setStatusAnchor(null);
               set({ page: null });
+              setLoading(true);
             }}
             selected={selectedStatus === "unpaid"}
           >
