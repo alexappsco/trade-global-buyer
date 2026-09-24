@@ -290,7 +290,7 @@ export default function OrdersListView() {
     { id: "orderNumber", label: t("table.order_id"), align: cellAlignment.left },
     { id: "title", label: t("table.order_title"), align: cellAlignment.left },
     { id: "categoryNameEn", label: t("table.category"), align: cellAlignment.left },
-    { id: "classificationNameEn", label: t("table.classification"), align: cellAlignment.left },
+    // { id: "classificationNameEn", label: t("table.classification"), align: cellAlignment.left },
     { id: "deliveryDate", label: t("table.delivery_date"), align: cellAlignment.left },
     { id: "creationTime", label: t("table.creation_date"), align: cellAlignment.left },
     ...(role === "buyer"
