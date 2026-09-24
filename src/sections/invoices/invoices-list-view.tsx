@@ -46,7 +46,6 @@ export default function InvoicesListView() {
     searchTimerRef.current = setTimeout(() => {
       setDebouncedSearch(searchQuery);
       set({ page: null });
-      setLoading(true);
     }, 400);
     return () => {
       if (searchTimerRef.current) {
@@ -57,6 +56,7 @@ export default function InvoicesListView() {
 
   useEffect(() => {
     const fetchInvoices = async () => {
+      setLoading(true);
       const res = await getInvoices({
         search: debouncedSearch || undefined,
         status: selectedStatus || undefined,
@@ -202,7 +202,6 @@ export default function InvoicesListView() {
               setSelectedStatus(null);
               setStatusAnchor(null);
               set({ page: null });
-              setLoading(true);
             }}
             selected={selectedStatus === null}
           >
@@ -213,7 +212,6 @@ export default function InvoicesListView() {
               setSelectedStatus("unpaid");
               setStatusAnchor(null);
               set({ page: null });
-              setLoading(true);
             }}
             selected={selectedStatus === "unpaid"}
           >

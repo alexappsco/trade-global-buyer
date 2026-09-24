@@ -49,7 +49,6 @@ export default function QuotationsListView() {
     debounceRef.current = setTimeout(() => {
       setDebouncedSearch(searchQuery);
       set({ page: null });
-      setIsLoading(true);
     }, 400);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -60,6 +59,7 @@ export default function QuotationsListView() {
   useEffect(() => {
     let cancelled = false;
     const fetchOffers = async () => {
+      setIsLoading(true);
       const res = await getQuotationOffers({
         search: debouncedSearch || undefined,
         status: selectedStatus || undefined,
@@ -277,7 +277,6 @@ export default function QuotationsListView() {
                   onClick={() => {
                     setSelectedStatus(opt.value);
                     set({ page: null });
-                    setIsLoading(true);
                     setStatusAnchor(null);
                   }}
                 >
