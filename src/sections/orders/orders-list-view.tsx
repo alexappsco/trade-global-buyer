@@ -216,6 +216,7 @@ export default function OrdersListView() {
 
   // Fetch Orders
   useEffect(() => {
+    let ignore = false;
     const fetchOrders = async () => {
       setIsLoading(true);
       const res = await getOrders({
@@ -227,13 +228,16 @@ export default function OrdersListView() {
         SkipCount: 0,
         MaxResultCount: 1000,
       });
-      setIsLoading(false);
-      if (res.success && res.data) {
-        setOrders(res.data.items);
-        setTotalCount(res.data.totalCount);
+      if (!ignore) {
+        setIsLoading(false);
+        if (res.success && res.data) {
+          setOrders(res.data.items);
+          setTotalCount(res.data.totalCount);
+        }
       }
     };
     fetchOrders();
+    return () => { ignore = true; };
   }, [debouncedSearch, selectedCategoryCode, selectedClassificationCode, selectedStatus, selectedDate]);
 
   const classifications = useMemo(() => {

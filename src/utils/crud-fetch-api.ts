@@ -68,6 +68,7 @@ async function apiRequest<TResponse, TBody = undefined>(
       body: reqBody,
       cache: options.cache,
       next: { tags: options.tags },
+      signal: AbortSignal.timeout(15000),
     });
 
     // UN-AUTHORIZED (skip for guest mode)
