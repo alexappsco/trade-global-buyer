@@ -1,10 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Link, usePathname } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { scrollbar } from "src/theme/css";
 import SvgColor from "src/components/svg-color";
 import { useAuth } from "src/contexts/AuthContext";
+import { getNotificationUnreadCount } from "src/actions/notifications";
 import {
   Box,
   Drawer,
@@ -94,6 +96,29 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const isRtl = locale === "ar";
   const anchor = isRtl ? "right" : "left";
   const { role } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      const res = await getNotificationUnreadCount();
+      if (res.success && res.data) {
+        setUnreadCount(res.data.unreadCount);
+      }
+    };
+    if (role) {
+      fetchUnread();
+    }
+
+    const handleUnreadChanged = (e: Event) => {
+      const customEvent = e as CustomEvent<{ count: number }>;
+      setUnreadCount(customEvent.detail.count);
+    };
+
+    window.addEventListener("notification-unread-changed", handleUnreadChanged);
+    return () => {
+      window.removeEventListener("notification-unread-changed", handleUnreadChanged);
+    };
+  }, [role]);
 
 const supplierOnlyItems = ["invoices", "quotation_requests"];
 
@@ -153,16 +178,36 @@ const isVisible = (item: SidebarItem) => {
                 </ListItemIcon>
                 <ListItemText
                   primary={
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontWeight: active ? 700 : 500,
-                        textAlign,
-                        color: active ? "#1B8354" : "#9DA4AE",
-                      }}
-                    >
-                      {t(item.key)}
-                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontWeight: active ? 700 : 500,
+                          textAlign,
+                          color: active ? "#1B8354" : "#9DA4AE",
+                        }}
+                      >
+                        {t(item.key)}
+                      </Typography>
+                      {item.key === "notifications" && unreadCount > 0 && (
+                        <Box
+                          sx={{
+                            bgcolor: active ? "#1B83541A" : "#9DA4AE26",
+                            color: active ? "#1B8354" : "#9DA4AE",
+                            fontSize: "0.7rem",
+                            fontWeight: 700,
+                            borderRadius: "12px",
+                            px: 1,
+                            py: 0.25,
+                            minWidth: 20,
+                            textAlign: "center",
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {unreadCount > 99 ? "99+" : unreadCount}
+                        </Box>
+                      )}
+                    </Box>
                   }
                 />
               </ListItemButton>
