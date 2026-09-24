@@ -287,38 +287,38 @@ export default function NotificationsView() {
       {/* ── Header card ───────────────────────────────────────────────── */}
       <Box
         sx={{
-          borderRadius: 3,
+          borderRadius: 2.5,
           overflow: "hidden",
           background: "linear-gradient(135deg, #0B5A3C 0%, #1B8354 60%, #2AA76E 100%)",
-          p: { xs: 3, md: 4 },
+          p: { xs: 2, md: 2.5 },
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           gap: 2,
           flexWrap: "wrap",
-          boxShadow: "0 8px 32px rgba(11,90,60,0.25)",
+          boxShadow: "0 6px 24px rgba(11,90,60,0.22)",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
             sx={{
-              width: 52,
-              height: 52,
-              borderRadius: 2.5,
+              width: 40,
+              height: 40,
+              borderRadius: 2,
               bgcolor: alpha("#fff", 0.15),
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Iconify icon="solar:bell-bold-duotone" width={28} sx={{ color: "#fff" }} />
+            <Iconify icon="solar:bell-bold-duotone" width={22} sx={{ color: "#fff" }} />
           </Box>
           <Box>
-            <Typography variant="h5" sx={{ color: "#fff", fontWeight: 800, lineHeight: 1.2 }}>
+            <Typography variant="subtitle1" sx={{ color: "#fff", fontWeight: 800, lineHeight: 1.2 }}>
               {t("title")}
             </Typography>
             {!isLoading && (
-              <Typography variant="body2" sx={{ color: alpha("#fff", 0.75), mt: 0.5 }}>
+              <Typography variant="caption" sx={{ color: alpha("#fff", 0.75) }}>
                 {unreadCount > 0
                   ? (isRtl ? `${unreadCount} إشعار غير مقروء` : `${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}`)
                   : (isRtl ? "لا توجد إشعارات غير مقروءة" : "All caught up!")}
@@ -381,7 +381,14 @@ export default function NotificationsView() {
             value={tab}
             onChange={(_, v) => setTab(v)}
             sx={{
-              "& .MuiTab-root": { textTransform: "none", fontWeight: 600, minHeight: 44 },
+              "& .MuiTab-root": {
+                textTransform: "none",
+                fontWeight: 600,
+                minHeight: 48,
+                fontSize: "0.875rem",
+                px: 3,
+                mr: 1,
+              },
               "& .Mui-selected": { color: "#1B8354 !important" },
               "& .MuiTabs-indicator": { bgcolor: "#1B8354" },
             }}
