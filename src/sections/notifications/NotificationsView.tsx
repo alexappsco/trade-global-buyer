@@ -333,21 +333,22 @@ export default function NotificationsView() {
             size="small"
             disabled={isMarkingAll}
             onClick={handleMarkAllRead}
-            startIcon={<Iconify icon="solar:check-read-bold" width={16} />}
             sx={{
               bgcolor: alpha("#fff", 0.15),
               color: "#fff",
               fontWeight: 700,
               borderRadius: "10px",
               textTransform: "none",
-              px: 2.5,
-              py: 1,
+              px: 1.5,
+              py: 1.5,
+              gap: 1,
               backdropFilter: "blur(4px)",
               border: "1px solid",
               borderColor: alpha("#fff", 0.25),
               "&:hover": { bgcolor: alpha("#fff", 0.25) },
             }}
           >
+            <Iconify icon="solar:check-read-bold" width={16} />
             {isMarkingAll ? t("marking") : t("mark_all_read")}
           </Button>
         )}
