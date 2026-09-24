@@ -192,8 +192,8 @@ const isVisible = (item: SidebarItem) => {
                       {item.key === "notifications" && unreadCount > 0 && (
                         <Box
                           sx={{
-                            bgcolor: "#FF3B30",
-                            color: "white",
+                            bgcolor: active ? "#1B83541A" : "#9DA4AE26",
+                            color: active ? "#1B8354" : "#9DA4AE",
                             fontSize: "0.7rem",
                             fontWeight: 700,
                             borderRadius: "12px",
