@@ -8,6 +8,7 @@ import TableBody from '@mui/material/TableBody';
 import { useSearchParams } from 'next/navigation';
 import TableContainer from '@mui/material/TableContainer';
 
+import TableSkeleton from './table-skeleton';
 import useTable from './use-table';
 import TableNoData from './table-no-data';
 import { SharedTableProps } from './types';
@@ -24,6 +25,7 @@ function SharedTable<T extends { id: string }>({
   customRender,
   count,
   maxHeight,
+  loading,
 }: SharedTableProps<T>) {
   const table = useTable();
   const searchParams = useSearchParams();
@@ -47,23 +49,29 @@ function SharedTable<T extends { id: string }>({
             <TableHeadCustom headLabel={tableHead} enableActions={!!actions?.length} />
 
             <TableBody>
-              {paginatedData.map((row) => (
-                <SharedTableRow<T>
-                  key={row.id}
-                  row={row}
-                  dense={table.dense}
-                  actions={actions}
-                  customRender={customRender}
-                  tableHead={tableHead}
-                  headIds={
-                    tableHead
-                      .map((x) => x.id)
-                      .filter((x) => x !== '' && x !== 'rowsActions') as (keyof T)[]
-                  }
-                />
-              ))}
+              {loading ? (
+                <TableSkeleton tableHead={tableHead} enableActions={!!actions?.length} rowCount={limit > 10 ? 10 : limit} />
+              ) : (
+                <>
+                  {paginatedData.map((row) => (
+                    <SharedTableRow<T>
+                      key={row.id}
+                      row={row}
+                      dense={table.dense}
+                      actions={actions}
+                      customRender={customRender}
+                      tableHead={tableHead}
+                      headIds={
+                        tableHead
+                          .map((x) => x.id)
+                          .filter((x) => x !== '' && x !== 'rowsActions') as (keyof T)[]
+                      }
+                    />
+                  ))}
 
-              <TableNoData notFound={!data.length} />
+                  <TableNoData notFound={!data.length} />
+                </>
+              )}
             </TableBody>
           </Table>
       </TableContainer>

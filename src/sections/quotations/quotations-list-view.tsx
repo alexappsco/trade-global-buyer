@@ -288,18 +288,14 @@ export default function QuotationsListView() {
           </Box>
         </Box>
 
-        {/* Loading */}
-        {isLoading && <Loader variant="section" minHeight={240} />}
-
         {/* Table */}
-        {!isLoading && (
-          <SharedTable
-            data={offers}
-            tableHead={tableHead}
-            count={totalCount}
-            customRender={customRender}
-          />
-        )}
+        <SharedTable
+          loading={isLoading}
+          data={offers}
+          tableHead={tableHead}
+          count={totalCount}
+          customRender={customRender}
+        />
       </Card>
     </Box>
   );

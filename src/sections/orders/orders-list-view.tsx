@@ -178,7 +178,7 @@ export default function OrdersListView() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Dropdown Anchors
   const [categoryAnchor, setCategoryAnchor] = useState<null | HTMLElement>(null);
@@ -695,19 +695,15 @@ export default function OrdersListView() {
           </Box>
         </Box>
 
-        {/* Loading */}
-        {isLoading && <Loader variant="section" minHeight={240} />}
-
         {/* Table */}
-        {!isLoading && (
-          <SharedTable
-            data={orders}
-            tableHead={tableHead}
-            customRender={customRender}
-            count={totalCount}
-            maxHeight={660}
-          />
-        )}
+        <SharedTable
+          loading={isLoading}
+          data={orders}
+          tableHead={tableHead}
+          customRender={customRender}
+          count={totalCount}
+          maxHeight={660}
+        />
       </Card>
 
       {/* Close Order Confirmation Dialog */}

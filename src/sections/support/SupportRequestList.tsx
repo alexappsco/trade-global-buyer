@@ -7,6 +7,7 @@ import {
   InputAdornment,
   Menu,
   MenuItem,
+  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -31,12 +32,14 @@ type SupportRequestListProps = {
   requests: SupportRequest[];
   onCreate: () => void;
   onDelete: (id: string) => void;
+  loading?: boolean;
 };
 
 export default function SupportRequestList({
   requests,
   onCreate,
   onDelete,
+  loading,
 }: SupportRequestListProps) {
   const t = useTranslations("Support");
   const [search, setSearch] = useState("");
@@ -131,7 +134,16 @@ export default function SupportRequestList({
       </Menu>
 
       <Stack spacing={2.5}>
-        {filteredRequests.length === 0 ? (
+        {loading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              variant="rounded"
+              height={140}
+              sx={{ borderRadius: 3, bgcolor: "rgba(0, 0, 0, 0.04)" }}
+            />
+          ))
+        ) : filteredRequests.length === 0 ? (
           <EmptyContent title={t("empty")} sx={{ py: 8 }} />
         ) : (
           filteredRequests.map((request) => (
