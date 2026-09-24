@@ -56,6 +56,7 @@ export default function NotificationsView() {
     setNotifications((prev) => prev.filter((item) => item.id !== id));
     if (target && !target.isRead) {
       setUnreadCount((c) => Math.max(0, c - 1));
+      window.dispatchEvent(new CustomEvent("notification-unread-changed", { detail: { count: Math.max(0, unreadCount - 1) } }));
     }
     toast.success(t("dismissed"));
   };
@@ -71,6 +72,7 @@ export default function NotificationsView() {
       prev.map((item) => (item.id === notification.id ? { ...item, isRead: true } : item))
     );
     setUnreadCount((c) => Math.max(0, c - 1));
+    window.dispatchEvent(new CustomEvent("notification-unread-changed", { detail: { count: Math.max(0, unreadCount - 1) } }));
   };
 
   const handleMarkAllRead = async () => {
@@ -84,6 +86,7 @@ export default function NotificationsView() {
     }
     setNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
     setUnreadCount(0);
+    window.dispatchEvent(new CustomEvent("notification-unread-changed", { detail: { count: 0 } }));
   };
 
   return (
