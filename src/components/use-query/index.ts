@@ -1,5 +1,6 @@
 import { useMemo, useCallback } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from 'src/i18n/routing';
 
 interface Options {
   replace?: boolean;

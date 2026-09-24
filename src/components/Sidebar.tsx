@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "src/i18n/routing";
+import { Link, usePathname } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { scrollbar } from "src/theme/css";
 import SvgColor from "src/components/svg-color";
