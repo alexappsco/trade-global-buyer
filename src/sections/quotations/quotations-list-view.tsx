@@ -112,7 +112,6 @@ export default function QuotationsListView() {
     }
   };
 
-  // Table headers
   const tableHead = [
     { id: "orderNumber", label: tOrders("table.order_id"), align: cellAlignment.center },
     { id: "orderTitle", label: tOrders("table.order_title"), align: cellAlignment.left },
@@ -120,6 +119,7 @@ export default function QuotationsListView() {
     { id: "deliveryDate", label: tOrders("table.delivery_date"), align: cellAlignment.left },
     { id: "submissionTime", label: tOrders("table.creation_date"), align: cellAlignment.left },
     { id: "grandTotal", label: t("table.grand_total"), align: cellAlignment.center },
+    { id: "deliveryStatus", label: tOrders("details.info.delivery_status"), align: cellAlignment.center },
     { id: "status", label: tOrders("table.status"), align: cellAlignment.left },
     { id: "actions_cell", label: t("table.actions"), align: cellAlignment.center },
   ];
@@ -156,16 +156,43 @@ export default function QuotationsListView() {
         </Box>
       );
     },
-actions_cell: (row: QuotationOffer) => (
+    deliveryStatus: (row: QuotationOffer) => (
+      <Box
+        component="span"
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.5,
+          px: 1.5,
+          py: 0.5,
+          borderRadius: "12px",
+          fontSize: "0.75rem",
+          fontWeight: 700,
+          ...(row.deliveryStatus === "delivered"
+            ? { bgcolor: "rgba(0, 104, 56, 0.08)", color: "#006838" }
+            : row.deliveryStatus === "pending"
+            ? { bgcolor: "rgba(255, 171, 0, 0.08)", color: "#B76E00" }
+            : { bgcolor: "rgba(99, 115, 129, 0.08)", color: "#637381" }),
+        }}
+      >
+        <Iconify icon="solar:delivery-bold" width={14} />
+        {row.deliveryStatus === "delivered"
+          ? tOrders("details.delivery.delivered")
+          : row.deliveryStatus === "pending"
+          ? tOrders("details.delivery.pending")
+          : tOrders("details.delivery.not_delivered")}
+      </Box>
+    ),
+    actions_cell: (row: QuotationOffer) => (
       <Button
         variant="contained"
         size="small"
         onClick={() => router.push(`/orders/${row.orderId}/${row.id}?role=supplier`)}
         sx={{
-          bgcolor: "#0B5A3C",
+          bgcolor: "#10754E",
           color: "white",
           fontWeight: 700,
-          borderRadius: "4px",
+          borderRadius: "12px",
           fontSize: "0.75rem",
           px: 2,
           py: 0.75,

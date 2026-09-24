@@ -294,7 +294,10 @@ export default function OrdersListView() {
     { id: "deliveryDate", label: t("table.delivery_date"), align: cellAlignment.left },
     { id: "creationTime", label: t("table.creation_date"), align: cellAlignment.left },
     ...(role === "buyer"
-      ? [{ id: "offers", label: t("table.offers"), align: cellAlignment.center }]
+      ? [
+          { id: "offers", label: t("table.offers"), align: cellAlignment.center },
+          { id: "deliveryStatus", label: t("details.info.delivery_status"), align: cellAlignment.center },
+        ]
       : []),
     { id: "status", label: t("table.status"), align: cellAlignment.center },
     { id: "actions", label: t("table.actions"), align: cellAlignment.center },
@@ -358,6 +361,29 @@ export default function OrdersListView() {
         }}
       >
         {row.status === "open" ? t("status.open") : t("status.closed")}
+      </Box>
+    ),
+    deliveryStatus: (row: Order) => (
+      <Box
+        component="span"
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.5,
+          px: 1.5,
+          py: 0.5,
+          borderRadius: "12px",
+          fontSize: "0.75rem",
+          fontWeight: 700,
+          ...(row.isDelivered
+            ? { bgcolor: "rgba(0, 104, 56, 0.08)", color: "#006838" }
+            : { bgcolor: "rgba(255, 171, 0, 0.08)", color: "#B76E00" }),
+        }}
+      >
+        <Iconify icon="solar:delivery-bold" width={14} />
+        {row.isDelivered
+          ? t("details.delivery.delivered")
+          : t("details.delivery.not_delivered")}
       </Box>
     ),
   };
