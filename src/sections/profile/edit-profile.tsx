@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'src/i18n/routing';
 import { useTranslations, useLocale } from 'next-intl';
 import {
   Autocomplete,
