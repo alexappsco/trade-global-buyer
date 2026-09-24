@@ -222,18 +222,14 @@ export default function InvoicesListView() {
         </Menu>
       </Box>
 
-      {/* Loading */}
-      {loading && <Loader variant="section" minHeight={240} />}
-
       {/* Table */}
-      {!loading && (
-        <SharedTable
-          data={invoices}
-          tableHead={tableHead}
-          customRender={customRender}
-          count={totalCount}
-        />
-      )}
+      <SharedTable
+        loading={loading}
+        data={invoices}
+        tableHead={tableHead}
+        customRender={customRender}
+        count={totalCount}
+      />
     </Box>
   );
 }

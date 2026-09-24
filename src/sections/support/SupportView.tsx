@@ -83,15 +83,12 @@ export default function SupportView() {
 
   return (
     <>
-      {isLoading ? (
-        <Loader variant="section" minHeight={240} label={t("loading")} />
-      ) : (
-        <SupportRequestList
-          requests={requests}
-          onCreate={() => setView("create")}
-          onDelete={setDeleteId}
-        />
-      )}
+      <SupportRequestList
+        loading={isLoading}
+        requests={requests}
+        onCreate={() => setView("create")}
+        onDelete={setDeleteId}
+      />
       <DeleteDialog
         open={Boolean(deleteId)}
         onClose={() => setDeleteId(null)}
