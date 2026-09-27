@@ -21,7 +21,6 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
-import MonitorOutlinedIcon from '@mui/icons-material/MonitorOutlined';
 import CardTravelOutlinedIcon from '@mui/icons-material/CardTravelOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
@@ -350,59 +349,6 @@ export default function CounterpartyProfileView({ orderId, offerId, from }: Prop
                     </Stack>
                   </Grid>
                 ))}
-
-                <Grid size={12}>
-                  <Stack
-                    direction="row"
-                    spacing={1.5}
-                    sx={{
-                      p: 2,
-                      borderRadius: 2.5,
-                      bgcolor: '#F7F9F8',
-                      border: '1px solid #EDF1F0',
-                      alignItems: 'flex-start',
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        bgcolor: '#EAF3EF',
-                        p: 1,
-                        borderRadius: 2,
-                        display: 'flex',
-                        color: '#1E8057',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <MonitorOutlinedIcon sx={{ fontSize: 20 }} />
-                    </Box>
-                    <Box sx={{ minWidth: 0 }}>
-                      <Typography
-                        variant="caption"
-                        sx={{ color: '#A0ABA6', display: 'block', mb: 1, fontSize: '0.75rem' }}
-                      >
-                        {t('fields.category')}
-                      </Typography>
-                      <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
-                        {(profile.categories ?? []).map((c) => (
-                          <Box
-                            key={c.code}
-                            sx={{
-                              bgcolor: '#EAF3EF',
-                              color: '#1E8057',
-                              borderRadius: 2,
-                              px: 1.5,
-                              py: 0.6,
-                              fontSize: '0.8rem',
-                              fontWeight: 700,
-                            }}
-                          >
-                            {locale === 'ar' ? c.nameAr : c.nameEn}
-                          </Box>
-                        ))}
-                      </Stack>
-                    </Box>
-                  </Stack>
-                </Grid>
               </Grid>
             </Card>
           </Grid>
