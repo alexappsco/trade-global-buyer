@@ -133,14 +133,14 @@ const isVisible = (item: SidebarItem) => {
 };
 
 
-  const isSupplierOfferDetail =
-    /^\/orders\/[^/]+\/[^/]+$/.test(pathname) &&
-    searchParams.get("role") === "supplier" &&
-    role === "supplier";
+  const isSupplierContext =
+    role === "supplier" &&
+    ((/^\/orders\/[^/]+\/[^/]+$/.test(pathname) && searchParams.get("role") === "supplier") ||
+      (pathname.includes("/counterparty-profile") && searchParams.get("from") === "supplier"));
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === path;
-    if (isSupplierOfferDetail) {
+    if (isSupplierContext) {
       if (path === "/quotation-requests") return true;
       if (path === "/orders") return false;
     }
