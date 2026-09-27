@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Link, usePathname } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { scrollbar } from "src/theme/css";
@@ -91,6 +92,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations("Sidebar");
   const isRtl = locale === "ar";
@@ -131,8 +133,19 @@ const isVisible = (item: SidebarItem) => {
 };
 
 
-  const isActive = (path: string) =>
-    path === "/" ? pathname === path : pathname.startsWith(path);
+  const isSupplierContext =
+    role === "supplier" &&
+    ((/^\/orders\/[^/]+\/[^/]+$/.test(pathname) && searchParams.get("role") === "supplier") ||
+      (pathname.includes("/counterparty-profile") && searchParams.get("from") === "supplier"));
+
+  const isActive = (path: string) => {
+    if (path === "/") return pathname === path;
+    if (isSupplierContext) {
+      if (path === "/quotation-requests") return true;
+      if (path === "/orders") return false;
+    }
+    return pathname.startsWith(path);
+  };
 
   const textAlign = isRtl ? "right" : "left";
   const justify = isRtl ? "flex-end" : "flex-start";
