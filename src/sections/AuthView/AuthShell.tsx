@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import {
   Box,
+  Button,
   Checkbox,
   Container,
   FormControlLabel,
@@ -15,9 +16,72 @@ import {
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import Iconify from "src/components/iconify";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { usePathname, useRouter } from "src/i18n/routing";
 
 const BRAND_GREEN = "#1B8354";
+
+function LocaleSwitch() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+
+  const handleChange = (target: "ar" | "en") => {
+    if (target !== locale) router.replace(pathname, { locale: target });
+  };
+
+  return (
+    <Box
+      sx={{
+        position: "fixed",
+        top: 16,
+        insetInlineEnd: 20,
+        zIndex: 1300,
+      }}
+    >
+      <Stack
+        direction="row"
+        spacing={0.35}
+        sx={{
+          p: 0.4,
+          borderRadius: "999px",
+          bgcolor: "rgba(255, 255, 255, 0.95)",
+          border: "1px solid #E5EFEA",
+          boxShadow: "0px 8px 20px -8px rgba(16, 24, 40, 0.2)",
+        }}
+      >
+        {(["ar", "en"] as const).map((lng) => {
+          const active = locale === lng;
+          return (
+            <Button
+              key={lng}
+              onClick={() => handleChange(lng)}
+              sx={{
+                minWidth: { xs: 64, sm: 84 },
+                px: { xs: 1.25, sm: 1.75 },
+                py: 0.75,
+                borderRadius: "999px",
+                fontSize: "0.8rem",
+                fontWeight: 700,
+                textTransform: "none",
+                color: active ? "#FFFFFF" : "#6B7280",
+                bgcolor: active ? "#1B8354" : "transparent",
+                boxShadow: active ? "0 2px 8px -2px rgba(27,131,84,0.5)" : "none",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  bgcolor: active ? "#17734A" : "#EAF5EF",
+                  color: active ? "#FFFFFF" : "#1B8354",
+                },
+              }}
+            >
+              {lng === "ar" ? "العربية" : "English"}
+            </Button>
+          );
+        })}
+      </Stack>
+    </Box>
+  );
+}
 
 export function AuthBanner({
   title,
@@ -248,6 +312,7 @@ export default function AuthShell({
 }) {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#FAFBFA", pb: { xs: 5, md: 10 } }}>
+      <LocaleSwitch />
       <AuthBanner {...banner} />
       <Container maxWidth="lg" sx={{ mt: { xs: 3, md: 5 } }}>
         <Box
