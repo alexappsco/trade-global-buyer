@@ -17,15 +17,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const theme = useTheme();
   const router = useRouter();
   const pathname = usePathname();
-  const { getValidAccessToken, resetSession } = useAuth();
+  const { getValidAccessToken, resetSession, session } = useAuth();
   const pathnameWithoutLocale = pathname?.replace(/^\/(?:ar|en)/, "") ?? "";
   const isAuthPage = pathnameWithoutLocale.startsWith("/auth");
+  const isLandingPage = pathnameWithoutLocale === "" || pathnameWithoutLocale === "/";
+  const isGuestLanding = isLandingPage && !session?.accessToken;
 
   useEffect(() => {
     let cancelled = false;
 
     const checkAuth = async () => {
-      if (isAuthPage) {
+      if (isAuthPage || isGuestLanding) {
         setChecking(false);
         return;
       }
@@ -47,9 +49,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => {
       cancelled = true;
     };
-  }, [isAuthPage, getValidAccessToken, resetSession, router]);
+  }, [isAuthPage, isGuestLanding, getValidAccessToken, resetSession, router]);
 
-  if (isAuthPage) {
+  if (isAuthPage || isGuestLanding) {
     return <>{children}</>;
   }
 
