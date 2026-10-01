@@ -64,6 +64,145 @@
       "add_new": "Add New Order"
     }
   },
+  "Landing": {
+    "hero": {
+      "title": "A platform connecting you with verified suppliers, your strategic partner in the world of trade and brokerage",
+      "description": "We offer innovative solutions to connect merchants and investors. Let suppliers compete for your request and choose the most suitable offer with ease and complete safety.",
+      "verified_suppliers": "Verified Suppliers",
+      "verified_desc": "Official documents and trade licenses have been verified for 98% of active suppliers.",
+      "successful_trades": "Successful trading transactions"
+    },
+    "services": {
+      "title": "Get the best price quote for any product within minutes",
+      "description": "Our platform allows buyers and suppliers to interact directly and transparently to ensure win-win business deals for both parties.",
+      "trust": {
+        "free_registration": "Free registration",
+        "no_hidden_fees": "No hidden fees",
+        "support_24_7": "24/7 technical support"
+      },
+      "suppliers": {
+        "title": "Suppliers",
+        "desc": "Small & medium enterprises",
+        "btn": "Start Selling"
+      },
+      "buyers": {
+        "title": "Buyers",
+        "desc": "Large companies",
+        "btn": "Start Buying"
+      }
+    },
+    "how": {
+      "title": "How the Platform Works",
+      "subtitle": "An integrated enterprise experience that ensures transparency and speed in executing commercial deals.",
+      "step_1": {
+        "title": "Send Your Request",
+        "desc": "Specify product details and quantity required accurately through our easy RFQ form."
+      },
+      "step_2": {
+        "title": "Merchants Receive the Request",
+        "desc": "Our smart algorithms instantly route your request to verified suppliers in the selected category."
+      },
+      "step_3": {
+        "title": "Receive Price Quotes",
+        "desc": "Suppliers start sending competitive offers directly to your platform dashboard."
+      },
+      "step_4": {
+        "title": "Choose the Suitable Offer",
+        "desc": "Compare the technical and financial offers and choose the most suitable commercial partner."
+      }
+    },
+    "nav": {
+      "home": "Home",
+      "how_it_works": "How it Works",
+      "partners": "Our Partners",
+      "about": "About Us",
+      "faq": "FAQs",
+      "login": "Login"
+    },
+    "platform": {
+      "why_title": "Why",
+      "why_brand": "Trade Global",
+      "why_description": "We offer you an integrated and innovative platform to manage all procurement processes with reliability, speed, and high efficiency, ensuring the best results for your business.",
+      "cards": {
+        "procurement": {
+          "title": "Procurement Management",
+          "desc": "Create and track purchase requests easily with an integrated system for managing tenders with the highest efficiency."
+        },
+        "security": {
+          "title": "Security & Reliability",
+          "desc": "A secure and encrypted system with the latest technologies to protect your data and business transactions from any risks."
+        },
+        "suppliers": {
+          "title": "Trusted Suppliers Network",
+          "desc": "Connect with the best certified and trusted suppliers across the Kingdom of Saudi Arabia."
+        },
+        "speed": {
+          "title": "Speed of Execution",
+          "desc": "Get price quotes in record time and select the best one for your project with a single click."
+        }
+      },
+      "stats": {
+        "title": "Deep Industry Experience",
+        "labels": {
+          "suppliers": "Verified Supplier",
+          "orders": "Completed Order",
+          "cities": "Covered City",
+          "support": "Technical Support"
+        }
+      },
+      "partners": {
+        "title": "We are proud of our clients' trust"
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Quick answers to the most common questions",
+        "q1": {
+          "q": "How can I create a purchase request?",
+          "a": "Create your account, then add product details and the required quantity from the request form."
+        },
+        "q2": {
+          "q": "Is registration on the platform free?",
+          "a": "Yes, registration is free and there are no hidden fees for creating an account."
+        },
+        "q3": {
+          "q": "How are suppliers selected?",
+          "a": "The request details reach certified suppliers, and you can compare their offers and choose the most suitable one."
+        },
+        "q4": {
+          "q": "Are my data and transactions secure?",
+          "a": "We use appropriate security and encryption measures to protect your data and business transactions."
+        }
+      }
+    },
+    "footer": {
+      "subscribe": {
+        "title": "Subscribe",
+        "placeholder": "Email Address",
+        "description": "We are here to help, send your email and we will contact you as soon as possible."
+      },
+      "support": {
+        "title": "Support",
+        "terms": "Terms & Conditions",
+        "privacy": "Privacy Policy",
+        "cookies": "Cookies",
+        "faq": "FAQs"
+      },
+      "services": {
+        "title": "Services",
+        "new_rfq": "Send New RFQ",
+        "receive_quotes": "Receive Price Quotes",
+        "corporate_requests": "Corporate Requests"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About Us",
+        "how_it_works": "How it Works",
+        "contact": "Contact Us",
+        "join_supplier": "Join as Supplier",
+        "join_merchant": "Join as Merchant"
+      }
+    }
+  },
   "Orders": {
     "title": "Orders",
     "reason_order_closed": "This order is no longer open for submitting offers.",
