@@ -1,5 +1,7 @@
 import { getTranslations } from 'next-intl/server';
-import HomePage from "@/sections/home/view";
+import HomePage from '@/sections/home/view';
+import LandingView from '@/sections/landing/view';
+import { getAuthSession } from 'src/actions/session';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -11,6 +13,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default function Home() {
-  return <HomePage/>;
+export default async function Home() {
+  const session = await getAuthSession();
+
+  if (!session) {
+    return <LandingView />;
+  }
+
+  return <HomePage />;
 }
