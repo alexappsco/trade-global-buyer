@@ -117,7 +117,9 @@
       "partners": "شركاؤنا",
       "about": "من نحن",
       "faq": "الأسئلة الشائعة",
-      "login": "تسجيل الدخول"
+      "login": "تسجيل الدخول",
+      "go_to_dashboard": "الذهاب إلى لوحة التحكم",
+      "logout": "تسجيل الخروج"
     },
     "platform": {
       "why_title": "لماذا",
@@ -394,7 +396,7 @@
     "back": "رجوع",
     "category_placeholder_multi": "اختر فئة واحدة أو أكثر",
     "category_required": "الرجاء اختيار فئة واحدة على الأقل",
-"fields": {
+    "fields": {
       "name": "الاسم",
       "company": "اسم الشركة",
       "phone": "رقم الجوال",
@@ -526,9 +528,9 @@
     "change_password_subtitle": "أدخل كلمة السر الجديدة لإكمال إعادة تعيين كلمة السر.",
     "new_password": "كلمة السر الجديدة",
     "password_changed": "تم تغيير كلمة السر بنجاح",
-    "password_change_failed": "فشل تغيير كلمة السر. حاول مرة أخرى"
+    "password_change_failed": "فشل تغيير كلمة السر. حاول مرة أخرى",
+    "landing_page": "الصفحة الرئيسية"
   },
-
   "Invoices": {
     "title": "الفواتير",
     "search": "بحث",

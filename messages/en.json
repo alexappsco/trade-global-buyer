@@ -117,7 +117,9 @@
       "partners": "Our Partners",
       "about": "About Us",
       "faq": "FAQs",
-      "login": "Login"
+      "login": "Login",
+      "go_to_dashboard": "Go to dashboard",
+      "logout": "Log out"
     },
     "platform": {
       "why_title": "Why",
@@ -394,7 +396,7 @@
     "back": "Back",
     "category_placeholder_multi": "Select one or more categories",
     "category_required": "Please select at least one category",
-"fields": {
+    "fields": {
       "name": "Name",
       "company": "Company Name",
       "phone": "Phone Number",
@@ -526,9 +528,9 @@
     "change_password_subtitle": "Enter your new password to complete the password reset.",
     "new_password": "New Password",
     "password_changed": "Password changed successfully",
-    "password_change_failed": "Failed to change password. Please try again"
+    "password_change_failed": "Failed to change password. Please try again",
+    "landing_page": "Home Page"
   },
-
   "Invoices": {
     "title": "Invoices",
     "search": "Search",
@@ -568,7 +570,7 @@
         "city": "City",
         "company_address": "Company Address",
         "creation_time": "Creation Time",
-"category": "Category",
+        "category": "Category",
         "date": "Date",
         "status": "Status"
       },
