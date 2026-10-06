@@ -111,6 +111,12 @@ export default function RegisterView() {
   const [phoneError, setPhoneError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const effectiveAccountType: AuthAccountType =
+    entity === "supplier" ? "Company" : accountType;
+
+  const nameFieldLabel =
+    entity === "supplier" ? t("supplier_name") : effectiveAccountType === "Company" ? t("company_name") : t("full_name");
+
   const handleSubmit = async () => {
     setPhoneError("");
     if (!nameOrCompany || !password || !confirmPassword) {
@@ -144,7 +150,7 @@ export default function RegisterView() {
       const result = await registerAction(
         {
           role: UI_TO_ROLE[entity],
-          type: accountType,
+          type: effectiveAccountType,
           name: nameOrCompany,
           phoneNumber: phone,
           password,
@@ -157,7 +163,8 @@ export default function RegisterView() {
         completionToken: result.completionToken,
         phoneNumber: result.phoneNumber,
       });
-      router.push("/auth/complete-profile");
+      toast.success(t("register_success"));
+      router.push("/auth/login");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("register_failed"));
     } finally {
@@ -184,18 +191,20 @@ export default function RegisterView() {
           ]}
         />
 
-        <AccountTypeRadio
-          value={accountType}
-          onChange={setAccountType}
-          options={[
-            { value: "Company", label: t("company") },
-            { value: "Individual", label: t("individual") },
-          ]}
-        />
+        {entity === "buyer" && (
+          <AccountTypeRadio
+            value={accountType}
+            onChange={setAccountType}
+            options={[
+              { value: "Company", label: t("company") },
+              { value: "Individual", label: t("individual") },
+            ]}
+          />
+        )}
 
         <Box>
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
-            {accountType === "Company" ? t("company_name") : t("full_name")}
+            {nameFieldLabel}
           </Typography>
           <TextField
             fullWidth

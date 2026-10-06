@@ -545,7 +545,9 @@
     "new_password": "كلمة السر الجديدة",
     "password_changed": "تم تغيير كلمة السر بنجاح",
     "password_change_failed": "فشل تغيير كلمة السر. حاول مرة أخرى",
-    "landing_page": "الصفحة الرئيسية"
+    "landing_page": "الصفحة الرئيسية",
+    "supplier_name": "اسم المورد",
+    "register_success": "تم إنشاء الحساب بنجاح، يمكنك تسجيل الدخول الآن."
   },
   "Invoices": {
     "title": "الفواتير",
