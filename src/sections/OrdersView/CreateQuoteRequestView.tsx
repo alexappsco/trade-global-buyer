@@ -503,13 +503,22 @@ export default function CreateQuoteRequestView() {
       }))
     };
     
-    const res = await createOrder(payload);
-    setIsSubmitting(false);
-    
-    if (res.success) {
-      setShowSuccess(true);
-    } else {
-      toast.error(res.error || t("submit_error"));
+    try {
+      const res = await createOrder(payload);
+
+      if (res?.success) {
+        setShowSuccess(true);
+      } else {
+        const errorMsg =
+          typeof res?.error === "string" && res.error ? res.error : t("submit_error");
+        console.error("[CreateOrder] Failed:", res);
+        toast.error(errorMsg);
+      }
+    } catch (err) {
+      console.error("[CreateOrder] Exception:", err);
+      toast.error(t("submit_error"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
