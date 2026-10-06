@@ -203,6 +203,22 @@
         "join_supplier": "Join as Supplier",
         "join_merchant": "Join as Merchant"
       }
+    },
+    "roles": {
+      "buyer": "buyer",
+      "supplier": "supplier"
+    },
+    "role_dialog": {
+      "title": "This action requires a different account type",
+      "message": "Your account is registered as {current}, but you chose the {target} area. Where do you want to go?",
+      "register_as": "Sign in as {target}",
+      "go_home": "Go to dashboard",
+      "warning_title": "You will be logged out",
+      "warning_message": "You will be logged out of your {current} account and redirected to sign in as {target}.",
+      "cancel": "Cancel",
+      "confirm_logout": "Log out and continue",
+      "current_account": "Your current account",
+      "required_account": "Required account"
     }
   },
   "Orders": {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import PasswordField from "./PasswordField";
 import { useRouter } from "src/i18n/routing";
@@ -33,9 +34,13 @@ export default function SignInView() {
   const router = useRouter();
   const toast = useToast();
   const { setAuthFlow } = useAuth();
+  const searchParams = useSearchParams();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setLocalRole] = useState<UserRole | null>(null);
+  const roleParam = searchParams.get("role");
+  const initialRole: UserRole | null =
+    roleParam === "supplier" ? "supplier" : roleParam === "buyer" ? "buyer" : null;
+  const [role, setLocalRole] = useState<UserRole | null>(initialRole);
   const [roleError, setRoleError] = useState(false);
   const [phoneError, setPhoneError] = useState("");
   const [loading, setLoading] = useState(false);

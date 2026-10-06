@@ -203,6 +203,22 @@
         "join_supplier": "انضم كمورد",
         "join_merchant": "انضم كتاجر"
       }
+    },
+    "roles": {
+      "buyer": "مشتري",
+      "supplier": "مورد"
+    },
+    "role_dialog": {
+      "title": "هذا الإجراء يتطلب نوع حساب مختلف",
+      "message": "حسابك مسجل كـ {current}، وأنت اخترت قسم {target}. إلى أين تريد الانتقال؟",
+      "register_as": "تسجيل الدخول كـ {target}",
+      "go_home": "الذهاب إلى لوحة التحكم",
+      "warning_title": "سيتم تسجيل خروجك",
+      "warning_message": "سيتم تسجيل خروجك من حساب {current} وتحويلك لتسجيل الدخول كـ {target}.",
+      "cancel": "إلغاء",
+      "confirm_logout": "تسجيل الخروج والمتابعة",
+      "current_account": "حسابك الحالي",
+      "required_account": "الحساب المطلوب"
     }
   },
   "Orders": {
