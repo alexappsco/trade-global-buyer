@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'src/i18n/routing';
 import { useTranslations, useLocale } from 'next-intl';
 import {
@@ -33,6 +33,8 @@ import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import { paths } from '@/routes/paths';
 import { getMyInfo, updateMyInfo } from '@/actions/profile';
 import { useAuth } from '@/contexts/AuthContext';
+import CompleteProfileView from '@/sections/AuthView/CompleteProfileView';
+import { sanitizeEmail } from 'src/utils/sanitize-email';
 import { useToast } from 'src/components/toast';
 import { Loader } from 'src/components/Loader/Loader';
 import type { MyInfo } from '@/types/auth';
@@ -64,23 +66,7 @@ export default function ProfileView() {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      setIsLoading(true);
-      setError(null);
-      const res = await getMyInfo();
-      if (!res.success) {
-        setError(res.error ?? t('load_error'));
-        setIsLoading(false);
-        return;
-      }
-      setProfile(res.data);
-      setIsLoading(false);
-    };
-    loadProfile();
-  }, [t]);
-
-  const handleRetry = async () => {
+  const loadProfile = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     const res = await getMyInfo();
@@ -91,7 +77,13 @@ export default function ProfileView() {
     }
     setProfile(res.data);
     setIsLoading(false);
-  };
+  }, [t]);
+
+  useEffect(() => {
+    (async () => {
+      await loadProfile();
+    })();
+  }, [loadProfile]);
 
   const handleImageEdit = async (type: 'profile' | 'cover', file?: File | null) => {
     if (!file || !profile || isUploading) return;
@@ -149,7 +141,7 @@ export default function ProfileView() {
         <Alert
           severity="error"
           action={
-            <Button color="inherit" size="small" onClick={handleRetry}>
+            <Button color="inherit" size="small" onClick={loadProfile}>
               {t('retry')}
             </Button>
           }
@@ -157,6 +149,16 @@ export default function ProfileView() {
           {error ?? t('load_error')}
         </Alert>
       </Box>
+    );
+  }
+
+  if (!profile.profileCompletedAt) {
+    return (
+      <CompleteProfileView
+        variant="profile"
+        initialProfile={profile}
+        onCompleted={loadProfile}
+      />
     );
   }
 
@@ -172,7 +174,7 @@ export default function ProfileView() {
     { label: t('fields.name'), value: profile.name, icon: <PersonOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.company'), value: profile.legalCompanyName, icon: <BusinessOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.phone'), value: profile.phoneNumber, icon: <PhoneOutlinedIcon sx={{ fontSize: 20 }} /> },
-    { label: t('fields.email'), value: profile.email, icon: <MailOutlineOutlinedIcon sx={{ fontSize: 20 }} /> },
+    { label: t('fields.email'), value: sanitizeEmail(profile.email) || '—', icon: <MailOutlineOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.commercial_record'), value: profile.commercialRecord, icon: <CardTravelOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.tax_number'), value: profile.taxNumber, icon: <AccountBalanceOutlinedIcon sx={{ fontSize: 20 }} /> },
     { label: t('fields.city'), value: profile.city, icon: <LocationOnOutlinedIcon sx={{ fontSize: 20 }} /> },

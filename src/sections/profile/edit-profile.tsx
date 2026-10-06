@@ -27,6 +27,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from 'src/components/toast';
 import { Loader } from 'src/components/Loader/Loader';
 import PageHeader from 'src/components/PageHeader/PageHeader';
+import CompleteProfileView from '@/sections/AuthView/CompleteProfileView';
+import { sanitizeEmail } from 'src/utils/sanitize-email';
 import type { MyInfo } from '@/types/auth';
 import type { OrderCatalogItem } from '@/types/order';
 
@@ -46,7 +48,7 @@ function profileToForm(profile: MyInfo): Record<(typeof fieldKeys)[number], stri
     name: profile.name ?? '',
     company: profile.legalCompanyName ?? '',
     phone: profile.phoneNumber ?? '',
-    email: profile.email ?? '',
+    email: sanitizeEmail(profile.email),
     tax_number: profile.taxNumber ?? '',
     commercial_record: profile.commercialRecord ?? '',
     company_address: profile.companyAddress ?? '',
@@ -172,6 +174,16 @@ export default function EditProfile() {
   const avatarPreview = profile?.profileImageUrl;
   const coverPreview = profile?.coverImageUrl;
   const initials = getInitials(profile?.name);
+
+  if (!isLoading && profile && !profile.profileCompletedAt) {
+    return (
+      <CompleteProfileView
+        variant="profile"
+        initialProfile={profile}
+        onCompleted={handleRetry}
+      />
+    );
+  }
 
   return (
     <Box

@@ -110,7 +110,7 @@ export async function clearAuthSession(): Promise<void> {
 }
 
 export type SessionMetaPatch = Partial<
-  Pick<SessionMeta, "name" | "phoneNumber" | "email" | "avatarUrl">
+  Pick<SessionMeta, "name" | "phoneNumber" | "email" | "avatarUrl" | "profileCompleted">
 >;
 
 export async function updateAuthSessionMeta(patch: SessionMetaPatch): Promise<void> {

@@ -23,6 +23,13 @@ export interface RegisterResponse {
   completionTokenExpiresAt: string;
 }
 
+export interface CompleteProfileResponse {
+  userId: string;
+  phoneNumber: string;
+  registrationCompleted: boolean;
+  nextStep: string;
+}
+
 export interface UserSession {
   id: string;
   name: string;

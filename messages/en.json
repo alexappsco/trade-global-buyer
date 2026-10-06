@@ -507,6 +507,7 @@
     "logout": "Log Out",
     "complete_title": "Complete Registration Data",
     "account_info_title": "Account Information",
+    "complete_profile_hint": "Please complete your profile data to be able to view and edit your profile.",
     "legal_company_name": "Legal Company Name",
     "email": "Email",
     "category": "Category",
