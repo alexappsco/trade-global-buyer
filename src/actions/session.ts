@@ -13,6 +13,7 @@ interface SessionMeta {
   name: string;
   phoneNumber: string;
   email: string;
+  avatarUrl?: string;
   role: AuthRole;
   accountType: AuthAccountType;
   profileCompleted: boolean;
@@ -64,6 +65,7 @@ function toMeta(session: UserSession): SessionMeta {
     name: session.name,
     phoneNumber: session.phoneNumber,
     email: session.email,
+    avatarUrl: session.avatarUrl,
     role: session.role,
     accountType: session.accountType,
     profileCompleted: session.profileCompleted,
@@ -105,6 +107,19 @@ export async function clearAuthSession(): Promise<void> {
   store.delete(ACCESS_TOKEN_COOKIE);
   store.delete(REFRESH_TOKEN_COOKIE);
   store.delete(SESSION_META_COOKIE);
+}
+
+export type SessionMetaPatch = Partial<
+  Pick<SessionMeta, "name" | "phoneNumber" | "email" | "avatarUrl">
+>;
+
+export async function updateAuthSessionMeta(patch: SessionMetaPatch): Promise<void> {
+  const store = await cookies();
+  const meta = parseMeta(store.get(SESSION_META_COOKIE)?.value);
+  if (!meta) return;
+
+  const next: SessionMeta = { ...meta, ...patch };
+  store.set(SESSION_META_COOKIE, JSON.stringify(next), buildCookieOptions(meta.refreshTokenExpireAt));
 }
 
 export async function refreshAuthSession(): Promise<UserSession | null> {

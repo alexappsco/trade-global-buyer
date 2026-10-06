@@ -28,6 +28,7 @@ export interface UserSession {
   name: string;
   phoneNumber: string;
   email: string;
+  avatarUrl?: string;
   role: AuthRole;
   accessToken: string;
   refreshToken: string;

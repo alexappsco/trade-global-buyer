@@ -163,7 +163,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
             disableRipple
             sx={{ p: 0.5, "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }}
           >
-            <Avatar sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}>
+            <Avatar
+              src={session?.avatarUrl}
+              alt={session?.name}
+              sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}
+            >
               <PersonIcon />
             </Avatar>
           </IconButton>
@@ -233,6 +237,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
           }}
         >
           <Avatar
+            src={session?.avatarUrl}
+            alt={session?.name}
             sx={{
               width: 46,
               height: 46,

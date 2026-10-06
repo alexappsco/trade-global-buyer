@@ -23,6 +23,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { paths } from '@/routes/paths';
 import { getMyInfo, updateMyInfo } from '@/actions/profile';
 import { getOrdersCatalog } from '@/actions/orders';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from 'src/components/toast';
 import { Loader } from 'src/components/Loader/Loader';
 import PageHeader from 'src/components/PageHeader/PageHeader';
@@ -70,6 +71,7 @@ export default function EditProfile() {
   const tSidebar = useTranslations('Sidebar');
   const locale = useLocale();
   const toast = useToast();
+  const { patchSession } = useAuth();
 
   const [profile, setProfile] = useState<MyInfo | null>(null);
   const [categories, setCategories] = useState<OrderCatalogItem[]>([]);
@@ -149,6 +151,14 @@ export default function EditProfile() {
       if (!res.success) {
         toast.error(res.error ?? t('load_error'));
         return;
+      }
+      if (res.data) {
+        patchSession({
+          name: res.data.name,
+          phoneNumber: res.data.phoneNumber,
+          email: res.data.email,
+          avatarUrl: res.data.profileImageUrl,
+        });
       }
       toast.success(t('save_success'));
       router.push(paths.profile.view);

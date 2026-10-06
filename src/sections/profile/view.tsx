@@ -32,6 +32,7 @@ import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlin
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import { paths } from '@/routes/paths';
 import { getMyInfo, updateMyInfo } from '@/actions/profile';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from 'src/components/toast';
 import { Loader } from 'src/components/Loader/Loader';
 import type { MyInfo } from '@/types/auth';
@@ -55,6 +56,7 @@ export default function ProfileView() {
   const t = useTranslations('Profile');
   const locale = useLocale();
   const toast = useToast();
+  const { patchSession } = useAuth();
 
   const [profile, setProfile] = useState<MyInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -114,7 +116,12 @@ export default function ProfileView() {
         return;
       }
       toast.success(t('image_updated'));
-      if (res.data) setProfile(res.data);
+      if (res.data) {
+        setProfile(res.data);
+        if (type === 'profile') {
+          patchSession({ avatarUrl: res.data.profileImageUrl });
+        }
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('load_error'));
     } finally {
