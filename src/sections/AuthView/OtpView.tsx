@@ -81,7 +81,7 @@ export default function OtpView() {
         clearAuthFlow();
         await persistSession({ mode: null }, session);
         toast.success(t("otp_verified"));
-        router.push("/");
+        router.push(session.profileCompleted ? "/" : "/profile");
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("otp_failed"));

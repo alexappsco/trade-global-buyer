@@ -117,7 +117,11 @@ export default function CompleteProfileView({
   const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
-  const { authFlow, clearAuthFlow, patchSession } = useAuth();
+  const { authFlow, clearAuthFlow, patchSession, session } = useAuth();
+
+  // role: from session (auth variant) or from initialProfile (profile variant)
+  const role = initialProfile?.role ?? session?.role;
+  const isSupplier = role === "Supplier";
 
   const cities =
     locale === "ar" ? ["القاهرة", "الرياض", "دبي"] : ["Cairo", "Riyadh", "Dubai"];
@@ -172,11 +176,11 @@ export default function CompleteProfileView({
     Boolean(form.legalName) &&
     Boolean(form.phone) &&
     Boolean(form.email) &&
-    Boolean(form.taxNumber) &&
-    Boolean(form.commercialRecord) &&
+    (!isSupplier || Boolean(form.taxNumber)) &&
+    (!isSupplier || Boolean(form.commercialRecord)) &&
     Boolean(form.city) &&
     Boolean(form.address) &&
-    form.categoryCodes.length > 0;
+    (!isSupplier || form.categoryCodes.length > 0);
 
   const handleSave = async () => {
     if (variant === "auth" && !completionToken) {
@@ -198,9 +202,9 @@ export default function CompleteProfileView({
           legalCompanyName: form.legalName,
           phoneNumber: form.phone,
           email: form.email,
-          categoryCodes: form.categoryCodes,
-          taxNumber: form.taxNumber,
-          commercialRecord: form.commercialRecord,
+          categoryCodes: isSupplier ? form.categoryCodes : [],
+          taxNumber: isSupplier ? form.taxNumber : "",
+          commercialRecord: isSupplier ? form.commercialRecord : "",
           city: form.city,
           companyAddress: form.address,
         });
@@ -223,9 +227,9 @@ export default function CompleteProfileView({
           legalCompanyName: form.legalName,
           phoneNumber: form.phone,
           email: form.email,
-          categoryCodes: form.categoryCodes,
-          taxNumber: form.taxNumber,
-          commercialRecord: form.commercialRecord,
+          categoryCodes: isSupplier ? form.categoryCodes : [],
+          taxNumber: isSupplier ? form.taxNumber : "",
+          commercialRecord: isSupplier ? form.commercialRecord : "",
           city: form.city,
           companyAddress: form.address,
         },
@@ -279,22 +283,26 @@ export default function CompleteProfileView({
           onChange={(e) => update("email", e.target.value)}
         />
       </Field>
-      <Field label={t("tax_number")}>
-        <TextField
-          fullWidth
-          size="small"
-          value={form.taxNumber}
-          onChange={(e) => update("taxNumber", e.target.value)}
-        />
-      </Field>
-      <Field label={t("commercial_record")}>
-        <TextField
-          fullWidth
-          size="small"
-          value={form.commercialRecord}
-          onChange={(e) => update("commercialRecord", e.target.value)}
-        />
-      </Field>
+      {isSupplier && (
+        <Field label={t("tax_number")}>
+          <TextField
+            fullWidth
+            size="small"
+            value={form.taxNumber}
+            onChange={(e) => update("taxNumber", e.target.value)}
+          />
+        </Field>
+      )}
+      {isSupplier && (
+        <Field label={t("commercial_record")}>
+          <TextField
+            fullWidth
+            size="small"
+            value={form.commercialRecord}
+            onChange={(e) => update("commercialRecord", e.target.value)}
+          />
+        </Field>
+      )}
       <Field label={t("city")}>
         <TextField
           select
@@ -318,57 +326,59 @@ export default function CompleteProfileView({
           onChange={(e) => update("address", e.target.value)}
         />
       </Field>
-      <Field label={t("category")} sx={{ gridColumn: "1 / -1" }}>
-        <Autocomplete
-          multiple
-          fullWidth
-          size="small"
-          options={categories}
-          getOptionLabel={(cat) => (locale === "ar" ? cat.nameAr : cat.nameEn)}
-          value={categories.filter((cat) => form.categoryCodes.includes(cat.code))}
-          onChange={(_, value) => update("categoryCodes", value.map((v) => v.code))}
-          isOptionEqualToValue={(option, value) => option.code === value.code}
-          slotProps={{
-            chip: {
-              size: "small",
-              sx: {
-                bgcolor: "#EAF3EF",
-                color: "#1E8057",
-                fontWeight: 600,
-                transition: "background-color 0.2s",
-                "&:hover": {
-                  bgcolor: "#D94141",
-                  color: "#fff",
-                  "& .MuiChip-deleteIcon": { color: "#fff" },
-                },
-                "& .MuiChip-deleteIcon": {
+      {isSupplier && (
+        <Field label={t("category")} sx={{ gridColumn: "1 / -1" }}>
+          <Autocomplete
+            multiple
+            fullWidth
+            size="small"
+            options={categories}
+            getOptionLabel={(cat) => (locale === "ar" ? cat.nameAr : cat.nameEn)}
+            value={categories.filter((cat) => form.categoryCodes.includes(cat.code))}
+            onChange={(_, value) => update("categoryCodes", value.map((v) => v.code))}
+            isOptionEqualToValue={(option, value) => option.code === value.code}
+            slotProps={{
+              chip: {
+                size: "small",
+                sx: {
+                  bgcolor: "#EAF3EF",
                   color: "#1E8057",
-                  marginInlineStart: "4px",
-                  marginInlineEnd: "2px",
+                  fontWeight: 600,
+                  transition: "background-color 0.2s",
+                  "&:hover": {
+                    bgcolor: "#D94141",
+                    color: "#fff",
+                    "& .MuiChip-deleteIcon": { color: "#fff" },
+                  },
+                  "& .MuiChip-deleteIcon": {
+                    color: "#1E8057",
+                    marginInlineStart: "4px",
+                    marginInlineEnd: "2px",
+                  },
                 },
               },
-            },
-            listbox: {
-              sx: {
-                "& .MuiAutocomplete-option": {
-                  "&:hover": { bgcolor: "#F4F9F7" },
-                  "&.Mui-focused": { bgcolor: "#F4F9F7" },
+              listbox: {
+                sx: {
+                  "& .MuiAutocomplete-option": {
+                    "&:hover": { bgcolor: "#F4F9F7" },
+                    "&.Mui-focused": { bgcolor: "#F4F9F7" },
+                  },
                 },
               },
-            },
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder={
-                form.categoryCodes.length > 0
-                  ? ""
-                  : t("category_placeholder_multi")
-              }
-            />
-          )}
-        />
-      </Field>
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder={
+                  form.categoryCodes.length > 0
+                    ? ""
+                    : t("category_placeholder_multi")
+                }
+              />
+            )}
+          />
+        </Field>
+      )}
     </Box>
   );
 

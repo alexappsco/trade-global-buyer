@@ -32,16 +32,9 @@ import { sanitizeEmail } from 'src/utils/sanitize-email';
 import type { MyInfo } from '@/types/auth';
 import type { OrderCatalogItem } from '@/types/order';
 
-const fieldKeys = [
-  'name',
-  'company',
-  'phone',
-  'email',
-  'tax_number',
-  'commercial_record',
-  'company_address',
-  'city',
-] as const;
+const commonFieldKeys = ['name', 'company', 'phone', 'email', 'company_address', 'city'] as const;
+const supplierFieldKeys = ['tax_number', 'commercial_record'] as const;
+const fieldKeys = [...commonFieldKeys, ...supplierFieldKeys] as const;
 
 function profileToForm(profile: MyInfo): Record<(typeof fieldKeys)[number], string> {
   return {
@@ -131,8 +124,10 @@ export default function EditProfile() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  const isSupplier = profile?.role === 'Supplier';
+
   const handleSave = async () => {
-    if (categoryCodes.length === 0) {
+    if (isSupplier && categoryCodes.length === 0) {
       toast.error(t('category_required'));
       return;
     }
@@ -311,7 +306,7 @@ export default function EditProfile() {
                   <Loader variant="section" minHeight={200} label={t('loading')} />
                 ) : (
                   <Grid container spacing={2.5}>
-                    {fieldKeys.map((key) => (
+                    {commonFieldKeys.map((key) => (
                       <Grid size={{ xs: 12, sm: 6 }} key={key}>
                         <Typography
                           variant="caption"
@@ -347,84 +342,122 @@ export default function EditProfile() {
                       </Grid>
                     ))}
 
-                    <Grid size={12}>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          fontWeight: 'medium',
-                          color: 'text.secondary',
-                          mb: 0.8,
-                          display: 'block',
-                          textAlign: 'start',
-                        }}
-                      >
-                        {t('fields.category')}
-                      </Typography>
-                      <Autocomplete
-                        multiple
-                        fullWidth
-                        size="small"
-                        options={categories}
-                        getOptionLabel={(cat) => (locale === 'ar' ? cat.nameAr : cat.nameEn)}
-                        value={categories.filter((cat) => categoryCodes.includes(cat.code))}
-                        onChange={(_, value) => setCategoryCodes(value.map((v) => v.code))}
-                        isOptionEqualToValue={(option, value) => option.code === value.code}
-                        slotProps={{
-                          chip: {
-                            size: 'small',
-                            sx: {
-                              bgcolor: '#EAF3EF',
-                              color: '#1E8057',
-                              fontWeight: 600,
-                              transition: 'background-color 0.2s',
-                              '&:hover': {
-                                bgcolor: '#D94141',
-                                color: '#fff',
-                                '& .MuiChip-deleteIcon': { color: '#fff' },
+                    {isSupplier && supplierFieldKeys.map((key) => (
+                      <Grid size={{ xs: 12, sm: 6 }} key={key}>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            fontWeight: 'medium',
+                            color: 'text.secondary',
+                            mb: 0.8,
+                            display: 'block',
+                            textAlign: 'start',
+                          }}
+                        >
+                          {t(`fields.${key}`)}
+                        </Typography>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={form[key]}
+                          onChange={(e) => handleChange(key, e.target.value)}
+                          slotProps={{
+                            input: {
+                              sx: {
+                                borderRadius: 2,
+                                bgcolor: '#FAFAFA',
+                                fontSize: '0.875rem',
+                                '& input': { textAlign: 'start' },
+                                '& fieldset': { borderColor: '#E5E7EB' },
+                                '&:hover fieldset': { borderColor: '#1B8354' },
+                                '&.Mui-focused fieldset': { borderColor: '#1B8354' },
                               },
-                              '& .MuiChip-deleteIcon': {
+                            },
+                          }}
+                        />
+                      </Grid>
+                    ))}
+
+                    {isSupplier && (
+                      <Grid size={12}>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            fontWeight: 'medium',
+                            color: 'text.secondary',
+                            mb: 0.8,
+                            display: 'block',
+                            textAlign: 'start',
+                          }}
+                        >
+                          {t('fields.category')}
+                        </Typography>
+                        <Autocomplete
+                          multiple
+                          fullWidth
+                          size="small"
+                          options={categories}
+                          getOptionLabel={(cat) => (locale === 'ar' ? cat.nameAr : cat.nameEn)}
+                          value={categories.filter((cat) => categoryCodes.includes(cat.code))}
+                          onChange={(_, value) => setCategoryCodes(value.map((v) => v.code))}
+                          isOptionEqualToValue={(option, value) => option.code === value.code}
+                          slotProps={{
+                            chip: {
+                              size: 'small',
+                              sx: {
+                                bgcolor: '#EAF3EF',
                                 color: '#1E8057',
-                                marginInlineStart: '4px',
-                                marginInlineEnd: '2px',
-                              },
-                            },
-                          },
-                          listbox: {
-                            sx: {
-                              '& .MuiAutocomplete-option': {
-                                '&:hover': { bgcolor: '#F4F9F7' },
-                                '&.Mui-focused': { bgcolor: '#F4F9F7' },
-                              },
-                            },
-                          },
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            placeholder={
-                              categoryCodes.length > 0
-                                ? ''
-                                : t('category_placeholder_multi')
-                            }
-                            slotProps={{
-                              ...params.slotProps,
-                              input: {
-                                ...params.slotProps.input,
-                                sx: {
-                                  borderRadius: 2,
-                                  bgcolor: '#FAFAFA',
-                                  fontSize: '0.875rem',
-                                  '& input': { textAlign: 'start' },
-                                  '& fieldset': { borderColor: '#E5E7EB' },
-                                  '&:hover fieldset': { borderColor: '#1B8354' },
-                                  '&.Mui-focused fieldset': { borderColor: '#1B8354' },
+                                fontWeight: 600,
+                                transition: 'background-color 0.2s',
+                                '&:hover': {
+                                  bgcolor: '#D94141',
+                                  color: '#fff',
+                                  '& .MuiChip-deleteIcon': { color: '#fff' },
+                                },
+                                '& .MuiChip-deleteIcon': {
+                                  color: '#1E8057',
+                                  marginInlineStart: '4px',
+                                  marginInlineEnd: '2px',
                                 },
                               },
-                            }}
-                          />
-                        )}
-                      />
-                    </Grid>
+                            },
+                            listbox: {
+                              sx: {
+                                '& .MuiAutocomplete-option': {
+                                  '&:hover': { bgcolor: '#F4F9F7' },
+                                  '&.Mui-focused': { bgcolor: '#F4F9F7' },
+                                },
+                              },
+                            },
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              placeholder={
+                                categoryCodes.length > 0
+                                  ? ''
+                                  : t('category_placeholder_multi')
+                              }
+                              slotProps={{
+                                ...params.slotProps,
+                                input: {
+                                  ...params.slotProps.input,
+                                  sx: {
+                                    borderRadius: 2,
+                                    bgcolor: '#FAFAFA',
+                                    fontSize: '0.875rem',
+                                    '& input': { textAlign: 'start' },
+                                    '& fieldset': { borderColor: '#E5E7EB' },
+                                    '&:hover fieldset': { borderColor: '#1B8354' },
+                                    '&.Mui-focused fieldset': { borderColor: '#1B8354' },
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      </Grid>
+                    )}
                   </Grid>
                 )}
               </Card>
