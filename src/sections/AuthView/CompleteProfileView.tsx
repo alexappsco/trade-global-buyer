@@ -7,16 +7,21 @@ import {
   Button,
   Container,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  IconButton,
   MenuItem,
-  Slide,
   Stack,
   TextField,
   Typography,
+  Zoom,
+  keyframes,
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
+import CloseIcon from "@mui/icons-material/Close";
+import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
@@ -34,13 +39,45 @@ import type { SxProps, Theme } from "@mui/material";
 
 const GREEN = "#1E8E59";
 
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children: React.ReactElement },
+const glowPulse = keyframes`
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(30, 142, 89, 0.4);
+  }
+  70% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 18px rgba(30, 142, 89, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(30, 142, 89, 0);
+  }
+`;
+
+const floatBadge = keyframes`
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+`;
+
+const shimmer = keyframes`
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+`;
+
+const DialogTransition = forwardRef(function DialogTransition(
+  props: TransitionProps & { children: React.ReactElement<any, any> },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Zoom ref={ref} {...props} timeout={{ enter: 380, exit: 260 }} />;
 });
-Transition.displayName = "CompleteProfileDialogTransition";
 
 interface CompleteProfileViewProps {
   /** "auth" = registration flow (AuthShell), "profile" = dashboard gate inside the profile page */
@@ -425,48 +462,248 @@ export default function CompleteProfileView({
         <Dialog
           open={infoOpen}
           keepMounted
+          slots={{ transition: DialogTransition }}
           onClose={() => setInfoOpen(false)}
-          slots={{ transition: Transition }}
-          aria-describedby="complete-profile-info"
+          aria-labelledby="complete-profile-info-title"
+          aria-describedby="complete-profile-info-desc"
           slotProps={{
             paper: {
               sx: {
-                borderRadius: "14px",
+                borderRadius: "20px",
+                boxShadow: "0 32px 80px -16px rgba(15, 23, 42, 0.35)",
+                overflow: "hidden",
+                border: "1px solid rgba(30, 142, 89, 0.15)",
+                maxWidth: 380,
                 width: "100%",
-                maxWidth: 420,
                 m: 2,
-                boxShadow: "0 10px 40px rgba(16,117,78,0.15)",
+                background:
+                  "radial-gradient(circle at 50% 0%, rgba(30, 142, 89, 0.08) 0%, #FFFFFF 65%)",
               },
             },
             backdrop: {
-              sx: { backgroundColor: "rgba(15, 23, 42, 0.4)" },
+              sx: {
+                backgroundColor: "rgba(15, 23, 42, 0.65)",
+                backdropFilter: "blur(12px)",
+                transition: "all 0.3s ease-in-out",
+              },
             },
           }}
         >
-          <DialogTitle sx={{ fontWeight: 700, color: "#13201A", pb: 0.5 }}>
-            {t("complete_title")}
-          </DialogTitle>
-          <DialogContent>
-            <Typography id="complete-profile-info" sx={{ color: "#6B7A74", lineHeight: 1.7 }}>
+          <Box
+            sx={{
+              position: "relative",
+              px: 3,
+              pt: 3.5,
+              pb: 3,
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {/* Close Button */}
+            <IconButton
+              onClick={() => setInfoOpen(false)}
+              aria-label="close"
+              size="small"
+              sx={{
+                position: "absolute",
+                top: 12,
+                right: locale === "ar" ? "auto" : 12,
+                left: locale === "ar" ? 12 : "auto",
+                color: "#64748B",
+                bgcolor: "rgba(241, 245, 249, 0.8)",
+                backdropFilter: "blur(4px)",
+                border: "1px solid rgba(226, 232, 240, 0.8)",
+                transition: "all 0.25s ease-in-out",
+                "&:hover": {
+                  bgcolor: "#E2E8F0",
+                  color: "#0F172A",
+                  transform: "rotate(90deg) scale(1.1)",
+                },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 17 }} />
+            </IconButton>
+
+            {/* Glowing & Floating Icon Badge Container */}
+            <Box
+              sx={{
+                position: "relative",
+                mb: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* Pulse Ambient Outer Ring */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: 72,
+                  height: 72,
+                  borderRadius: "20px",
+                  bgcolor: "rgba(30, 142, 89, 0.12)",
+                  animation: `${glowPulse} 3s infinite ease-in-out`,
+                }}
+              />
+
+              {/* Central Floating Badge */}
+              <Box
+                sx={{
+                  position: "relative",
+                  width: 60,
+                  height: 60,
+                  borderRadius: "18px",
+                  background: "linear-gradient(135deg, #1E8E59 0%, #115E3B 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 12px 28px -6px rgba(30, 142, 89, 0.5)",
+                  animation: `${floatBadge} 4s ease-in-out infinite`,
+                }}
+              >
+                <VerifiedUserRoundedIcon sx={{ fontSize: 32, color: "#FFFFFF" }} />
+              </Box>
+
+              {/* Status Badge Indicator */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: -2,
+                  right: locale === "ar" ? "auto" : -2,
+                  left: locale === "ar" ? -2 : "auto",
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  bgcolor: "#10B981",
+                  border: "2px solid #FFFFFF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 8px rgba(16, 185, 129, 0.4)",
+                }}
+              >
+                <CheckCircleRoundedIcon sx={{ fontSize: 11, color: "#FFFFFF" }} />
+              </Box>
+            </Box>
+
+            {/* Header Badge Pill */}
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.6,
+                px: 1.5,
+                py: 0.4,
+                borderRadius: 999,
+                bgcolor: "rgba(30, 142, 89, 0.08)",
+                border: "1px solid rgba(30, 142, 89, 0.2)",
+                color: "#1E8E59",
+                fontSize: 12,
+                fontWeight: 700,
+                mb: 1.5,
+              }}
+            >
+              <ShieldOutlinedIcon sx={{ fontSize: 14 }} />
+              {locale === "ar" ? "خطوة هامة لتفعيل الحساب" : "Important Profile Step"}
+            </Box>
+
+            {/* Title */}
+            <Typography
+              id="complete-profile-info-title"
+              variant="h6"
+              sx={{
+                fontWeight: 800,
+                color: "#0F172A",
+                mb: 1,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {t("complete_title")}
+            </Typography>
+
+            {/* Description */}
+            <Typography
+              id="complete-profile-info-desc"
+              sx={{
+                color: "#475569",
+                lineHeight: 1.65,
+                fontSize: 13.5,
+                mb: 2.5,
+              }}
+            >
               {t("complete_profile_hint")}
             </Typography>
-          </DialogContent>
-          <DialogActions sx={{ px: 3, pb: 2 }}>
+
+            {/* CTA Button with Shimmer & Glowing Hover */}
             <Button
               onClick={() => setInfoOpen(false)}
               variant="contained"
               disableElevation
+              fullWidth
               sx={{
-                bgcolor: GREEN,
-                color: "#fff",
-                borderRadius: "8px",
-                px: 3,
-                "&:hover": { bgcolor: "#17734A" },
+                position: "relative",
+                overflow: "hidden",
+                background: "linear-gradient(135deg, #1E8E59 0%, #157347 100%)",
+                color: "#FFFFFF",
+                borderRadius: "12px",
+                py: 1.2,
+                px: 4,
+                fontSize: 14.5,
+                fontWeight: 700,
+                textTransform: "none",
+                boxShadow: "0 8px 20px -4px rgba(30, 142, 89, 0.4)",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                "&:hover": {
+                  background: "linear-gradient(135deg, #17734A 0%, #0F5C37 100%)",
+                  boxShadow: "0 12px 26px -4px rgba(30, 142, 89, 0.55)",
+                  transform: "translateY(-2px)",
+                  "& .cta-arrow": {
+                    transform: locale === "ar" ? "translateX(-4px)" : "translateX(4px)",
+                  },
+                },
+                "&:active": {
+                  transform: "translateY(0)",
+                },
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "50%",
+                  height: "100%",
+                  background:
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)",
+                  transform: "skewX(-20deg)",
+                  animation: `${shimmer} 3.5s infinite`,
+                },
               }}
             >
-              {t("understood")}
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 0.8,
+                  zIndex: 1,
+                }}
+              >
+                <span>{t("understood")}</span>
+                {locale === "ar" ? (
+                  <ArrowBackIcon
+                    className="cta-arrow"
+                    sx={{ fontSize: 16, transition: "transform 0.25s" }}
+                  />
+                ) : (
+                  <ArrowForwardIcon
+                    className="cta-arrow"
+                    sx={{ fontSize: 16, transition: "transform 0.25s" }}
+                  />
+                )}
+              </Box>
             </Button>
-          </DialogActions>
+          </Box>
         </Dialog>
       </Box>
     );
