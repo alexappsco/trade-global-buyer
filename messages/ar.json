@@ -449,6 +449,7 @@
     "deleted_success": "تم حذف الطلب",
     "loading": "جاري التحميل...",
     "submit_error": "تعذر إرسال الطلب. يرجى المحاولة مجدداً.",
+    "profile_completion_required": "ملفك الشخصي غير مكتمل. يرجى إكمال بياناتك للمتابعة.",
     "request_number": "رقم الطلب",
     "request_date": "تاريخ الطلب",
     "request_time": "وقت الطلب",
@@ -540,6 +541,8 @@
     "profile_failed": "تعذر حفظ ملفك الشخصي. حاول مرة أخرى",
     "otp_sent": "تم إرسال رمز التحقق",
     "otp_failed": "فشل التحقق. حاول مرة أخرى",
+    "profile_completion_required": "ملفك الشخصي غير مكتمل. يرجى إكمال بياناتك للمتابعة.",
+    "understood": "فهمت",
     "forgot_failed": "تعذر إرسال رمز إعادة التعيين. حاول مرة أخرى",
     "change_password_title": "تعيين كلمة سر جديدة",
     "change_password_subtitle": "أدخل كلمة السر الجديدة لإكمال إعادة تعيين كلمة السر.",
@@ -721,7 +724,8 @@
     "validation_no_items": "يرجى إضافة صنف واحد على الأقل",
     "validation_item_name": "يرجى إدخال اسم الصنف",
     "validation_item_quantity": "يرجى إدخال كمية صحيحة للصنف",
-    "validation_item_details": "يرجى إدخال تفاصيل الصنف"
+    "validation_item_details": "يرجى إدخال تفاصيل الصنف",
+    "profile_completion_required": "ملفك الشخصي غير مكتمل. يرجى إكمال بياناتك للمتابعة."
   },
   "Quotations": {
     "title": "طلبات عروض الأسعار",

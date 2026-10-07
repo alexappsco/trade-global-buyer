@@ -1,16 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import {
   Autocomplete,
   Box,
   Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   MenuItem,
+  Slide,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import type { TransitionProps } from "@mui/material/transitions";
 import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import AuthShell from "./AuthShell";
@@ -27,6 +33,14 @@ import type { OrderCatalogItem } from "src/types/order";
 import type { SxProps, Theme } from "@mui/material";
 
 const GREEN = "#1E8E59";
+
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & { children: React.ReactElement },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+Transition.displayName = "CompleteProfileDialogTransition";
 
 interface CompleteProfileViewProps {
   /** "auth" = registration flow (AuthShell), "profile" = dashboard gate inside the profile page */
@@ -101,6 +115,7 @@ export default function CompleteProfileView({
   );
 
   const [loading, setLoading] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(variant === "profile");
 
   useEffect(() => {
     if (variant !== "profile" || initialProfile) return;
@@ -407,6 +422,52 @@ export default function CompleteProfileView({
             </Stack>
           </Box>
         </Container>
+        <Dialog
+          open={infoOpen}
+          keepMounted
+          onClose={() => setInfoOpen(false)}
+          slots={{ transition: Transition }}
+          aria-describedby="complete-profile-info"
+          slotProps={{
+            paper: {
+              sx: {
+                borderRadius: "14px",
+                width: "100%",
+                maxWidth: 420,
+                m: 2,
+                boxShadow: "0 10px 40px rgba(16,117,78,0.15)",
+              },
+            },
+            backdrop: {
+              sx: { backgroundColor: "rgba(15, 23, 42, 0.4)" },
+            },
+          }}
+        >
+          <DialogTitle sx={{ fontWeight: 700, color: "#13201A", pb: 0.5 }}>
+            {t("complete_title")}
+          </DialogTitle>
+          <DialogContent>
+            <Typography id="complete-profile-info" sx={{ color: "#6B7A74", lineHeight: 1.7 }}>
+              {t("complete_profile_hint")}
+            </Typography>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button
+              onClick={() => setInfoOpen(false)}
+              variant="contained"
+              disableElevation
+              sx={{
+                bgcolor: GREEN,
+                color: "#fff",
+                borderRadius: "8px",
+                px: 3,
+                "&:hover": { bgcolor: "#17734A" },
+              }}
+            >
+              {t("understood")}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     );
   }

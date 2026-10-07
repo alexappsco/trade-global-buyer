@@ -365,6 +365,7 @@ function RequestFormBlock({
 export default function CreateQuoteRequestView() {
   const t = useTranslations("CreateQuoteRequest");
   const tSidebar = useTranslations("Sidebar");
+  const tAuth = useTranslations("Auth");
   const toast = useToast();
   const router = useRouter();
   const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
@@ -509,8 +510,20 @@ export default function CreateQuoteRequestView() {
       if (res?.success) {
         setShowSuccess(true);
       } else {
-        const errorMsg =
-          typeof res?.error === "string" && res.error ? res.error : t("submit_error");
+        const errorCode = (res as unknown as { code?: string; error?: { code?: string } })?.code ??
+          (res as unknown as { error?: { code?: string } })?.error?.code;
+        const rawError =
+          typeof (res as unknown as { error?: unknown })?.error === "string"
+            ? ((res as unknown as { error?: string })?.error as string)
+            : undefined;
+
+        if (errorCode === "Profiles:CompletionRequired" || rawError?.includes("Profiles:CompletionRequired")) {
+          toast.error(tAuth("profile_completion_required") || rawError || "Your profile is incomplete");
+          router.push("/profile");
+          return;
+        }
+
+        const errorMsg = rawError || t("submit_error");
         console.error("[CreateOrder] Failed:", res);
         toast.error(errorMsg);
       }

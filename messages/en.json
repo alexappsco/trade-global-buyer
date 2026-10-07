@@ -449,6 +449,7 @@
     "deleted_success": "Request deleted",
     "loading": "Loading...",
     "submit_error": "Unable to send the request. Please try again.",
+    "profile_completion_required": "Your profile is incomplete. Please complete your profile to continue.",
     "request_number": "Request number",
     "request_date": "Request date",
     "request_time": "Request time",
@@ -538,6 +539,8 @@
     "session_expired": "Your session has expired. Please start again",
     "profile_required": "Please fill in all required fields",
     "profile_failed": "Failed to save your profile. Please try again",
+    "profile_completion_required": "Your profile is incomplete. Please complete your profile to continue.",
+    "understood": "Got it",
     "otp_sent": "A verification code has been sent",
     "otp_failed": "Verification failed. Please try again",
     "forgot_failed": "Unable to send the reset code. Please try again",
@@ -721,7 +724,8 @@
     "validation_no_items": "Please add at least one item",
     "validation_item_name": "Please enter the item name",
     "validation_item_quantity": "Please enter a valid quantity for the item",
-    "validation_item_details": "Please enter the item details"
+    "validation_item_details": "Please enter the item details",
+    "profile_completion_required": "Your profile is incomplete. Please complete your profile to continue."
   },
   "Quotations": {
     "title": "Quotation Requests",

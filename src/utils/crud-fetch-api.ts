@@ -108,13 +108,26 @@ async function apiRequest<TResponse, TBody = undefined>(
 
     // Response check after parsing so i can get the error message
     if (!response.ok) {
-      const errMsg = Array.isArray(responseData?.message)
-        ? responseData?.message.join(' | ')
-        : responseData?.message || t;
-      const resCode = responseData?.code || null;
-      const resDetails = responseData?.details || null;
-      const resData = responseData?.data || {};
-      const resVErrors = responseData?.validationErrors || null;
+      const rawMessage =
+        responseData?.message ??
+        responseData?.error?.message ??
+        (typeof responseData?.error === 'string' ? responseData.error : null) ??
+        responseData?.title;
+
+      let errMsg: string;
+      if (Array.isArray(rawMessage)) {
+        errMsg = rawMessage.join(' | ');
+      } else if (typeof rawMessage === 'string' && rawMessage) {
+        errMsg = rawMessage;
+      } else if (commonErrorStatus.has(response.status)) {
+        errMsg = t(commonErrorMessages.get(response.status.toString()) ?? 'unexpected_error');
+      } else {
+        errMsg = t('unexpected_error');
+      }
+      const resCode = responseData?.code ?? responseData?.error?.code ?? null;
+      const resDetails = responseData?.details ?? responseData?.error?.details ?? null;
+      const resData = responseData?.data ?? responseData?.error?.data ?? {};
+      const resVErrors = responseData?.validationErrors ?? responseData?.error?.validationErrors ?? null;
       return errorObject(errMsg, response.status, resCode, resDetails, resData, resVErrors);
     }
 
@@ -167,19 +180,22 @@ export async function deleteData<TResponse>(
   return apiRequest<TResponse>(endpoint, 'DELETE', undefined, options);
 }
 
-const errorObject = (
-  error: string = '',
-  status: string | number = '',
-  code: unknown = null,
-  details: unknown = null,
-  data: unknown = {},
-  validationErrors: unknown = null
-): ApiErrorResponse => ({
-  success: false,
-  error,
-  status,
-  code,
-  details,
-  data,
-  validationErrors,
-});
+  const errorObject = (
+    error: string = '',
+    status: string | number = '',
+    code: unknown = null,
+    details: unknown = null,
+    data: unknown = {},
+    validationErrors: unknown = null
+  ): ApiErrorResponse => {
+    const safeError = typeof error === 'string' ? error : String(error || '');
+    return {
+      success: false,
+      error: safeError,
+      status,
+      code,
+      details,
+      data,
+      validationErrors,
+    };
+  };
