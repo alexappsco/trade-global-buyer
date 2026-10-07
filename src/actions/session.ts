@@ -13,6 +13,7 @@ interface SessionMeta {
   name: string;
   phoneNumber: string;
   email: string;
+  avatarUrl?: string;
   role: AuthRole;
   accountType: AuthAccountType;
   profileCompleted: boolean;
@@ -64,6 +65,7 @@ function toMeta(session: UserSession): SessionMeta {
     name: session.name,
     phoneNumber: session.phoneNumber,
     email: session.email,
+    avatarUrl: session.avatarUrl,
     role: session.role,
     accountType: session.accountType,
     profileCompleted: session.profileCompleted,
@@ -107,6 +109,19 @@ export async function clearAuthSession(): Promise<void> {
   store.delete(SESSION_META_COOKIE);
 }
 
+export type SessionMetaPatch = Partial<
+  Pick<SessionMeta, "name" | "phoneNumber" | "email" | "avatarUrl" | "profileCompleted">
+>;
+
+export async function updateAuthSessionMeta(patch: SessionMetaPatch): Promise<void> {
+  const store = await cookies();
+  const meta = parseMeta(store.get(SESSION_META_COOKIE)?.value);
+  if (!meta) return;
+
+  const next: SessionMeta = { ...meta, ...patch };
+  store.set(SESSION_META_COOKIE, JSON.stringify(next), buildCookieOptions(meta.refreshTokenExpireAt));
+}
+
 export async function refreshAuthSession(): Promise<UserSession | null> {
   const session = await getAuthSession();
   if (!session) return null;
@@ -121,9 +136,13 @@ export async function refreshAuthSession(): Promise<UserSession | null> {
   }
 
   try {
-    const next = await refreshTokenAction(session.refreshToken);
-    await saveAuthSession(next);
-    return next;
+    const nextRes = await refreshTokenAction(session.refreshToken);
+    if (!nextRes.success || !nextRes.data) {
+      await clearAuthSession();
+      return null;
+    }
+    await saveAuthSession(nextRes.data);
+    return nextRes.data;
   } catch {
     await clearAuthSession();
     return null;

@@ -111,6 +111,12 @@ export default function RegisterView() {
   const [phoneError, setPhoneError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const effectiveAccountType: AuthAccountType =
+    entity === "supplier" ? "Company" : accountType;
+
+  const nameFieldLabel =
+    entity === "supplier" ? t("supplier_name") : effectiveAccountType === "Company" ? t("company_name") : t("full_name");
+
   const handleSubmit = async () => {
     setPhoneError("");
     if (!nameOrCompany || !password || !confirmPassword) {
@@ -141,10 +147,10 @@ export default function RegisterView() {
 
     setLoading(true);
     try {
-      const result = await registerAction(
+      const res = await registerAction(
         {
           role: UI_TO_ROLE[entity],
-          type: accountType,
+          type: effectiveAccountType,
           name: nameOrCompany,
           phoneNumber: phone,
           password,
@@ -152,14 +158,19 @@ export default function RegisterView() {
         },
         locale
       );
+      if (!res.success || !res.data) {
+        toast.error(res.error || t("register_failed"));
+        return;
+      }
       setAuthFlow({
         mode: "register",
-        completionToken: result.completionToken,
-        phoneNumber: result.phoneNumber,
+        completionToken: res.data.completionToken,
+        phoneNumber: res.data.phoneNumber,
       });
-      router.push("/auth/complete-profile");
+      toast.success(t("register_success"));
+      router.push("/auth/login");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("register_failed"));
+      toast.error(t("register_failed"));
     } finally {
       setLoading(false);
     }
@@ -184,18 +195,20 @@ export default function RegisterView() {
           ]}
         />
 
-        <AccountTypeRadio
-          value={accountType}
-          onChange={setAccountType}
-          options={[
-            { value: "Company", label: t("company") },
-            { value: "Individual", label: t("individual") },
-          ]}
-        />
+        {entity === "buyer" && (
+          <AccountTypeRadio
+            value={accountType}
+            onChange={setAccountType}
+            options={[
+              { value: "Company", label: t("company") },
+              { value: "Individual", label: t("individual") },
+            ]}
+          />
+        )}
 
         <Box>
           <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 0.5 }}>
-            {accountType === "Company" ? t("company_name") : t("full_name")}
+            {nameFieldLabel}
           </Typography>
           <TextField
             fullWidth

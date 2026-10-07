@@ -1,9 +1,9 @@
 'use server';
 
-import { getData, editData } from 'src/utils/crud-fetch-api';
+import { getData, postData, editData } from 'src/utils/crud-fetch-api';
 import { endpoints } from 'src/utils/endpoints';
 import type { ApiSingleResponse } from 'src/types/crud-types';
-import type { MyInfo, UpdateMyInfoPayload } from 'src/types/auth';
+import type { CompleteProfileResponse, MyInfo, UpdateMyInfoPayload } from 'src/types/auth';
 
 function isNEXT_REDIRECT(error: unknown): boolean {
   return (
@@ -74,6 +74,44 @@ export async function updateMyInfo(
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to update profile',
+    };
+  }
+}
+
+export interface CompleteProfileForSessionPayload {
+  completionToken?: string;
+  legalCompanyName: string;
+  phoneNumber: string;
+  email: string;
+  categoryCodes: string[];
+  taxNumber: string;
+  commercialRecord: string;
+  city: string;
+  companyAddress: string;
+}
+
+export async function completeProfileForSession(
+  payload: CompleteProfileForSessionPayload
+): Promise<ApiSingleResponse<CompleteProfileResponse>> {
+  try {
+    const res = await postData<CompleteProfileResponse, CompleteProfileForSessionPayload>(
+      endpoints.auth.completeProfile,
+      payload
+    );
+
+    if (res.success && res.data) {
+      return { success: true, data: res.data };
+    }
+
+    return {
+      success: false,
+      error: 'error' in res ? res.error : 'Failed to complete profile',
+    };
+  } catch (error) {
+    if (isNEXT_REDIRECT(error)) throw error;
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to complete profile',
     };
   }
 }

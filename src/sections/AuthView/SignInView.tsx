@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import PasswordField from "./PasswordField";
 import { useRouter } from "src/i18n/routing";
@@ -33,9 +34,13 @@ export default function SignInView() {
   const router = useRouter();
   const toast = useToast();
   const { setAuthFlow } = useAuth();
+  const searchParams = useSearchParams();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setLocalRole] = useState<UserRole | null>(null);
+  const roleParam = searchParams.get("role");
+  const initialRole: UserRole | null =
+    roleParam === "supplier" ? "supplier" : roleParam === "buyer" ? "buyer" : null;
+  const [role, setLocalRole] = useState<UserRole | null>(initialRole);
   const [roleError, setRoleError] = useState(false);
   const [phoneError, setPhoneError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -70,18 +75,22 @@ export default function SignInView() {
 
     setLoading(true);
     try {
-      const challenge = await loginAction(
+      const res = await loginAction(
         { role: UI_TO_ROLE[role], phoneNumber: phone, password },
         locale
       );
+      if (!res.success || !res.data) {
+        toast.error(res.error || t("signin_failed"));
+        return;
+      }
       setAuthFlow({
         mode: "login",
-        challengeId: challenge.challengeId,
+        challengeId: res.data.challengeId,
         phoneNumber: phone,
       });
       router.push("/auth/otp");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("signin_failed"));
+      toast.error(t("signin_failed"));
     } finally {
       setLoading(false);
     }

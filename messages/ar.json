@@ -117,7 +117,9 @@
       "partners": "شركاؤنا",
       "about": "من نحن",
       "faq": "الأسئلة الشائعة",
-      "login": "تسجيل الدخول"
+      "login": "تسجيل الدخول",
+      "go_to_dashboard": "الذهاب إلى لوحة التحكم",
+      "logout": "تسجيل الخروج"
     },
     "platform": {
       "why_title": "لماذا",
@@ -201,6 +203,22 @@
         "join_supplier": "انضم كمورد",
         "join_merchant": "انضم كتاجر"
       }
+    },
+    "roles": {
+      "buyer": "مشتري",
+      "supplier": "مورد"
+    },
+    "role_dialog": {
+      "title": "هذا الإجراء يتطلب نوع حساب مختلف",
+      "message": "حسابك مسجل كـ {current}، وأنت اخترت قسم {target}. إلى أين تريد الانتقال؟",
+      "register_as": "تسجيل الدخول كـ {target}",
+      "go_home": "الذهاب إلى لوحة التحكم",
+      "warning_title": "سيتم تسجيل خروجك",
+      "warning_message": "سيتم تسجيل خروجك من حساب {current} وتحويلك لتسجيل الدخول كـ {target}.",
+      "cancel": "إلغاء",
+      "confirm_logout": "تسجيل الخروج والمتابعة",
+      "current_account": "حسابك الحالي",
+      "required_account": "الحساب المطلوب"
     }
   },
   "Orders": {
@@ -394,7 +412,7 @@
     "back": "رجوع",
     "category_placeholder_multi": "اختر فئة واحدة أو أكثر",
     "category_required": "الرجاء اختيار فئة واحدة على الأقل",
-"fields": {
+    "fields": {
       "name": "الاسم",
       "company": "اسم الشركة",
       "phone": "رقم الجوال",
@@ -431,6 +449,7 @@
     "deleted_success": "تم حذف الطلب",
     "loading": "جاري التحميل...",
     "submit_error": "تعذر إرسال الطلب. يرجى المحاولة مجدداً.",
+    "profile_completion_required": "ملفك الشخصي غير مكتمل. يرجى إكمال بياناتك للمتابعة.",
     "request_number": "رقم الطلب",
     "request_date": "تاريخ الطلب",
     "request_time": "وقت الطلب",
@@ -489,7 +508,8 @@
     "logout": "تسجيل خروج",
     "complete_title": "اكمال تسجيل البيانات",
     "account_info_title": "بيانات الحساب",
-    "legal_company_name": "اسم الشركة القانوني",
+    "complete_profile_hint": "يرجى إكمال بيانات ملفك الشخصي حتى تتمكن من عرضه والتعديل عليه.",
+    "legal_company_name": "الاسم",
     "email": "البريد الالكتروني",
     "category": "الفئة",
     "category_placeholder_multi": "اختر فئة واحدة أو أكثر",
@@ -521,14 +541,18 @@
     "profile_failed": "تعذر حفظ ملفك الشخصي. حاول مرة أخرى",
     "otp_sent": "تم إرسال رمز التحقق",
     "otp_failed": "فشل التحقق. حاول مرة أخرى",
+    "profile_completion_required": "ملفك الشخصي غير مكتمل. يرجى إكمال بياناتك للمتابعة.",
+    "understood": "فهمت",
     "forgot_failed": "تعذر إرسال رمز إعادة التعيين. حاول مرة أخرى",
     "change_password_title": "تعيين كلمة سر جديدة",
     "change_password_subtitle": "أدخل كلمة السر الجديدة لإكمال إعادة تعيين كلمة السر.",
     "new_password": "كلمة السر الجديدة",
     "password_changed": "تم تغيير كلمة السر بنجاح",
-    "password_change_failed": "فشل تغيير كلمة السر. حاول مرة أخرى"
+    "password_change_failed": "فشل تغيير كلمة السر. حاول مرة أخرى",
+    "landing_page": "الصفحة الرئيسية",
+    "supplier_name": "اسم المورد",
+    "register_success": "تم إنشاء الحساب بنجاح، يمكنك تسجيل الدخول الآن."
   },
-
   "Invoices": {
     "title": "الفواتير",
     "search": "بحث",
@@ -700,7 +724,8 @@
     "validation_no_items": "يرجى إضافة صنف واحد على الأقل",
     "validation_item_name": "يرجى إدخال اسم الصنف",
     "validation_item_quantity": "يرجى إدخال كمية صحيحة للصنف",
-    "validation_item_details": "يرجى إدخال تفاصيل الصنف"
+    "validation_item_details": "يرجى إدخال تفاصيل الصنف",
+    "profile_completion_required": "ملفك الشخصي غير مكتمل. يرجى إكمال بياناتك للمتابعة."
   },
   "Quotations": {
     "title": "طلبات عروض الأسعار",

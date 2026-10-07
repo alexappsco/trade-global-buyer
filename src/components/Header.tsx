@@ -7,6 +7,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import Iconify from "src/components/iconify";
 import { useAuth } from "src/contexts/AuthContext";
 import { localesSettings, LocaleType, allLocales } from "src/i18n/config-locale";
@@ -71,6 +72,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const handleLangClose = () => {
     setLangAnchorEl(null);
+  };
+
+  const handleGoToLanding = () => {
+    setAvatarAnchorEl(null);
+    router.push("/landing");
   };
 
   const handleLogout = () => {
@@ -157,7 +163,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
             disableRipple
             sx={{ p: 0.5, "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }}
           >
-            <Avatar sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}>
+            <Avatar
+              src={session?.avatarUrl}
+              alt={session?.name}
+              sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}
+            >
               <PersonIcon />
             </Avatar>
           </IconButton>
@@ -227,6 +237,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
           }}
         >
           <Avatar
+            src={session?.avatarUrl}
+            alt={session?.name}
             sx={{
               width: 46,
               height: 46,
@@ -264,6 +276,26 @@ export default function Header({ onMenuClick }: HeaderProps) {
             </Typography>
           </Box>
         </Box>
+
+        <MenuItem
+          onClick={handleGoToLanding}
+          sx={{
+            mx: 1,
+            my: 0.75,
+            borderRadius: "8px",
+            color: "#161C24",
+            "&:hover": { bgcolor: "rgba(27, 131, 84, 0.08)" },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 40, color: "#1B8354" }}>
+            <PublicRoundedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText
+            slotProps={{ primary: { sx: { fontSize: 14, fontWeight: 600 } } }}
+          >
+            {t("landing_page")}
+          </ListItemText>
+        </MenuItem>
 
         <MenuItem
           onClick={handleLogout}
