@@ -147,7 +147,7 @@ export default function RegisterView() {
 
     setLoading(true);
     try {
-      const result = await registerAction(
+      const res = await registerAction(
         {
           role: UI_TO_ROLE[entity],
           type: effectiveAccountType,
@@ -158,15 +158,19 @@ export default function RegisterView() {
         },
         locale
       );
+      if (!res.success || !res.data) {
+        toast.error(res.error || t("register_failed"));
+        return;
+      }
       setAuthFlow({
         mode: "register",
-        completionToken: result.completionToken,
-        phoneNumber: result.phoneNumber,
+        completionToken: res.data.completionToken,
+        phoneNumber: res.data.phoneNumber,
       });
       toast.success(t("register_success"));
       router.push("/auth/login");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("register_failed"));
+      toast.error(t("register_failed"));
     } finally {
       setLoading(false);
     }

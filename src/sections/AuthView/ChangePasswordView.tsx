@@ -44,15 +44,19 @@ export default function ChangePasswordView() {
 
     setLoading(true);
     try {
-      await changePasswordAction(
+      const res = await changePasswordAction(
         { resetToken, newPassword, confirmPassword },
         locale
       );
+      if (!res.success) {
+        toast.error(res.error || t("password_change_failed"));
+        return;
+      }
       clearAuthFlow();
       toast.success(t("password_changed"));
       router.push("/auth/login");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("password_change_failed"));
+      toast.error(t("password_change_failed"));
     } finally {
       setLoading(false);
     }

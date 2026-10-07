@@ -136,9 +136,13 @@ export async function refreshAuthSession(): Promise<UserSession | null> {
   }
 
   try {
-    const next = await refreshTokenAction(session.refreshToken);
-    await saveAuthSession(next);
-    return next;
+    const nextRes = await refreshTokenAction(session.refreshToken);
+    if (!nextRes.success || !nextRes.data) {
+      await clearAuthSession();
+      return null;
+    }
+    await saveAuthSession(nextRes.data);
+    return nextRes.data;
   } catch {
     await clearAuthSession();
     return null;

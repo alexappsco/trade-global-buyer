@@ -221,7 +221,7 @@ export default function CompleteProfileView({
         return;
       }
 
-      await completeProfileAction(
+      const res = await completeProfileAction(
         {
           completionToken: completionToken as string,
           legalCompanyName: form.legalName,
@@ -235,12 +235,16 @@ export default function CompleteProfileView({
         },
         locale
       );
+      if (!res.success) {
+        toast.error(res.error || t("profile_failed"));
+        return;
+      }
       clearAuthFlow();
       toast.success(t("profile_saved"));
       router.push("/auth/login");
     } catch (err) {
       console.error("[CompleteProfile] Exception:", err);
-      toast.error(err instanceof Error && err.message ? err.message : t("profile_failed"));
+      toast.error(t("profile_failed"));
     } finally {
       setLoading(false);
     }

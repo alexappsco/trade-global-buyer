@@ -75,18 +75,22 @@ export default function SignInView() {
 
     setLoading(true);
     try {
-      const challenge = await loginAction(
+      const res = await loginAction(
         { role: UI_TO_ROLE[role], phoneNumber: phone, password },
         locale
       );
+      if (!res.success || !res.data) {
+        toast.error(res.error || t("signin_failed"));
+        return;
+      }
       setAuthFlow({
         mode: "login",
-        challengeId: challenge.challengeId,
+        challengeId: res.data.challengeId,
         phoneNumber: phone,
       });
       router.push("/auth/otp");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("signin_failed"));
+      toast.error(t("signin_failed"));
     } finally {
       setLoading(false);
     }

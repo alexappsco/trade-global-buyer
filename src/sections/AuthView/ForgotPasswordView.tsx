@@ -30,16 +30,20 @@ export default function ForgotPasswordView() {
 
     setLoading(true);
     try {
-      const challenge = await forgetPasswordAction(phone, locale);
+      const res = await forgetPasswordAction(phone, locale);
+      if (!res.success || !res.data) {
+        toast.error(res.error || t("forgot_failed"));
+        return;
+      }
       setAuthFlow({
         mode: "reset",
-        challengeId: challenge.challengeId,
+        challengeId: res.data.challengeId,
         phoneNumber: phone,
       });
       toast.success(t("otp_sent"));
       router.push("/auth/otp");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("forgot_failed"));
+      toast.error(t("forgot_failed"));
     } finally {
       setLoading(false);
     }
