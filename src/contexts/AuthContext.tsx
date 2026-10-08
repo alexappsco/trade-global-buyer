@@ -18,7 +18,9 @@ import {
   clearAuthSession,
   refreshAuthSession,
   saveAuthSession,
+  updateAuthSessionMeta,
 } from "src/actions/session";
+import type { SessionMetaPatch } from "src/actions/session";
 
 type UserRole = "buyer" | "supplier" | null;
 
@@ -35,6 +37,7 @@ interface AuthContextType {
   clearAuthFlow: () => void;
 
   persistSession: (flow: AuthFlowState, session: UserSession) => Promise<void>;
+  patchSession: (patch: SessionMetaPatch) => Promise<void>;
   refreshSession: () => Promise<string | null>;
   getValidAccessToken: () => Promise<string | null>;
   resetSession: () => Promise<void>;
@@ -100,6 +103,15 @@ export function AuthProvider({
     []
   );
 
+  const patchSession = useCallback(async (patch: SessionMetaPatch) => {
+    setSession((prev) => (prev ? { ...prev, ...patch } : prev));
+    try {
+      await updateAuthSessionMeta(patch);
+    } catch {
+      /* meta will be re-synced on the next token refresh */
+    }
+  }, []);
+
   const refreshSession = useCallback(async (): Promise<string | null> => {
     const next = await refreshAuthSession();
     if (!next) {
@@ -156,6 +168,7 @@ export function AuthProvider({
       setAuthFlow,
       clearAuthFlow,
       persistSession,
+      patchSession,
       refreshSession,
       getValidAccessToken,
       resetSession,
@@ -169,6 +182,7 @@ export function AuthProvider({
       setAuthFlow,
       clearAuthFlow,
       persistSession,
+      patchSession,
       refreshSession,
       getValidAccessToken,
       resetSession,

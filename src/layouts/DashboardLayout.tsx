@@ -11,6 +11,10 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
+function isRootPath(pathnameWithoutLocale: string) {
+  return pathnameWithoutLocale === "" || pathnameWithoutLocale === "/";
+}
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -20,14 +24,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { getValidAccessToken, resetSession, session } = useAuth();
   const pathnameWithoutLocale = pathname?.replace(/^\/(?:ar|en)/, "") ?? "";
   const isAuthPage = pathnameWithoutLocale.startsWith("/auth");
-  const isLandingPage = pathnameWithoutLocale === "" || pathnameWithoutLocale === "/";
-  const isGuestLanding = isLandingPage && !session?.accessToken;
+  const isStandaloneLanding = pathnameWithoutLocale === "/landing";
+  const isGuestLanding = !isStandaloneLanding && !session?.accessToken && isRootPath(pathnameWithoutLocale);
+  const isPublicPage = isAuthPage || isStandaloneLanding || isGuestLanding;
 
   useEffect(() => {
     let cancelled = false;
 
     const checkAuth = async () => {
-      if (isAuthPage || isGuestLanding) {
+      if (isAuthPage || isStandaloneLanding || isGuestLanding) {
         setChecking(false);
         return;
       }
@@ -49,9 +54,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => {
       cancelled = true;
     };
-  }, [isAuthPage, isGuestLanding, getValidAccessToken, resetSession, router]);
+  }, [isAuthPage, isStandaloneLanding, isGuestLanding, getValidAccessToken, resetSession, router]);
 
-  if (isAuthPage || isGuestLanding) {
+  if (isPublicPage) {
     return <>{children}</>;
   }
 

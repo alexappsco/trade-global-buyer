@@ -73,6 +73,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
     setLangAnchorEl(null);
   };
 
+  const handleGoToLanding = () => {
+    setAvatarAnchorEl(null);
+    router.push("/landing");
+  };
+
   const handleLogout = () => {
     setAvatarAnchorEl(null);
     logout();
@@ -105,7 +110,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <MenuIcon />
           </IconButton>
 
-         <Box
+          <Box
             component="img"
             src="/logo_2.png"
             alt="Trade Global"
@@ -157,7 +162,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
             disableRipple
             sx={{ p: 0.5, "&:hover": { bgcolor: "rgba(0,0,0,0.06)" } }}
           >
-            <Avatar sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}>
+            <Avatar
+              src={session?.avatarUrl}
+              alt={session?.name}
+              sx={{ width: 36, height: 36, bgcolor: "#1B8354" }}
+            >
               <PersonIcon />
             </Avatar>
           </IconButton>
@@ -227,6 +236,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
           }}
         >
           <Avatar
+            src={session?.avatarUrl}
+            alt={session?.name}
             sx={{
               width: 46,
               height: 46,
@@ -264,6 +275,26 @@ export default function Header({ onMenuClick }: HeaderProps) {
             </Typography>
           </Box>
         </Box>
+
+        <MenuItem
+          onClick={handleGoToLanding}
+          sx={{
+            mx: 1,
+            my: 0.75,
+            borderRadius: "8px",
+            color: "#161C24",
+            "&:hover": { bgcolor: "rgba(27, 131, 84, 0.08)" },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 40, color: "#1B8354" }}>
+            <Iconify icon="solar:shop-2-linear" width={20} />
+          </ListItemIcon>
+          <ListItemText
+            slotProps={{ primary: { sx: { fontSize: 14, fontWeight: 600, color: "#1B8354" } } }}
+          >
+            {t("landing_page")}
+          </ListItemText>
+        </MenuItem>
 
         <MenuItem
           onClick={handleLogout}

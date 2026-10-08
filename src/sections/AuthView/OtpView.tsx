@@ -63,28 +63,36 @@ export default function OtpView() {
     setLoading(true);
     try {
       if (mode === "reset") {
-        const result = await verifyForgetPasswordOtpAction(
+        const res = await verifyForgetPasswordOtpAction(
           { challengeId, phoneNumber, otp },
           locale
         );
+        if (!res.success || !res.data) {
+          toast.error(res.error || t("otp_failed"));
+          return;
+        }
         setAuthFlow({
           mode: "reset",
-          resetToken: result.resetToken,
+          resetToken: res.data.resetToken,
           phoneNumber,
         });
         router.push("/auth/change-password");
       } else {
-        const session = await verifyLoginOtpAction(
+        const res = await verifyLoginOtpAction(
           { challengeId, phoneNumber, otp },
           locale
         );
+        if (!res.success || !res.data) {
+          toast.error(res.error || t("otp_failed"));
+          return;
+        }
         clearAuthFlow();
-        await persistSession({ mode: null }, session);
+        await persistSession({ mode: null }, res.data);
         toast.success(t("otp_verified"));
-        router.push("/");
+        router.push(res.data.profileCompleted ? "/" : "/profile");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("otp_failed"));
+      toast.error(t("otp_failed"));
     } finally {
       setLoading(false);
     }
@@ -97,21 +105,29 @@ export default function OtpView() {
     }
     try {
       if (mode === "reset") {
-        const challenge = await resendForgetPasswordOtpAction(
+        const res = await resendForgetPasswordOtpAction(
           { challengeId, phoneNumber },
           locale
         );
-        setAuthFlow({ mode: "reset", challengeId: challenge.challengeId, phoneNumber });
+        if (!res.success || !res.data) {
+          toast.error(res.error || t("otp_failed"));
+          return;
+        }
+        setAuthFlow({ mode: "reset", challengeId: res.data.challengeId, phoneNumber });
       } else {
-        const challenge = await resendLoginOtpAction(
+        const res = await resendLoginOtpAction(
           { challengeId, phoneNumber },
           locale
         );
-        setAuthFlow({ mode: "login", challengeId: challenge.challengeId, phoneNumber });
+        if (!res.success || !res.data) {
+          toast.error(res.error || t("otp_failed"));
+          return;
+        }
+        setAuthFlow({ mode: "login", challengeId: res.data.challengeId, phoneNumber });
       }
       toast.success(t("otp_resent"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("otp_failed"));
+      toast.error(t("otp_failed"));
     }
   };
 

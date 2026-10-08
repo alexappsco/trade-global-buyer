@@ -117,7 +117,9 @@
       "partners": "Our Partners",
       "about": "About Us",
       "faq": "FAQs",
-      "login": "Login"
+      "login": "Login",
+      "go_to_dashboard": "Go to dashboard",
+      "logout": "Log out"
     },
     "platform": {
       "why_title": "Why",
@@ -201,6 +203,22 @@
         "join_supplier": "Join as Supplier",
         "join_merchant": "Join as Merchant"
       }
+    },
+    "roles": {
+      "buyer": "buyer",
+      "supplier": "supplier"
+    },
+    "role_dialog": {
+      "title": "This action requires a different account type",
+      "message": "Your account is registered as {current}, but you chose the {target} area. Where do you want to go?",
+      "register_as": "Sign in as {target}",
+      "go_home": "Go to dashboard",
+      "warning_title": "You will be logged out",
+      "warning_message": "You will be logged out of your {current} account and redirected to sign in as {target}.",
+      "cancel": "Cancel",
+      "confirm_logout": "Log out and continue",
+      "current_account": "Your current account",
+      "required_account": "Required account"
     }
   },
   "Orders": {
@@ -394,7 +412,7 @@
     "back": "Back",
     "category_placeholder_multi": "Select one or more categories",
     "category_required": "Please select at least one category",
-"fields": {
+    "fields": {
       "name": "Name",
       "company": "Company Name",
       "phone": "Phone Number",
@@ -431,6 +449,7 @@
     "deleted_success": "Request deleted",
     "loading": "Loading...",
     "submit_error": "Unable to send the request. Please try again.",
+    "profile_completion_required": "Your profile is incomplete. Please complete your profile to continue.",
     "request_number": "Request number",
     "request_date": "Request date",
     "request_time": "Request time",
@@ -489,7 +508,8 @@
     "logout": "Log Out",
     "complete_title": "Complete Registration Data",
     "account_info_title": "Account Information",
-    "legal_company_name": "Legal Company Name",
+    "complete_profile_hint": "Please complete your profile data to be able to view and edit your profile.",
+    "legal_company_name": "Name",
     "email": "Email",
     "category": "Category",
     "category_placeholder_multi": "Select one or more categories",
@@ -519,6 +539,8 @@
     "session_expired": "Your session has expired. Please start again",
     "profile_required": "Please fill in all required fields",
     "profile_failed": "Failed to save your profile. Please try again",
+    "profile_completion_required": "Your profile is incomplete. Please complete your profile to continue.",
+    "understood": "Got it",
     "otp_sent": "A verification code has been sent",
     "otp_failed": "Verification failed. Please try again",
     "forgot_failed": "Unable to send the reset code. Please try again",
@@ -526,9 +548,11 @@
     "change_password_subtitle": "Enter your new password to complete the password reset.",
     "new_password": "New Password",
     "password_changed": "Password changed successfully",
-    "password_change_failed": "Failed to change password. Please try again"
+    "password_change_failed": "Failed to change password. Please try again",
+    "landing_page": "Home Page",
+    "supplier_name": "Supplier name",
+    "register_success": "Account created successfully, you can sign in now."
   },
-
   "Invoices": {
     "title": "Invoices",
     "search": "Search",
@@ -568,7 +592,7 @@
         "city": "City",
         "company_address": "Company Address",
         "creation_time": "Creation Time",
-"category": "Category",
+        "category": "Category",
         "date": "Date",
         "status": "Status"
       },
@@ -700,7 +724,8 @@
     "validation_no_items": "Please add at least one item",
     "validation_item_name": "Please enter the item name",
     "validation_item_quantity": "Please enter a valid quantity for the item",
-    "validation_item_details": "Please enter the item details"
+    "validation_item_details": "Please enter the item details",
+    "profile_completion_required": "Your profile is incomplete. Please complete your profile to continue."
   },
   "Quotations": {
     "title": "Quotation Requests",

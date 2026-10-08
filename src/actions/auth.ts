@@ -18,7 +18,7 @@ async function authRequest<T>(
   body?: unknown,
   lang?: string,
   accessToken?: string
-): Promise<T> {
+): Promise<{ success: boolean; data?: T; error?: string }> {
   const response = await fetch(`${AUTH_BASE}${path}`, {
     method: body === undefined ? "GET" : "POST",
     headers: {
@@ -35,13 +35,16 @@ async function authRequest<T>(
   const data = text ? JSON.parse(text) : undefined;
 
   if (!response.ok) {
-    const error = new Error(data?.message ?? `Request failed (${response.status})`);
-    (error as Error & { status?: number }).status = response.status;
-    (error as Error & { details?: unknown }).details = data?.details ?? null;
-    throw error;
+    const errorMsg =
+      data?.message ??
+      data?.error?.message ??
+      (typeof data?.error === "string" ? data.error : null) ??
+      data?.title ??
+      `Request failed (${response.status})`;
+    return { success: false, error: errorMsg };
   }
 
-  return data as T;
+  return { success: true, data: data as T };
 }
 
 export interface RegisterPayload {

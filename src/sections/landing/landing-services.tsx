@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -5,10 +8,46 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { useTranslations } from 'next-intl';
 
+import { useRouter } from 'src/i18n/routing';
+import { useAuth } from 'src/contexts/AuthContext';
 import Iconify from 'src/components/iconify';
+import LandingRoleDialog, { type LandingUserRole } from './landing-role-dialog';
 
 export default function LandingServices() {
   const t = useTranslations('Landing');
+  const router = useRouter();
+  const { isAuthenticated, logout, role: sessionRole } = useAuth();
+  const [dialogState, setDialogState] = useState<{
+    open: boolean;
+    target: LandingUserRole;
+  }>({ open: false, target: 'buyer' });
+
+  const handleRoleCta = (target: LandingUserRole) => {
+    if (!isAuthenticated) {
+      router.push(`/auth/login?role=${target}`);
+      return;
+    }
+
+    if (sessionRole === target) {
+      router.push('/');
+      return;
+    }
+
+    setDialogState({ open: true, target });
+  };
+
+  const handleGoHome = () => {
+    setDialogState((prev) => ({ ...prev, open: false }));
+    router.push('/');
+  };
+
+  const handleSwitchRole = async () => {
+    const target = dialogState.target;
+
+    setDialogState((prev) => ({ ...prev, open: false }));
+    await logout();
+    router.push(`/auth/login?role=${target}`);
+  };
 
   const trustItems = [
     t('services.trust.free_registration'),
@@ -59,7 +98,11 @@ export default function LandingServices() {
               <Typography sx={{ color: '#5F5E5E', mt: 1, mb: 3 }}>
                 {t('services.buyers.desc')}
               </Typography>
-              <Button variant="contained" sx={{ bgcolor: '#108558', px: 4, py: 1.25 }}>
+              <Button
+                variant="contained"
+                onClick={() => handleRoleCta('buyer')}
+                sx={{ bgcolor: '#108558', px: 4, py: 1.25 }}
+              >
                 {t('services.buyers.btn')}
               </Button>
             </Box>
@@ -79,7 +122,11 @@ export default function LandingServices() {
               <Typography sx={{ color: '#5F5E5E', mt: 1, mb: 3 }}>
                 {t('services.suppliers.desc')}
               </Typography>
-              <Button variant="contained" sx={{ bgcolor: '#108558', px: 4, py: 1.25 }}>
+              <Button
+                variant="contained"
+                onClick={() => handleRoleCta('supplier')}
+                sx={{ bgcolor: '#108558', px: 4, py: 1.25 }}
+              >
                 {t('services.suppliers.btn')}
               </Button>
             </Box>
@@ -134,6 +181,15 @@ export default function LandingServices() {
           </Stack>
         </Box>
       </Container>
+
+      <LandingRoleDialog
+        open={dialogState.open}
+        currentRole={(sessionRole ?? 'buyer') as LandingUserRole}
+        targetRole={dialogState.target}
+        onClose={() => setDialogState((prev) => ({ ...prev, open: false }))}
+        onGoHome={handleGoHome}
+        onSwitchRole={handleSwitchRole}
+      />
     </Box>
   );
 }

@@ -1,6 +1,7 @@
 export const endpoints = {
   auth: {
     myInfo: '/auth/my-info',
+    completeProfile: '/auth/complete-profile',
   },
   dashboard: {
     metrics: '/dashboard/metrics',
