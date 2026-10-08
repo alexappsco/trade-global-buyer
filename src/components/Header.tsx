@@ -7,7 +7,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import Iconify from "src/components/iconify";
 import { useAuth } from "src/contexts/AuthContext";
 import { localesSettings, LocaleType, allLocales } from "src/i18n/config-locale";
@@ -111,7 +110,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <MenuIcon />
           </IconButton>
 
-         <Box
+          <Box
             component="img"
             src="/logo_2.png"
             alt="Trade Global"
@@ -288,10 +287,10 @@ export default function Header({ onMenuClick }: HeaderProps) {
           }}
         >
           <ListItemIcon sx={{ minWidth: 40, color: "#1B8354" }}>
-            <PublicRoundedIcon fontSize="small" />
+            <Iconify icon="solar:shop-2-linear" width={20} />
           </ListItemIcon>
           <ListItemText
-            slotProps={{ primary: { sx: { fontSize: 14, fontWeight: 600 } } }}
+            slotProps={{ primary: { sx: { fontSize: 14, fontWeight: 600, color: "#1B8354" } } }}
           >
             {t("landing_page")}
           </ListItemText>
