@@ -235,7 +235,7 @@ export default function LandingRoleDialog({
             : t('role_dialog.message', { current: currentLabel, target: targetLabel })}
         </Typography>
 
-        {/* Minimalist Switch Badge (اختصار بدون تعقيد) */}
+        {/* Minimalist Switch Badge */}
         {!confirming && (
           <Box
             sx={{
@@ -259,8 +259,6 @@ export default function LandingRoleDialog({
                 fontWeight: 600,
                 color: 'text.secondary',
                 fontSize: 13,
-                textDecoration: 'line-through',
-                textDecorationColor: alpha(theme.palette.text.secondary, 0.4),
               }}
             >
               {currentLabel}
