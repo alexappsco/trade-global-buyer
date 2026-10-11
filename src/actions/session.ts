@@ -1,27 +1,20 @@
 "use server";
 
 import { cookies } from "next/headers";
-import type { AuthAccountType, AuthRole, UserSession } from "src/types/auth";
-import { refreshTokenAction } from "src/actions/auth";
+import type { SessionMeta, UserSession } from "src/types/auth";
+import {
+  logoutAction,
+  refreshTokenAction,
+  verifyLoginOtpAction,
+} from "src/actions/auth";
+import type { VerifyLoginOtpPayload } from "src/actions/auth";
 
 const ACCESS_TOKEN_COOKIE = "accessToken";
 const REFRESH_TOKEN_COOKIE = "refreshToken";
 const SESSION_META_COOKIE = "auth_session";
+const EXPIRY_BUFFER_MS = 30_000;
 
-interface SessionMeta {
-  id: string;
-  name: string;
-  phoneNumber: string;
-  email: string;
-  avatarUrl?: string;
-  role: AuthRole;
-  accountType: AuthAccountType;
-  profileCompleted: boolean;
-  accessTokenExpireAt: string;
-  refreshTokenExpireAt: string;
-}
-
-function isTokenExpired(expiresAt?: string, bufferMs = 30_000): boolean {
+function isTokenExpired(expiresAt?: string, bufferMs = EXPIRY_BUFFER_MS): boolean {
   if (!expiresAt) return false;
   const time = new Date(expiresAt).getTime();
   if (Number.isNaN(time)) return false;
@@ -30,13 +23,17 @@ function isTokenExpired(expiresAt?: string, bufferMs = 30_000): boolean {
 
 function cookieMaxAge(expiresAt?: string): number | undefined {
   if (!expiresAt) return undefined;
-  return Math.max(0, Math.floor((new Date(expiresAt).getTime() - Date.now()) / 1000));
+  const time = new Date(expiresAt).getTime();
+  if (Number.isNaN(time)) return undefined;
+  return Math.max(0, Math.floor((time - Date.now()) / 1000));
 }
 
 function buildCookieOptions(expiresAt?: string) {
   const maxAge = cookieMaxAge(expiresAt);
   // Default to secure in production, unless explicitly disabled via environment variable
-  const isSecure = process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_ALLOW_INSECURE_COOKIES !== "true";
+  const isSecure =
+    process.env.NODE_ENV === "production" &&
+    process.env.NEXT_PUBLIC_ALLOW_INSECURE_COOKIES !== "true";
   return {
     httpOnly: true,
     secure: isSecure,
@@ -74,19 +71,25 @@ function toMeta(session: UserSession): SessionMeta {
   };
 }
 
+/** Server-only: full session including tokens. */
 export async function getAuthSession(): Promise<UserSession | null> {
   const store = await cookies();
-  const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value;
+  // The access-token cookie may already be gone/expired while the refresh token
+  // is still valid — that is exactly when we need to refresh, so it is optional.
+  const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value ?? "";
   const refreshToken = store.get(REFRESH_TOKEN_COOKIE)?.value;
   const meta = parseMeta(store.get(SESSION_META_COOKIE)?.value);
 
-  if (!accessToken || !refreshToken || !meta) return null;
+  if (!refreshToken || !meta) return null;
 
-  return {
-    ...meta,
-    accessToken,
-    refreshToken,
-  };
+  return { ...meta, accessToken, refreshToken };
+}
+
+/** Safe for the client: session metadata without tokens. */
+export async function getPublicSession(): Promise<SessionMeta | null> {
+  const session = await getAuthSession();
+  if (!session) return null;
+  return toMeta(session);
 }
 
 export async function saveAuthSession(session: UserSession | null): Promise<void> {
@@ -97,7 +100,10 @@ export async function saveAuthSession(session: UserSession | null): Promise<void
     return;
   }
 
-  store.set(ACCESS_TOKEN_COOKIE, session.accessToken, buildCookieOptions(session.accessTokenExpireAt));
+  // Keep the access-token cookie alive for as long as the refresh token so a
+  // silently refreshed token can be written back. Its real expiry is tracked in
+  // the meta cookie (accessTokenExpireAt) and enforced server-side.
+  store.set(ACCESS_TOKEN_COOKIE, session.accessToken, buildCookieOptions(session.refreshTokenExpireAt));
   store.set(REFRESH_TOKEN_COOKIE, session.refreshToken, buildCookieOptions(session.refreshTokenExpireAt));
   store.set(SESSION_META_COOKIE, JSON.stringify(toMeta(session)), buildCookieOptions(session.refreshTokenExpireAt));
 }
@@ -122,11 +128,13 @@ export async function updateAuthSessionMeta(patch: SessionMetaPatch): Promise<vo
   store.set(SESSION_META_COOKIE, JSON.stringify(next), buildCookieOptions(meta.refreshTokenExpireAt));
 }
 
-export async function refreshAuthSession(): Promise<UserSession | null> {
+let inFlightRefresh: Promise<UserSession | null> | null = null;
+
+async function performRefresh(force: boolean): Promise<UserSession | null> {
   const session = await getAuthSession();
   if (!session) return null;
 
-  if (!isTokenExpired(session.accessTokenExpireAt)) {
+  if (!force && session.accessToken && !isTokenExpired(session.accessTokenExpireAt)) {
     return session;
   }
 
@@ -138,13 +146,92 @@ export async function refreshAuthSession(): Promise<UserSession | null> {
   try {
     const nextRes = await refreshTokenAction(session.refreshToken);
     if (!nextRes.success || !nextRes.data) {
-      await clearAuthSession();
+      const status = nextRes.status;
+      // Only a definitive auth rejection invalidates the session. Transient
+      // failures (5xx, network, unknown) keep the session so it can retry later.
+      if (status === 400 || status === 401 || status === 403) {
+        await clearAuthSession();
+      }
       return null;
     }
     await saveAuthSession(nextRes.data);
     return nextRes.data;
   } catch {
-    await clearAuthSession();
+    // Network/exception — keep the session for a later retry.
     return null;
   }
+}
+
+/**
+ * Refresh the access token when needed (or forcefully after a 401).
+ * Concurrent calls within the same process share a single request to avoid
+ * invalidating each other when the backend rotates refresh tokens.
+ */
+export async function refreshAuthSession(force = false): Promise<UserSession | null> {
+  if (inFlightRefresh) return inFlightRefresh;
+
+  inFlightRefresh = performRefresh(force).finally(() => {
+    inFlightRefresh = null;
+  });
+
+  return inFlightRefresh;
+}
+
+/**
+ * Server action for the client guard: returns whether a valid session exists
+ * (refreshing when possible) without ever exposing tokens to the caller.
+ */
+export async function ensureAuthSessionFresh(): Promise<boolean> {
+  const session = await getAuthSession();
+  if (!session) return false;
+  if (session.accessToken && !isTokenExpired(session.accessTokenExpireAt)) return true;
+
+  await refreshAuthSession(false);
+
+  // Authenticated if the session survived (a transient refresh failure keeps it).
+  return Boolean(await getAuthSession());
+}
+
+// ----------------------------------------------------------------------
+
+export type LoginOtpResult = {
+  success: boolean;
+  error?: string;
+  profileCompleted?: boolean;
+};
+
+/**
+ * Verifies the login OTP and persists the session server-side, so the tokens
+ * never reach the browser.
+ */
+export async function loginWithOtp(
+  payload: VerifyLoginOtpPayload,
+  lang?: string
+): Promise<LoginOtpResult> {
+  const res = await verifyLoginOtpAction(payload, lang);
+  if (!res.success || !res.data) {
+    return { success: false, error: res.error };
+  }
+
+  await saveAuthSession(res.data);
+  return { success: true, profileCompleted: res.data.profileCompleted };
+}
+
+/**
+ * Revokes the refresh token on the backend (using the httpOnly cookie) and
+ * clears the local session.
+ */
+export async function logoutAuthSession(lang?: string): Promise<void> {
+  const store = await cookies();
+  const refreshToken = store.get(REFRESH_TOKEN_COOKIE)?.value;
+
+  if (refreshToken) {
+    try {
+      await logoutAction(refreshToken, lang);
+    } catch {
+      /* ignore logout network errors */
+    }
+  }
+
+  await clearAuthSession();
 }

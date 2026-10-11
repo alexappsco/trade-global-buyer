@@ -12,7 +12,8 @@ import { notFound } from "next/navigation";
 import { routing } from "src/i18n/routing";
 import { plexArabic } from "src/theme/typography";
 import { AuthProvider } from "src/contexts/AuthContext";
-import { getAuthSession } from "src/actions/session";
+import { getPublicSession } from "src/actions/session";
+import AppLocalizationProvider from "src/components/AppLocalizationProvider";
 
 export const metadata: Metadata = {
   title: "Trade Global",
@@ -45,7 +46,7 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
 
-  const initialSession = await getAuthSession();
+  const initialSession = await getPublicSession();
 
   const localeSetting = localesSettings[locale as LocaleType];
   const dir = localeSetting?.dir ?? "rtl";
@@ -67,9 +68,11 @@ export default async function LocaleLayout({
           <ThemeProvider>
             <ToastProvider>
               <NextIntlClientProvider messages={messages}>
-                <AuthProvider initialSession={initialSession}>
-                  <DashboardLayout>{children}</DashboardLayout>
-                </AuthProvider>
+                <AppLocalizationProvider>
+                  <AuthProvider initialSession={initialSession}>
+                    <DashboardLayout>{children}</DashboardLayout>
+                  </AuthProvider>
+                </AppLocalizationProvider>
               </NextIntlClientProvider>
             </ToastProvider>
           </ThemeProvider>

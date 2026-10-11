@@ -26,6 +26,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslations } from "next-intl";
 import { useToast } from "src/components/toast";
 import PageHeader from "src/components/PageHeader/PageHeader";
+import DatePickerField from "src/components/DatePickerField/DatePickerField";
 import { useRouter } from "src/i18n/routing";
 import * as Yup from "yup";
 const GREEN = "#1E8E59";
@@ -227,22 +228,14 @@ function RequestFormBlock({
           )}
         </Stack>
 
-        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
+        <Stack spacing={0.5} sx={{ alignItems: "flex-start", width: "100%" }}>
           <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
             {t("delivery_date")}
           </Typography>
-          <InputBase
-            type="date"
+          <DatePickerField
             value={block.deliveryDate}
-            onChange={(e) => updateField("deliveryDate", e.target.value)}
+            onChange={(value) => updateField("deliveryDate", value)}
             error={Boolean(errors.deliveryDate)}
-            sx={{
-              color: errors.deliveryDate ? "#EF4444" : "#9CA3AF",
-              fontSize: "14px",
-              fontWeight: 400,
-              width: "100%",
-              "& input": { textAlign: "start", p: 0 }
-            }}
           />
           {errors.deliveryDate && (
             <Typography sx={{ fontSize: "12px", color: "#EF4444" }}>{errors.deliveryDate}</Typography>

@@ -30,19 +30,27 @@ export interface CompleteProfileResponse {
   nextStep: string;
 }
 
-export interface UserSession {
+/**
+ * Public, non-sensitive session data that is safe to expose to the client.
+ * Tokens are intentionally excluded — they live only in httpOnly cookies.
+ */
+export interface SessionMeta {
   id: string;
   name: string;
   phoneNumber: string;
   email: string;
   avatarUrl?: string;
   role: AuthRole;
-  accessToken: string;
-  refreshToken: string;
-  accessTokenExpireAt: string;
-  refreshTokenExpireAt: string;
   accountType: AuthAccountType;
   profileCompleted: boolean;
+  accessTokenExpireAt: string;
+  refreshTokenExpireAt: string;
+}
+
+/** Server-only session including the auth tokens (never sent to the client). */
+export interface UserSession extends SessionMeta {
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface MyInfo {

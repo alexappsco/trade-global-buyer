@@ -21,11 +21,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const theme = useTheme();
   const router = useRouter();
   const pathname = usePathname();
-  const { getValidAccessToken, resetSession, session } = useAuth();
+  const { refreshSession, resetSession, session } = useAuth();
   const pathnameWithoutLocale = pathname?.replace(/^\/(?:ar|en)/, "") ?? "";
   const isAuthPage = pathnameWithoutLocale.startsWith("/auth");
   const isStandaloneLanding = pathnameWithoutLocale === "/landing";
-  const isGuestLanding = !isStandaloneLanding && !session?.accessToken && isRootPath(pathnameWithoutLocale);
+  const isGuestLanding = !isStandaloneLanding && !session && isRootPath(pathnameWithoutLocale);
   const isPublicPage = isAuthPage || isStandaloneLanding || isGuestLanding;
 
   useEffect(() => {
@@ -37,10 +37,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         return;
       }
 
-      const token = await getValidAccessToken();
+      const authenticated = await refreshSession();
       if (cancelled) return;
 
-      if (token) {
+      if (authenticated) {
         setChecking(false);
         return;
       }
@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => {
       cancelled = true;
     };
-  }, [isAuthPage, isStandaloneLanding, isGuestLanding, getValidAccessToken, resetSession, router]);
+  }, [isAuthPage, isStandaloneLanding, isGuestLanding, refreshSession, resetSession, router]);
 
   if (isPublicPage) {
     return <>{children}</>;
