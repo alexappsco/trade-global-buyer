@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 import { defaultLocale } from 'src/i18n/config-locale';
 import { HOST_API, COOKIES_KEYS } from 'src/config-global';
+import { refreshAuthSession } from 'src/actions/session';
 import { ApiResponse, ApiErrorResponse, RequestOptions } from 'src/types/crud-types';
 
 // Base URL for the API
@@ -42,19 +43,19 @@ async function apiRequest<TResponse, TBody = undefined>(
   const token = cookie.get(COOKIES_KEYS.session)?.value;
   const lang = cookie.get(COOKIES_KEYS.lang)?.value || defaultLocale;
 
-  const headers = {
+  const buildHeaders = (authToken?: string): Record<string, string> => ({
     ...(!isFormData(body) && {
       'Content-Type': 'application/json',
     }),
     ...(!options.skipAuth &&
-      token && {
-        Authorization: `Bearer ${token}`,
+      authToken && {
+        Authorization: `Bearer ${authToken}`,
       }),
     'Accept-Language': lang,
-    ...options.headers,
-  };
+    ...(options.headers as Record<string, string>),
+  });
 
-  let reqBody;
+  let reqBody: FormData | string | undefined;
   if (body) {
     reqBody = isFormData(body) ? body : JSON.stringify(body);
   }
@@ -62,18 +63,27 @@ async function apiRequest<TResponse, TBody = undefined>(
   try {
     console.log(`[API Request] ${method} ${url}`);
     console.log(`[API Request] Has token: ${!!token}, Lang: ${lang}`);
-    const response = await fetch(url, {
-      method,
-      headers,
-      body: reqBody,
-      cache: options.cache,
-      next: { tags: options.tags },
-      signal: AbortSignal.timeout(15000),
-    });
+    const doFetch = (authToken?: string) =>
+      fetch(url, {
+        method,
+        headers: buildHeaders(authToken),
+        body: reqBody,
+        cache: options.cache,
+        next: { tags: options.tags },
+        signal: AbortSignal.timeout(15000),
+      });
 
-    // UN-AUTHORIZED (skip for guest mode)
+    let response = await doFetch(token);
+
+    // UN-AUTHORIZED: force a token refresh and retry once (handles rejection/rotation).
     if (response.status === 401 && !options.skipAuth) {
-      return errorObject(t('unauthorized'), response.status);
+      const refreshed = await refreshAuthSession(true);
+      if (refreshed?.accessToken) {
+        response = await doFetch(refreshed.accessToken);
+      }
+      if (response.status === 401) {
+        return errorObject(t('unauthorized'), response.status);
+      }
     }
 
     if (commonErrorStatus.has(response.status)) {

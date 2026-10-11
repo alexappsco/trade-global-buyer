@@ -45,17 +45,28 @@ async function apiRequest<T>(
   const { lang = "en", skipAuth } = options;
   const accessToken = await resolveAccessToken(options);
 
-  const response = await fetch(`${HOST_API}${url}`, {
-    method,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      "Accept-Language": lang,
-      ...(accessToken && !skipAuth ? { Authorization: `Bearer ${accessToken}` } : {}),
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-    cache: "no-store",
-  });
+  const doFetch = (token: string | null) =>
+    fetch(`${HOST_API}${url}`, {
+      method,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Accept-Language": lang,
+        ...(token && !skipAuth ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      cache: "no-store",
+    });
+
+  let response = await doFetch(accessToken);
+
+  // On 401, force a token refresh and retry once (handles server-side rejection/rotation).
+  if (response.status === 401 && !skipAuth && !options.accessToken) {
+    const refreshed = await refreshAuthSession(true);
+    if (refreshed?.accessToken) {
+      response = await doFetch(refreshed.accessToken);
+    }
+  }
 
   const text = await response.text();
   const data: ApiErrorBody | undefined = text ? JSON.parse(text) : undefined;

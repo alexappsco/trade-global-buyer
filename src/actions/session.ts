@@ -122,11 +122,13 @@ export async function updateAuthSessionMeta(patch: SessionMetaPatch): Promise<vo
   store.set(SESSION_META_COOKIE, JSON.stringify(next), buildCookieOptions(meta.refreshTokenExpireAt));
 }
 
-export async function refreshAuthSession(): Promise<UserSession | null> {
+let inFlightRefresh: Promise<UserSession | null> | null = null;
+
+async function performRefresh(force: boolean): Promise<UserSession | null> {
   const session = await getAuthSession();
   if (!session) return null;
 
-  if (!isTokenExpired(session.accessTokenExpireAt)) {
+  if (!force && !isTokenExpired(session.accessTokenExpireAt)) {
     return session;
   }
 
@@ -147,4 +149,14 @@ export async function refreshAuthSession(): Promise<UserSession | null> {
     await clearAuthSession();
     return null;
   }
+}
+
+export async function refreshAuthSession(force = false): Promise<UserSession | null> {
+  if (inFlightRefresh) return inFlightRefresh;
+
+  inFlightRefresh = performRefresh(force).finally(() => {
+    inFlightRefresh = null;
+  });
+
+  return inFlightRefresh;
 }
