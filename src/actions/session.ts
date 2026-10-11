@@ -74,11 +74,13 @@ function toMeta(session: UserSession): SessionMeta {
 /** Server-only: full session including tokens. */
 export async function getAuthSession(): Promise<UserSession | null> {
   const store = await cookies();
-  const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value;
+  // The access-token cookie may already be gone/expired while the refresh token
+  // is still valid — that is exactly when we need to refresh, so it is optional.
+  const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value ?? "";
   const refreshToken = store.get(REFRESH_TOKEN_COOKIE)?.value;
   const meta = parseMeta(store.get(SESSION_META_COOKIE)?.value);
 
-  if (!accessToken || !refreshToken || !meta) return null;
+  if (!refreshToken || !meta) return null;
 
   return { ...meta, accessToken, refreshToken };
 }
@@ -98,7 +100,10 @@ export async function saveAuthSession(session: UserSession | null): Promise<void
     return;
   }
 
-  store.set(ACCESS_TOKEN_COOKIE, session.accessToken, buildCookieOptions(session.accessTokenExpireAt));
+  // Keep the access-token cookie alive for as long as the refresh token so a
+  // silently refreshed token can be written back. Its real expiry is tracked in
+  // the meta cookie (accessTokenExpireAt) and enforced server-side.
+  store.set(ACCESS_TOKEN_COOKIE, session.accessToken, buildCookieOptions(session.refreshTokenExpireAt));
   store.set(REFRESH_TOKEN_COOKIE, session.refreshToken, buildCookieOptions(session.refreshTokenExpireAt));
   store.set(SESSION_META_COOKIE, JSON.stringify(toMeta(session)), buildCookieOptions(session.refreshTokenExpireAt));
 }
@@ -129,7 +134,7 @@ async function performRefresh(force: boolean): Promise<UserSession | null> {
   const session = await getAuthSession();
   if (!session) return null;
 
-  if (!force && !isTokenExpired(session.accessTokenExpireAt)) {
+  if (!force && session.accessToken && !isTokenExpired(session.accessTokenExpireAt)) {
     return session;
   }
 
@@ -179,7 +184,7 @@ export async function refreshAuthSession(force = false): Promise<UserSession | n
 export async function ensureAuthSessionFresh(): Promise<boolean> {
   const session = await getAuthSession();
   if (!session) return false;
-  if (!isTokenExpired(session.accessTokenExpireAt)) return true;
+  if (session.accessToken && !isTokenExpired(session.accessTokenExpireAt)) return true;
 
   await refreshAuthSession(false);
 

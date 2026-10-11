@@ -60,6 +60,23 @@ function uiRoleValue(role: UserRole): AuthRole | undefined {
   return undefined;
 }
 
+function isSameSession(a: SessionMeta | null, b: SessionMeta | null): boolean {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  return (
+    a.id === b.id &&
+    a.name === b.name &&
+    a.phoneNumber === b.phoneNumber &&
+    a.email === b.email &&
+    a.avatarUrl === b.avatarUrl &&
+    a.role === b.role &&
+    a.accountType === b.accountType &&
+    a.profileCompleted === b.profileCompleted &&
+    a.accessTokenExpireAt === b.accessTokenExpireAt &&
+    a.refreshTokenExpireAt === b.refreshTokenExpireAt
+  );
+}
+
 export function AuthProvider({
   children,
   initialSession,
@@ -88,7 +105,7 @@ export function AuthProvider({
   const syncSession = useCallback(async (): Promise<SessionMeta | null> => {
     try {
       const next = await getPublicSession();
-      setSession(next);
+      setSession((prev) => (isSameSession(prev, next) ? prev : next));
       return next;
     } catch {
       return null;
