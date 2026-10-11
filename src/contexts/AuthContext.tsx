@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   ReactNode,
@@ -11,13 +12,13 @@ import {
 import type {
   AuthFlowState,
   AuthRole,
-  UserSession,
+  SessionMeta,
 } from "src/types/auth";
-import { logoutAction } from "src/actions/auth";
 import {
   clearAuthSession,
-  refreshAuthSession,
-  saveAuthSession,
+  ensureAuthSessionFresh,
+  getPublicSession,
+  logoutAuthSession,
   updateAuthSessionMeta,
 } from "src/actions/session";
 import type { SessionMetaPatch } from "src/actions/session";
@@ -28,18 +29,19 @@ interface AuthContextType {
   role: UserRole;
   setRole: (role: UserRole) => void;
 
-  session: UserSession | null;
+  /** Public session metadata (never contains tokens). */
+  session: SessionMeta | null;
   isAuthenticated: boolean;
-  accessToken: string | null;
 
   authFlow: AuthFlowState;
   setAuthFlow: (flow: AuthFlowState) => void;
   clearAuthFlow: () => void;
 
-  persistSession: (flow: AuthFlowState, session: UserSession) => Promise<void>;
+  /** Re-read the session from the server cookies into client state. */
+  syncSession: () => Promise<SessionMeta | null>;
   patchSession: (patch: SessionMetaPatch) => Promise<void>;
-  refreshSession: () => Promise<string | null>;
-  getValidAccessToken: () => Promise<string | null>;
+  /** Ensure a valid access token exists (refreshing if needed). Returns authentication status. */
+  refreshSession: () => Promise<boolean>;
   resetSession: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -58,21 +60,14 @@ function uiRoleValue(role: UserRole): AuthRole | undefined {
   return undefined;
 }
 
-function isTokenExpired(expiresAt?: string, bufferMs = 30_000): boolean {
-  if (!expiresAt) return false;
-  const time = new Date(expiresAt).getTime();
-  if (Number.isNaN(time)) return false;
-  return time - bufferMs <= Date.now();
-}
-
 export function AuthProvider({
   children,
   initialSession,
 }: {
   children: ReactNode;
-  initialSession?: UserSession | null;
+  initialSession?: SessionMeta | null;
 }) {
-  const [session, setSession] = useState<UserSession | null>(initialSession ?? null);
+  const [session, setSession] = useState<SessionMeta | null>(initialSession ?? null);
   const [authFlow, setAuthFlowState] = useState<AuthFlowState>({ mode: null });
 
   const role: UserRole = session ? uiRoleOf(session.role) : null;
@@ -90,48 +85,33 @@ export function AuthProvider({
     setAuthFlowState({ mode: null });
   }, []);
 
-  const persistSession = useCallback(
-    async (flow: AuthFlowState, nextSession: UserSession) => {
-      setAuthFlowState(flow);
-      setSession(nextSession);
-      try {
-        await saveAuthSession(nextSession);
-      } catch {
-        /* session will be re-established on next protected navigation */
-      }
-    },
-    []
-  );
+  const syncSession = useCallback(async (): Promise<SessionMeta | null> => {
+    try {
+      const next = await getPublicSession();
+      setSession(next);
+      return next;
+    } catch {
+      return null;
+    }
+  }, []);
 
   const patchSession = useCallback(async (patch: SessionMetaPatch) => {
     setSession((prev) => (prev ? { ...prev, ...patch } : prev));
     try {
       await updateAuthSessionMeta(patch);
     } catch {
-      /* meta will be re-synced on the next token refresh */
+      /* meta will be re-synced on the next session refresh */
     }
   }, []);
 
-  const refreshSession = useCallback(async (): Promise<string | null> => {
-    const next = await refreshAuthSession();
-    if (!next) {
-      setSession(null);
+  const refreshSession = useCallback(async (): Promise<boolean> => {
+    const authenticated = await ensureAuthSessionFresh();
+    await syncSession();
+    if (!authenticated) {
       setAuthFlowState({ mode: null });
-      return null;
     }
-    setSession(next);
-    return next.accessToken;
-  }, []);
-
-  const getValidAccessToken = useCallback(async (): Promise<string | null> => {
-    if (!session?.accessToken) return null;
-
-    if (isTokenExpired(session.accessTokenExpireAt)) {
-      return refreshSession();
-    }
-
-    return session.accessToken;
-  }, [session, refreshSession]);
+    return authenticated;
+  }, [syncSession]);
 
   const resetSession = useCallback(async () => {
     setSession(null);
@@ -144,33 +124,43 @@ export function AuthProvider({
   }, []);
 
   const logout = useCallback(async () => {
-    const current = session;
-    if (current?.refreshToken) {
-      try {
-        await logoutAction(current.refreshToken);
-      } catch {
-        /* ignore logout network errors */
-      }
+    try {
+      await logoutAuthSession();
+    } catch {
+      /* ignore logout network errors */
     }
-    await resetSession();
-  }, [session, resetSession]);
+    setSession(null);
+    setAuthFlowState({ mode: null });
+  }, []);
+
+  // Keep client state in sync with the cookie session (e.g. expiry/session
+  // cleared by a server-side refresh failure) when the tab regains focus.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        void syncSession();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
+    };
+  }, [syncSession]);
 
   const value = useMemo<AuthContextType>(
     () => ({
       role,
       setRole,
       session,
-      isAuthenticated: Boolean(session?.accessToken),
-      accessToken: isTokenExpired(session?.accessTokenExpireAt)
-        ? null
-        : (session?.accessToken ?? null),
+      isAuthenticated: Boolean(session),
       authFlow,
       setAuthFlow,
       clearAuthFlow,
-      persistSession,
+      syncSession,
       patchSession,
       refreshSession,
-      getValidAccessToken,
       resetSession,
       logout,
     }),
@@ -181,10 +171,9 @@ export function AuthProvider({
       authFlow,
       setAuthFlow,
       clearAuthFlow,
-      persistSession,
+      syncSession,
       patchSession,
       refreshSession,
-      getValidAccessToken,
       resetSession,
       logout,
     ]

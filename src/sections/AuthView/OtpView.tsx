@@ -12,8 +12,8 @@ import {
   resendForgetPasswordOtpAction,
   resendLoginOtpAction,
   verifyForgetPasswordOtpAction,
-  verifyLoginOtpAction,
 } from "src/actions/auth";
+import { loginWithOtp } from "src/actions/session";
 
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
@@ -24,7 +24,7 @@ export default function OtpView() {
   const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
-  const { authFlow, setAuthFlow, persistSession, clearAuthFlow } = useAuth();
+  const { authFlow, setAuthFlow, syncSession, clearAuthFlow } = useAuth();
 
   const [code, setCode] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [loading, setLoading] = useState(false);
@@ -78,18 +78,15 @@ export default function OtpView() {
         });
         router.push("/auth/change-password");
       } else {
-        const res = await verifyLoginOtpAction(
-          { challengeId, phoneNumber, otp },
-          locale
-        );
-        if (!res.success || !res.data) {
+        const res = await loginWithOtp({ challengeId, phoneNumber, otp }, locale);
+        if (!res.success) {
           toast.error(res.error || t("otp_failed"));
           return;
         }
         clearAuthFlow();
-        await persistSession({ mode: null }, res.data);
+        await syncSession();
         toast.success(t("otp_verified"));
-        router.push(res.data.profileCompleted ? "/" : "/profile");
+        router.push(res.profileCompleted ? "/" : "/profile");
       }
     } catch (err) {
       toast.error(t("otp_failed"));
