@@ -219,20 +219,37 @@ export default function OrdersListView() {
     let ignore = false;
     const fetchOrders = async () => {
       setIsLoading(true);
-      const res = await getOrders({
-        Search: debouncedSearch || undefined,
-        CategoryCode: selectedCategoryCode || undefined,
-        ClassificationCode: selectedClassificationCode || undefined,
-        Status: selectedStatus || undefined,
-        Date: selectedDate || undefined,
-        SkipCount: 0,
-        MaxResultCount: 1000,
-      });
-      if (!ignore) {
-        setIsLoading(false);
-        if (res.success && res.data) {
-          setOrders(res.data.items);
-          setTotalCount(res.data.totalCount);
+      try {
+        const res = await getOrders({
+          search: debouncedSearch || undefined,
+          categoryCode: selectedCategoryCode || undefined,
+          classificationCode: selectedClassificationCode || undefined,
+          status: selectedStatus || undefined,
+          date: selectedDate || undefined,
+          skipCount: 0,
+          maxResultCount: 1000,
+        });
+        if (!ignore) {
+          if (res.success && res.data) {
+            setOrders(res.data.items ?? []);
+            setTotalCount(res.data.totalCount ?? 0);
+          } else {
+            setOrders([]);
+            setTotalCount(0);
+            if (!res.success && res.error) {
+              toast.error(res.error);
+            }
+          }
+        }
+      } catch (err) {
+        if (!ignore) {
+          setOrders([]);
+          setTotalCount(0);
+          toast.error(err instanceof Error ? err.message : t("table.load_error"));
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
         }
       }
     };
