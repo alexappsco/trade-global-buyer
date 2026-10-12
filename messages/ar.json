@@ -248,11 +248,12 @@
       "pdf_download_error": "فشل تحميل ملف PDF",
       "actions": "اجراءات",
       "action_view": "عرض",
-      "action_close": "إغلاق",
+      "action_close": "إلغاء",
       "action_submit_quote": "تقديم عرض سعر"
     },
     "status": {
       "open": "مفتوح",
+      "canceled": "ملغي",
       "closed": "مغلق"
     },
     "pagination": {
@@ -375,8 +376,8 @@
       "browse_supplier": "تصفح المورد"
     },
     "dialog": {
-      "confirm_close_order": "انت على وشك اغلاق الطلب",
-      "success_close_order": "تم اغلاق الطلب بنجاح",
+      "confirm_close_order": "انت على وشك إلغاء الطلب",
+      "success_close_order": "تم إلغاء الطلب بنجاح",
       "confirm_delivery": "انت على وشك تأكيد توصيل هذا الطلب",
       "success_confirm_delivery": "تم تأكيد التوصيل بنجاح",
       "confirm_mark_delivered": "انت على وشك تسجيل هذا الطلب كموصّل",

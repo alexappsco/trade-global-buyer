@@ -378,7 +378,7 @@ export default function OrdersListView() {
             : { bgcolor: "#FFE9D5", color: "#B71D18" }),
         }}
       >
-        {row.status === "open" ? t("status.open") : t("status.closed")}
+        {row.status === "open" ? t("status.open") : t("status.canceled")}
       </Box>
     ),
     deliveryStatus: (row: Order) => (
@@ -714,7 +714,7 @@ export default function OrdersListView() {
                 }}
                 selected={selectedStatus === "closed"}
               >
-                {t("status.closed")}
+                {t("status.canceled")}
               </MenuItem>
             </Menu>
           </Box>

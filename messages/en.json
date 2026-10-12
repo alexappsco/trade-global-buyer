@@ -248,11 +248,12 @@
       "pdf_download_error": "Failed to download PDF",
       "actions": "Actions",
       "action_view": "View",
-      "action_close": "Close",
+      "action_close": "Cnacel",
       "action_submit_quote": "Submit Quote"
     },
     "status": {
       "open": "Open",
+      "canceled": "Canceled",
       "closed": "Closed"
     },
     "pagination": {
@@ -375,8 +376,8 @@
       "browse_supplier": "Browse Supplier"
     },
     "dialog": {
-      "confirm_close_order": "You are about to close the order",
-      "success_close_order": "The order has been closed successfully",
+      "confirm_close_order": "You are about to cancel the order",
+      "success_close_order": "The order has been canceled successfully",
       "confirm_delivery": "You are about to confirm delivery of this order",
       "success_confirm_delivery": "Delivery confirmed successfully",
       "confirm_mark_delivered": "You are about to mark this order as delivered",
