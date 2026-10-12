@@ -23,7 +23,6 @@ import Iconify from "src/components/iconify";
 import ConfirmationDialog from "src/components/dialog/ConfirmationDialog";
 import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
-import { useQuery } from "src/components/use-query";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 import SharedTable from "src/components/SharedTable/SharedTable";
 import PageHeader from "src/components/PageHeader/PageHeader";
@@ -166,8 +165,6 @@ export default function OrdersListView() {
   const router = useRouter();
   const { role, session } = useAuth();
   const toast = useToast();
-  const { set } = useQuery(["page", "limit"]);
-
   // State
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -198,12 +195,6 @@ export default function OrdersListView() {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  // Reset table page on any filter change
-  useEffect(() => {
-    set({ page: null });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, selectedCategoryCode, selectedClassificationCode, selectedStatus, selectedDate]);
-
   // Fetch Catalog
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -218,14 +209,13 @@ export default function OrdersListView() {
   // Fetch Orders — re-runs when filters change OR when locale changes (language switch)
   useEffect(() => {
     let cancelled = false;
-    const controller = new AbortController();
 
-    // Safety timeout: if the server action takes longer than 20s, stop loading.
+    // Safety timeout: if request takes longer than 8s, force-stop loading skeleton
     const safetyTimer = setTimeout(() => {
       if (!cancelled) {
         setIsLoading(false);
       }
-    }, 20_000);
+    }, 8_000);
 
     const fetchOrders = async () => {
       setIsLoading(true);
@@ -239,30 +229,30 @@ export default function OrdersListView() {
           skipCount: 0,
           maxResultCount: 1000,
         });
-        if (!cancelled) {
-          if (res.success && res.data) {
-            setOrders(res.data.items ?? []);
-            setTotalCount(res.data.totalCount ?? 0);
-          } else {
-            setOrders([]);
-            setTotalCount(0);
-            if (!res.success && res.error) {
-              toast.error(res.error);
-            }
+
+        clearTimeout(safetyTimer);
+        if (cancelled) return;
+
+        if (res.success && res.data) {
+          setOrders(res.data.items ?? []);
+          setTotalCount(res.data.totalCount ?? 0);
+        } else {
+          setOrders([]);
+          setTotalCount(0);
+          if (!res.success && res.error) {
+            toast.error(res.error);
           }
         }
       } catch (err) {
-        if (!cancelled) {
-          setOrders([]);
-          setTotalCount(0);
-          const errMsg = err instanceof Error ? err.message : t("table.load_error");
-          // Ignore abort errors (caused by cleanup / language change navigation)
-          if (!errMsg.includes('abort') && !errMsg.includes('AbortError')) {
-            toast.error(errMsg);
-          }
+        clearTimeout(safetyTimer);
+        if (cancelled) return;
+        setOrders([]);
+        setTotalCount(0);
+        const errMsg = err instanceof Error ? err.message : t("table.load_error");
+        if (!errMsg.includes("abort") && !errMsg.includes("AbortError")) {
+          toast.error(errMsg);
         }
       } finally {
-        clearTimeout(safetyTimer);
         if (!cancelled) {
           setIsLoading(false);
         }
@@ -273,7 +263,6 @@ export default function OrdersListView() {
 
     return () => {
       cancelled = true;
-      controller.abort();
       clearTimeout(safetyTimer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
