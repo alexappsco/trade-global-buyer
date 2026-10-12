@@ -37,7 +37,7 @@ export default function InvoicesListView() {
 
   const [invoices, setInvoices] = useState<InvoiceListItem[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (searchTimerRef.current) {
@@ -55,6 +55,11 @@ export default function InvoicesListView() {
   }, [searchQuery]);
 
   useEffect(() => {
+    let cancelled = false;
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) setLoading(false);
+    }, 20_000);
+
     const fetchInvoices = async () => {
       setLoading(true);
       const res = await getInvoices({
@@ -64,6 +69,8 @@ export default function InvoicesListView() {
         skipCount: 0,
         maxResultCount: 1000,
       });
+      clearTimeout(safetyTimer);
+      if (cancelled) return;
       if (!res.success) {
         setLoading(false);
         toast.error(res.error || t("table.load_error"));
@@ -74,7 +81,12 @@ export default function InvoicesListView() {
       setLoading(false);
     };
     fetchInvoices();
-  }, [debouncedSearch, selectedStatus, toast, t]);
+    return () => {
+      cancelled = true;
+      clearTimeout(safetyTimer);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, debouncedSearch, selectedStatus, toast, t]);
 
   const formatDate = (value: string) =>
     value ? new Date(value).toLocaleDateString(locale) : "—";

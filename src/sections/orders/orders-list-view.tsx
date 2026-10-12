@@ -179,7 +179,7 @@ export default function OrdersListView() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Dropdown Anchors
   const [categoryAnchor, setCategoryAnchor] = useState<null | HTMLElement>(null);
@@ -215,9 +215,18 @@ export default function OrdersListView() {
     fetchCatalog();
   }, []);
 
-  // Fetch Orders
+  // Fetch Orders — re-runs when filters change OR when locale changes (language switch)
   useEffect(() => {
-    let ignore = false;
+    let cancelled = false;
+    const controller = new AbortController();
+
+    // Safety timeout: if the server action takes longer than 20s, stop loading.
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) {
+        setIsLoading(false);
+      }
+    }, 20_000);
+
     const fetchOrders = async () => {
       setIsLoading(true);
       try {
@@ -230,7 +239,7 @@ export default function OrdersListView() {
           skipCount: 0,
           maxResultCount: 1000,
         });
-        if (!ignore) {
+        if (!cancelled) {
           if (res.success && res.data) {
             setOrders(res.data.items ?? []);
             setTotalCount(res.data.totalCount ?? 0);
@@ -243,20 +252,32 @@ export default function OrdersListView() {
           }
         }
       } catch (err) {
-        if (!ignore) {
+        if (!cancelled) {
           setOrders([]);
           setTotalCount(0);
-          toast.error(err instanceof Error ? err.message : t("table.load_error"));
+          const errMsg = err instanceof Error ? err.message : t("table.load_error");
+          // Ignore abort errors (caused by cleanup / language change navigation)
+          if (!errMsg.includes('abort') && !errMsg.includes('AbortError')) {
+            toast.error(errMsg);
+          }
         }
       } finally {
-        if (!ignore) {
+        clearTimeout(safetyTimer);
+        if (!cancelled) {
           setIsLoading(false);
         }
       }
     };
+
     fetchOrders();
-    return () => { ignore = true; };
-  }, [debouncedSearch, selectedCategoryCode, selectedClassificationCode, selectedStatus, selectedDate]);
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+      clearTimeout(safetyTimer);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, debouncedSearch, selectedCategoryCode, selectedClassificationCode, selectedStatus, selectedDate]);
 
   const classifications = useMemo(() => {
     if (!selectedCategoryCode) return [];

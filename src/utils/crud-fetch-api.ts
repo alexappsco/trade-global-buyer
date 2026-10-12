@@ -77,7 +77,10 @@ async function apiRequest<TResponse, TBody = undefined>(
 
     // UN-AUTHORIZED: force a token refresh and retry once (handles rejection/rotation).
     if (response.status === 401 && !options.skipAuth) {
-      const refreshed = await refreshAuthSession(true);
+      const refreshed = await Promise.race([
+        refreshAuthSession(true),
+        new Promise<null>((resolve) => setTimeout(() => resolve(null), 10_000)),
+      ]);
       if (refreshed?.accessToken) {
         response = await doFetch(refreshed.accessToken);
       }
