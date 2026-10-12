@@ -16,14 +16,14 @@ export async function createOrder(
 }
 
 export async function getOrders(params?: {
-  Search?: string;
-  CategoryCode?: string;
-  ClassificationCode?: string;
-  Status?: string;
-  Date?: string;
-  Sorting?: string;
-  SkipCount?: number;
-  MaxResultCount?: number;
+  search?: string;
+  categoryCode?: string;
+  classificationCode?: string;
+  status?: string;
+  date?: string;
+  sorting?: string;
+  skipCount?: number;
+  maxResultCount?: number;
 }): Promise<ApiResponse<OrderListResponse>> {
   const query = new URLSearchParams();
   if (params) {
