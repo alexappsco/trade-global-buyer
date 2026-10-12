@@ -9,6 +9,9 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import SharedTable from '@/components/SharedTable/SharedTable';
 import { headCellType, cellAlignment, Action } from '@/components/SharedTable/types';
 import { ordersMock, Order } from '@/mocks/orders-data';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'src/i18n/routing';
+import { paths } from '@/routes/paths';
 
 const statusColors: Record<string, { bg: string; color: string }> = {
   open: { bg: '#EBF7F2', color: '#1B8354' },
@@ -18,6 +21,8 @@ const statusColors: Record<string, { bg: string; color: string }> = {
 export default function RecentOrdersTable() {
   const tHome = useTranslations('Home');
   const tOrders = useTranslations('Orders');
+  const router = useRouter();
+  const { role } = useAuth();
 
   const tableHead: headCellType[] = [
     { id: 'id', label: tOrders('table.order_id'), align: cellAlignment.right, width: 100 },
@@ -72,21 +77,24 @@ export default function RecentOrdersTable() {
           mb: 2,
         }}
       >
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: '#1B8354',
-            '&:hover': { bgcolor: '#146440' },
-            borderRadius: 2,
-            px: 3,
-            boxShadow: 'none',
-            fontWeight: 'bold',
-            gap: 1,
-          }}
-        >
-          <AddIcon />
-          {tHome('recent_orders.add_new')}
-        </Button>
+        {role !== 'supplier' && (
+          <Button
+            variant="contained"
+            onClick={() => router.push(paths.orders.root)}
+            sx={{
+              bgcolor: '#1B8354',
+              '&:hover': { bgcolor: '#146440' },
+              borderRadius: 2,
+              px: 3,
+              boxShadow: 'none',
+              fontWeight: 'bold',
+              gap: 1,
+            }}
+          >
+            <AddIcon />
+            {tHome('recent_orders.add_new')}
+          </Button>
+        )}
         <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
           {tHome('recent_orders.title')}
         </Typography>
