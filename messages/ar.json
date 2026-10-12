@@ -596,7 +596,10 @@
         "creation_time": "تاريخ الإنشاء",
         "category": "الفئة",
         "date": "التاريخ",
-        "status": "الحالة"
+        "status": "الحالة",
+        "commission_iban": "رقم الآيبان الخاص بالعمولة",
+        "copy_iban": "نسخ الآيبان",
+        "iban_copied": "تم نسخ رقم الآيبان بنجاح"
       },
       "table": {
         "item": "الصنف",
@@ -607,6 +610,13 @@
       "total": "الاجمالي",
       "download_pdf": "تحميل PDF",
       "downloading": "جاري التحميل...",
+      "upload_proof": "رفع إيصال التسديد",
+      "uploading": "جاري الرفع...",
+      "upload_proof_success": "تم رفع إيصال التسديد بنجاح",
+      "upload_proof_error": "فشل رفع إيصال التسديد",
+      "download_proof": "تحميل إيصال التسديد",
+      "download_proof_success": "تم تحميل إيصال التسديد بنجاح",
+      "download_proof_error": "فشل تحميل إيصال التسديد",
       "order_header": "الطلب رقم #{number}",
       "view_order": "تصفح تفاصيل المشترين",
       "offer_section_header": "العرض المقدم من خلالك"

@@ -38,6 +38,9 @@ export type InvoiceItemSnapshot = {
 };
 
 export type InvoiceDetail = InvoiceListItem & {
+  commissionIban: string;
+  hasPaymentProof: boolean;
+  paymentSubmittedAt: string | null;
   quotationOfferId: string;
   categoryCode: string;
   categoryNameEn: string;

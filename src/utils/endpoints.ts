@@ -42,5 +42,6 @@ export const endpoints = {
     list: '/invoices',
     details: (id: string) => `/invoices/${id}`,
     pdf: (id: string) => `/invoices/${id}/pdf`,
+    paymentProof: (id: string) => `/invoices/${id}/payment-proof`,
   },
 };

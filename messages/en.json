@@ -596,7 +596,10 @@
         "creation_time": "Creation Time",
         "category": "Category",
         "date": "Date",
-        "status": "Status"
+        "status": "Status",
+        "commission_iban": "Commission IBAN",
+        "copy_iban": "Copy IBAN",
+        "iban_copied": "IBAN copied successfully"
       },
       "table": {
         "item": "Item",
@@ -607,6 +610,13 @@
       "total": "Total",
       "download_pdf": "Download PDF",
       "downloading": "Downloading...",
+      "upload_proof": "Upload Payment Proof",
+      "uploading": "Uploading...",
+      "upload_proof_success": "Payment proof uploaded successfully",
+      "upload_proof_error": "Failed to upload payment proof",
+      "download_proof": "Download Payment Proof",
+      "download_proof_success": "Payment proof downloaded successfully",
+      "download_proof_error": "Failed to download payment proof",
       "order_header": "Order #{number}",
       "view_order": "View Order Details",
       "offer_section_header": "Your Submitted Offer"
