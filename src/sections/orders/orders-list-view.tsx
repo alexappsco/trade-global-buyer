@@ -27,6 +27,7 @@ import { useQuery } from "src/components/use-query";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 import SharedTable from "src/components/SharedTable/SharedTable";
 import PageHeader from "src/components/PageHeader/PageHeader";
+import { paths } from "src/routes/paths";
 import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
 import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
@@ -163,7 +164,7 @@ export default function OrdersListView() {
   const t = useTranslations("Orders");
   const locale = useLocale();
   const router = useRouter();
-  const { role } = useAuth();
+  const { role, session } = useAuth();
   const toast = useToast();
   const { set } = useQuery(["page", "limit"]);
 
@@ -415,7 +416,14 @@ export default function OrdersListView() {
           role === "buyer" ? (
             <Button
               variant="contained"
-              onClick={() => router.push("/orders/create")}
+              onClick={() => {
+                if (session && !session.profileCompleted) {
+                  toast.warning(t("complete_profile_required"));
+                  router.push(paths.profile.view);
+                  return;
+                }
+                router.push("/orders/create");
+              }}
               sx={{
                 bgcolor: "#10754E",
                 color: "white",
