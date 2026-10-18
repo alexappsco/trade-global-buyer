@@ -8,6 +8,7 @@ export type HeadCell<T = unknown> = {
   width?: string | number;
   renderHeader?: () => ReactNode;
   renderCell?: (row: T) => ReactNode;
+  hideOnMobile?: boolean;
 };
 
 export type TableAction<T> = {

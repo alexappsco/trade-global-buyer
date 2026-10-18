@@ -150,7 +150,7 @@ function RequestFormBlock({
         bgcolor: "#FFFFFF",
         border: "1px solid #CBD5E1",
         borderRadius: "12px",
-        p: "24px",
+        p: { xs: 2, md: 3 },
       }}
     >
       <Box
@@ -158,7 +158,7 @@ function RequestFormBlock({
           border: "1px solid #CBD5E1",
           borderRadius: "8px",
           mb: "32px",
-          p: "16px 24px",
+          p: { xs: "12px 16px", md: "16px 24px" },
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
           gap: 2,
@@ -243,8 +243,8 @@ function RequestFormBlock({
         </Stack>
       </Box>
 
-      <Box sx={{ border: "1px solid #CBD5E1", borderRadius: "8px", overflow: "hidden", mb: "16px" }}>
-        <Table sx={{ width: "100%", borderCollapse: "collapse" }}>
+      <Box sx={{ border: "1px solid #CBD5E1", borderRadius: "8px", overflow: "auto", mb: "16px" }}>
+        <Table sx={{ minWidth: 600, width: "100%", borderCollapse: "collapse" }}>
           <TableHead sx={{ bgcolor: "#F1F5F9", height: "40px" }}>
             <TableRow>
               <TableCell align="center" sx={{ width: "27%", borderBottom: "1px solid #CBD5E1", borderInlineEnd: "1px solid #E2E8F0", fontWeight: 700, fontSize: "13px", color: "#374151", py: 1 }}>{t("item")}</TableCell>
@@ -311,7 +311,7 @@ function RequestFormBlock({
         </Table>
       </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "10px", flexWrap: "wrap" }}>
         <Button
           onClick={addItem}
           sx={{
@@ -553,6 +553,8 @@ export default function CreateQuoteRequestView() {
           mb: 3,
           alignItems: { xs: "stretch", sm: "center" },
           justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 1,
         }}
       >
         <Stack>
@@ -594,7 +596,7 @@ export default function CreateQuoteRequestView() {
             bgcolor: RED,
             color: "#fff",
             borderRadius: "4px",
-            px: 8,
+            px: { xs: 4, sm: 8 },
             "&:hover": { bgcolor: RED_HOVER },
           }}
         >
@@ -610,7 +612,7 @@ export default function CreateQuoteRequestView() {
             bgcolor: GREEN,
             color: "#fff",
             borderRadius: "4px",
-            px: 8,
+            px: { xs: 4, sm: 8 },
             "&:hover": { bgcolor: GREEN_HOVER },
             "&.Mui-disabled": { bgcolor: GREEN, opacity: 0.5 },
           }}

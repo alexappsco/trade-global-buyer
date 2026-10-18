@@ -59,7 +59,7 @@ export default function SupportRequestCard({ request, onDelete }: SupportRequest
             md: "repeat(4, minmax(0, 1fr))",
           },
           bgcolor: "grey.100",
-          px: 3,
+          px: { xs: 2, md: 3 },
           py: 2,
         }}
       >
@@ -78,7 +78,7 @@ export default function SupportRequestCard({ request, onDelete }: SupportRequest
         ))}
       </Box>
 
-      <Box sx={{ px: 3, py: 2.5 }}>
+      <Box sx={{ px: { xs: 2, md: 3 }, py: 2.5 }}>
         <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
           {t("details_label")}
         </Typography>

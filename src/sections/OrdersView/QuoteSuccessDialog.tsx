@@ -28,9 +28,8 @@ export default function QuoteSuccessDialog({
           elevation: 0,
           sx: {
             borderRadius: "7px",
-            width: "100%",
+            width: { xs: "calc(100% - 32px)", sm: 580 },
             maxWidth: 580,
-            m: 2,
           },
         },
       }}

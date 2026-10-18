@@ -9,12 +9,10 @@ import RecentOrdersTable from './RecentOrdersTable';
 export default function HomePage() {
   return (
     <Box
-      dir="rtl"
       sx={{
         bgcolor: '#F3F6F5',
-        // minHeight: '100vh',
-        py: 4,
-        px: 2,
+        py: { xs: 2, md: 4 },
+        px: { xs: 1, md: 2 },
         fontFamily: 'sans-serif',
       }}
     >

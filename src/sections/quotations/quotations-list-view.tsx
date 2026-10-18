@@ -122,11 +122,11 @@ export default function QuotationsListView() {
   const tableHead = [
     { id: "orderNumber", label: tOrders("table.order_id"), align: cellAlignment.center },
     { id: "orderTitle", label: tOrders("table.order_title"), align: cellAlignment.left },
-    { id: "category", label: tOrders("table.category"), align: cellAlignment.left },
-    { id: "deliveryDate", label: tOrders("table.delivery_date"), align: cellAlignment.left },
-    { id: "submissionTime", label: tOrders("table.creation_date"), align: cellAlignment.left },
+    { id: "category", label: tOrders("table.category"), align: cellAlignment.left, hideOnMobile: true },
+    { id: "deliveryDate", label: tOrders("table.delivery_date"), align: cellAlignment.left, hideOnMobile: true },
+    { id: "submissionTime", label: tOrders("table.creation_date"), align: cellAlignment.left, hideOnMobile: true },
     { id: "grandTotal", label: t("table.grand_total"), align: cellAlignment.center },
-    { id: "deliveryStatus", label: tOrders("details.info.delivery_status"), align: cellAlignment.center },
+    { id: "deliveryStatus", label: tOrders("details.info.delivery_status"), align: cellAlignment.center, hideOnMobile: true },
     { id: "status", label: tOrders("table.status"), align: cellAlignment.left },
     { id: "actions_cell", label: t("table.actions"), align: cellAlignment.center },
   ];
@@ -220,7 +220,7 @@ export default function QuotationsListView() {
       {/* Filter and Table Card */}
       <Card
         sx={{
-          p: 3,
+          p: { xs: 2, md: 3 },
           borderRadius: 3,
           boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)",
           border: "1px solid #F4F6F8",

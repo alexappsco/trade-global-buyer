@@ -113,8 +113,8 @@ export default function SupportRequestForm({
             helperText={errors.details}
           />
 
-          <Stack direction="row" spacing={1.5} sx={{ justifyContent: "flex-start" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ minWidth: 120, fontWeight: 700 }}>
+          <Stack direction="row" spacing={1.5} sx={{ justifyContent: "flex-start", flexWrap: "wrap", gap: 1 }}>
+            <Button type="submit" variant="contained" color="primary" sx={{ minWidth: { xs: 100, sm: 120 }, fontWeight: 700 }}>
               {t("send")}
             </Button>
             <Button
@@ -122,7 +122,7 @@ export default function SupportRequestForm({
               variant="contained"
               color="error"
               onClick={onCancel}
-              sx={{ minWidth: 120, fontWeight: 700 }}
+              sx={{ minWidth: { xs: 100, sm: 120 }, fontWeight: 700 }}
             >
               {t("cancel")}
             </Button>

@@ -31,19 +31,32 @@ export default function TablePaginationCustom({
         component="div"
         sx={{
           borderTopColor: 'transparent',
+          flexWrap: 'wrap',
+          '& .MuiTablePagination-toolbar': {
+            flexWrap: 'wrap',
+            gap: 0.5,
+            minHeight: { xs: 40, sm: 52 },
+          },
+          '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
+            fontSize: { xs: '0.75rem', sm: '0.875rem' },
+          },
+          '& .MuiTablePagination-select': {
+            fontSize: { xs: '0.75rem', sm: '0.875rem' },
+          },
         }}
       />
 
       {onChangeDense && (
         <FormControlLabel
           label="Dense"
-          control={<Switch checked={dense} onChange={onChangeDense} />}
+          control={<Switch checked={dense} onChange={onChangeDense} size="small" />}
           sx={{
             pl: 2,
             py: 1.5,
             top: 0,
+            display: { xs: 'none', lg: 'flex' },
             position: {
-              sm: 'absolute',
+              lg: 'absolute',
             },
           }}
         />

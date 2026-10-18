@@ -322,7 +322,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
       <Card
         sx={{
           borderRadius: 3,
-          p: 3,
+          p: { xs: 2, md: 3 },
           boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
           border: '1px solid #F4F6F8',
         }}
@@ -333,37 +333,37 @@ export default function ConfirmOrderStatus({ id }: Props) {
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: 4,
+            gap: { xs: 2, md: 4 },
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.order_id')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '1rem', md: '1.25rem' } }}>
               {order.orderNumber}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.created_at')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '1rem', md: '1.25rem' } }}>
               {new Date(order.creationTime).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.delivery_date')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '1rem', md: '1.25rem' } }}>
               {new Date(order.deliveryDate).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.status')}
             </Typography>
@@ -378,7 +378,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
             </Typography>
           </Box>
           {order.offerCount > 0 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 120 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.delivery_status')}
             </Typography>
@@ -770,7 +770,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
 
         {/* Offers Table */}
         <TableContainer>
-          <Table sx={{ minWidth: 800 }}>
+          <Table sx={{ minWidth: { xs: 600, md: 800 } }}>
             <TableHead sx={{ bgcolor: '#F9FAFB' }}>
               <TableRow>
                 <TableCell padding="checkbox">

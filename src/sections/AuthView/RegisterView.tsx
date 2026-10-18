@@ -28,7 +28,7 @@ function ToggleTabs({
   options: { value: EntityTab; label: string }[];
 }) {
   return (
-    <Stack direction="row" spacing={1}>
+    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
       {options.map((option) => {
         const active = option.value === value;
         return (
@@ -66,7 +66,7 @@ function AccountTypeRadio({
   options: { value: AuthAccountType; label: string }[];
 }) {
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: "wrap" }}>
       {options.map((option) => {
         const active = option.value === value;
         return (

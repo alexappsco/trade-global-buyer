@@ -77,7 +77,7 @@ export default function SupportRequestList({
           {t("requests_title")}
         </Typography>
 
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} sx={{ width: { xs: "100%", md: "auto" } }}>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} sx={{ width: { xs: "100%", md: "auto" }, flexWrap: "wrap" }}>
           <TextField
             size="small"
             value={search}

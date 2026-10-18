@@ -109,7 +109,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
         sx={{
           bgcolor: "#EAEFEA",
           borderRadius: 2,
-          p: 4,
+          p: { xs: 3, md: 4 },
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -199,7 +199,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
       <Card
         sx={{
           borderRadius: 3,
-          p: 3,
+          p: { xs: 2, md: 3 },
           boxShadow: "0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05)",
           border: "1px solid #F4F6F8",
         }}
@@ -298,7 +298,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
         }}
         sx={{
           borderRadius: 3,
-          p: 3,
+          p: { xs: 2, md: 3 },
           boxShadow: "0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05)",
           border: "1px solid #F4F6F8",
           transition: "box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease",
@@ -446,7 +446,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
       <Card
         sx={{
           borderRadius: 3,
-          p: 3,
+          p: { xs: 2, md: 3 },
           boxShadow: "0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05)",
           border: "1px solid #F4F6F8",
         }}
@@ -455,7 +455,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(5, 1fr)" },
-            gap: 2.5,
+            gap: { xs: 1.5, sm: 2.5 },
             textAlign: "center",
           }}
         >
@@ -463,7 +463,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
             <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
               {t("submit_offer.delivery_fee")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: "#212B36" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: "#212B36", wordBreak: "break-word" }}>
               {formatMoney(offer.deliveryFee)}
             </Typography>
           </Box>
@@ -479,7 +479,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
             <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
               {t("submit_offer.subtotal")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: "#212B36" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: "#212B36", wordBreak: "break-word" }}>
               {formatMoney(offer.subtotal)}
             </Typography>
           </Box>
@@ -487,7 +487,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
             <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
               {t("submit_offer.tax")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: "#212B36" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: "#212B36", wordBreak: "break-word" }}>
               {formatMoney(offer.tax)}
             </Typography>
           </Box>
@@ -495,7 +495,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
             <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
               {t("submit_offer.grand_total")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: "#006838" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: "#006838", wordBreak: "break-word" }}>
               {formatMoney(offer.grandTotal)}
             </Typography>
           </Box>

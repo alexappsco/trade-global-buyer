@@ -93,7 +93,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <Box
           sx={{
             flex: 1,
-            p: 4,
+            p: { xs: 2, sm: 3, md: 4 },
             bgcolor: "#f9fafb",
             color: "#171717",
             minWidth: 0,

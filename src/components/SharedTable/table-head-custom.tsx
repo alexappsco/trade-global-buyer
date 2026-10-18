@@ -26,6 +26,9 @@ export default function TableHeadCustom({ headLabel, enableActions = false }: Pr
               borderBottom: 'none',
               color: '#6b7280',
               fontWeight: 600,
+              ...(headCell.hideOnMobile && {
+                display: { xs: 'none', md: 'table-cell' },
+              }),
             }}
           >
             {headCell.label ?? ''}

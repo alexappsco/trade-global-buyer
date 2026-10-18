@@ -105,7 +105,7 @@ function SimpleTable<T extends { id: string | number }>({
     <>
       <Box sx={{ width: "100%", overflowX: "auto", overflowY: "hidden" }}>
         <Table
-          sx={{ minWidth: 700, borderCollapse: "collapse", width: "100%" }}
+          sx={{ minWidth: { xs: 500, md: 700 }, borderCollapse: "collapse", width: "100%" }}
           size={dense ? "small" : "medium"}
         >
           <TableHead>
@@ -119,9 +119,6 @@ function SimpleTable<T extends { id: string | number }>({
                     color: "#6b7280",
                     whiteSpace: "nowrap",
                     verticalAlign: "middle",
-                    // textAlign:
-                    //   (headCell.align as React.CSSProperties["textAlign"]) ||
-                    //   "left",
                             textAlign:
           (headCell.align as React.CSSProperties["textAlign"]) ||
           "center",
@@ -129,6 +126,9 @@ function SimpleTable<T extends { id: string | number }>({
                     px: dense ? 1.5 : 2,
                     borderBottom: "1px solid #e5e7eb",
                     fontSize: "0.875rem",
+                    ...(headCell.hideOnMobile && {
+                      display: { xs: "none", md: "table-cell" },
+                    }),
                   }}
                 >
                   {headCell.renderHeader
@@ -192,6 +192,9 @@ function SimpleTable<T extends { id: string | number }>({
                         fontWeight: index === 0 ? 600 : 500,
                         fontSize: "0.9375rem",
                         borderBottom: "1px solid #f8fafc",
+                        ...(headCell.hideOnMobile && {
+                          display: { xs: "none", md: "table-cell" },
+                        }),
                       }}
                     >
                       {headCell.renderCell

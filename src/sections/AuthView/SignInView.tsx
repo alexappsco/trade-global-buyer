@@ -107,7 +107,7 @@ export default function SignInView() {
     >
       <Stack spacing={3}>
         <Box>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
             {(["supplier", "buyer"] as const).map((r) => {
               const active = role === r;
               return (

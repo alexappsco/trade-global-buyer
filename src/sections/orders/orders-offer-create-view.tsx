@@ -162,7 +162,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
         sx={{
           bgcolor: "#EAEFEA",
           borderRadius: 2,
-          p: 4,
+          p: { xs: 3, md: 4 },
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -218,7 +218,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
       <Card
         sx={{
           borderRadius: 3,
-          p: 3,
+          p: { xs: 2, md: 3 },
           boxShadow: "0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05)",
           border: "1px solid #F4F6F8",
         }}
@@ -280,7 +280,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
             bgcolor: "#FFF9E6",
             border: "1px solid #FFE699",
             borderRadius: 2,
-            p: 3,
+            p: { xs: 2, md: 3 },
             textAlign: "center",
           }}
         >
@@ -341,7 +341,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
                             htmlInput: { style: { textAlign: "center" } },
                           }}
                           sx={{
-                            width: 140,
+                            width: { xs: "100%", sm: 140 },
                             "& .MuiOutlinedInput-root": {
                               borderRadius: "8px",
                               bgcolor: "#fff",
@@ -363,7 +363,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
           <Card
             sx={{
               borderRadius: 3,
-              p: 3,
+              p: { xs: 2, md: 3 },
               boxShadow: "0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05)",
               border: "1px solid #F4F6F8",
             }}
@@ -499,7 +499,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             width: "100%",
             bgcolor: "#F9FAFB",
             borderRadius: 2,
@@ -517,7 +517,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
               },
             }}
           />
-          <Typography variant="body2" sx={{ fontWeight: 600, color: "#161C24" }}>
+          <Typography variant="body2" sx={{ fontWeight: 600, color: "#161C24", minWidth: 0 }}>
             {t("submit_offer.commission_terms")}
           </Typography>
         </Box>

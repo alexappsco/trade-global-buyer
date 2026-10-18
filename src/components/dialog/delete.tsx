@@ -79,11 +79,11 @@ export default function DeleteDialog({
 
         <Typography
           sx={{
-            fontSize: '20px',
+            fontSize: { xs: '16px', sm: '20px' },
             fontWeight: 700,
             textAlign: 'right',
             color: '#101828',
-            mb: 6,
+            mb: { xs: 3, sm: 6 },
           }}
         >
           الحذف
@@ -92,11 +92,11 @@ export default function DeleteDialog({
 
         <Typography
           sx={{
-            fontSize: '20px',
+            fontSize: { xs: '16px', sm: '20px' },
             fontWeight: 700,
             textAlign: 'right',
             color: '#101828',
-            mb: 8,
+            mb: { xs: 4, sm: 8 },
           }}
         >
           هل انت متاكد من انك تريد الحذف ؟
@@ -108,6 +108,7 @@ export default function DeleteDialog({
             display: 'flex',
             justifyContent: 'flex-end',
             gap: 2,
+            flexWrap: 'wrap',
           }}
         >
           <Button
@@ -116,11 +117,11 @@ export default function DeleteDialog({
             disableElevation
             variant="contained"
             sx={{
-              width: '110px',
+              minWidth: { xs: 90, sm: 110 },
               height: '40px',
               borderRadius: '8px',
               background: '#FF6257',
-              fontSize: '20px',
+              fontSize: { xs: '16px', sm: '20px' },
               fontWeight: 700,
               boxShadow: 'none',
 
@@ -136,12 +137,12 @@ export default function DeleteDialog({
           <Button
             onClick={onClose}
             sx={{
-              width: '110px',
+              minWidth: { xs: 90, sm: 110 },
               height: '40px',
               borderRadius: '8px',
               border: '2px solid #98A2B3',
               color: '#344054',
-              fontSize: '20px',
+              fontSize: { xs: '16px', sm: '20px' },
               fontWeight: 700,
 
               '&:hover': {
