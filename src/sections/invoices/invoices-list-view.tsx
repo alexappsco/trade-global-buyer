@@ -96,9 +96,9 @@ export default function InvoicesListView() {
   const tableHead = [
     { id: "invoiceNumber", label: t("table.invoice_number"), align: cellAlignment.center },
     { id: "orderTitle", label: t("table.order_title"), align: cellAlignment.left },
-    { id: "orderNumber", label: t("table.order_number"), align: cellAlignment.center },
-    { id: "issuedAt", label: t("table.issued_at"), align: cellAlignment.center },
-    { id: "commissionAmount", label: t("table.commission_amount"), align: cellAlignment.left },
+    { id: "orderNumber", label: t("table.order_number"), align: cellAlignment.center, hideOnMobile: true },
+    { id: "issuedAt", label: t("table.issued_at"), align: cellAlignment.center, hideOnMobile: true },
+    { id: "commissionAmount", label: t("table.commission_amount"), align: cellAlignment.left, hideOnMobile: true },
     { id: "actions", label: t("table.actions"), align: cellAlignment.center },
   ];
 

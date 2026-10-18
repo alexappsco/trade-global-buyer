@@ -86,7 +86,7 @@ function NotificationCard({
         display: "flex",
         alignItems: "flex-start",
         gap: 2,
-        px: 3,
+        px: { xs: 2, sm: 3 },
         py: 1.5,
         cursor: isUnread ? "pointer" : "default",
         position: "relative",

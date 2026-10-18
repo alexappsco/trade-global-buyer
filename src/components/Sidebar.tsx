@@ -155,25 +155,36 @@ const isVisible = (item: SidebarItem) => {
       sx={{
         width: "100%",
         boxSizing: "border-box",
-        p: 2,
+        p: { xs: 1.5, sm: 2 },
+        pb: { xs: "calc(env(safe-area-inset-bottom) + 8px)", sm: 2 },
         height: "100%",
         bgcolor: "#FFFFFF",
         display: "flex",
         flexDirection: "column",
+        gap: 1,
       }}
     >
-      <List disablePadding sx={{ flex: 1 }}>
+      <List disablePadding sx={{ flex: 1, overflow: "auto", ...scrollbar() }}>
         {sidebarItems.filter(isVisible).map((item) => {
           const active = isActive(item.path);
 
           return (
-            <Link key={item.key} href={item.path} style={{ textDecoration: "none" }}>
+            <Link
+              key={item.key}
+              href={item.path}
+              style={{ textDecoration: "none" }}
+              onClick={() => {
+                if (!mdUp && onClose) {
+                  onClose();
+                }
+              }}
+            >
               <ListItemButton
                 sx={{
                   borderRadius: 2,
                   gap: 1.5,
                   justifyContent: justify,
-                  mb: 0.08,
+                  mb: { xs: 0.25, sm: 0.08 },
                   pr: 2,
                   pl: 2,
                   "&:hover": {
@@ -235,7 +246,8 @@ const isVisible = (item: SidebarItem) => {
             display: "flex",
             alignItems: "center",
             gap: 1.25,
-            p: 1.5,
+            p: { xs: 1.25, sm: 1.5 },
+            mt: "auto",
             borderRadius: 2,
             bgcolor: role === "buyer" ? "rgba(27,131,84,0.06)" : "rgba(124,58,237,0.06)",
             border: "1px solid",
@@ -279,8 +291,8 @@ const isVisible = (item: SidebarItem) => {
           boxSizing: "border-box",
           borderLeft: "none",
           borderRight: "none",
-          top: mdUp ? "64px" : undefined,
-          height: mdUp ? "calc(100% - 64px)" : "100%",
+          top: "64px",
+          height: { xs: "calc(100dvh - 64px)", md: "calc(100vh - 64px)" },
           ...scrollbar(),
         },
       }}

@@ -100,7 +100,16 @@ export default function Header({ onMenuClick }: HeaderProps) {
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 4 } }}>
+      <Toolbar
+        sx={{
+          minHeight: 64,
+          height: 64,
+          justifyContent: "space-between",
+          px: { xs: 2, md: 4 },
+          flexWrap: "nowrap",
+          gap: 1,
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton
             edge="start"
@@ -114,11 +123,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
             component="img"
             src="/logo_2.png"
             alt="Trade Global"
-            sx={{ height: 66, marginInlineStart: { xs: 0, md: "60px" } }}
+            sx={{ height: { xs: 40, md: 66 }, marginInlineStart: { xs: 0, md: "60px" } }}
           />
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2.5, marginInlineEnd: { xs: 1, md: 2 } }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1.5, md: 2.5 }, marginInlineEnd: { xs: 1, md: 2 } }}>
           <Box
             onClick={handleLangOpen}
             sx={{

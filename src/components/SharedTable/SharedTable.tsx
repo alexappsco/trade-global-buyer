@@ -45,7 +45,7 @@ function SharedTable<T extends { id: string }>({
           ...(maxHeight && { maxHeight: `${maxHeight}px` }),
         }}
       >
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: { xs: 600, md: 960 } }}>
             <TableHeadCustom headLabel={tableHead} enableActions={!!actions?.length} />
 
             <TableBody>

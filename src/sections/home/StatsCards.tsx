@@ -56,7 +56,7 @@ export default function StatsCards() {
   return (
     <Grid container spacing={2} sx={{ mb: 4 }}>
       {statKeys.map((stat) => (
-        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={stat.key}>
+        <Grid size={{ xs: 6, sm: 6, md: 3 }} key={stat.key}>
           <Card
             elevation={0}
             sx={{

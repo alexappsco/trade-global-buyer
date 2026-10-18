@@ -134,10 +134,10 @@ export default function PromoteDialog({
             {labels.badge}
           </Box>
 
-          <Typography variant="h4" sx={{ fontWeight: 900, mb: 1 }}>
+          <Typography variant="h4" sx={{ fontWeight: 900, mb: 1, fontSize: { xs: '1.75rem', sm: '2.125rem' } }}>
             {labels.title}
           </Typography>
-          <Typography sx={{ color: "rgba(255,255,255,0.82)", maxWidth: 420 }}>
+          <Typography sx={{ color: "rgba(255,255,255,0.82)", maxWidth: { xs: '100%', sm: 420 } }}>
             {labels.subtitle}
           </Typography>
         </Box>
@@ -222,7 +222,7 @@ export default function PromoteDialog({
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: 1.5, mt: 3, justifyContent: "flex-end" }}>
+          <Box sx={{ display: "flex", gap: 1.5, mt: 3, justifyContent: "flex-end", flexWrap: "wrap" }}>
             <Button
               onClick={handleClose}
               disabled={loading}

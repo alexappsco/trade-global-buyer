@@ -163,15 +163,16 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             justifyContent: 'space-between',
             alignItems: 'flex-start',
             gap: 2,
+            flexWrap: 'wrap',
           }}
         >
-          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
-            <Iconify icon="solar:danger-triangle-bold" width={24} sx={{ color: '#FFAB00', mt: 0.25 }} />
+          <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start', flex: 1, minWidth: 0 }}>
+            <Iconify icon="solar:danger-triangle-bold" width={24} sx={{ color: '#FFAB00', mt: 0.25, flexShrink: 0 }} />
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#7A4100', lineHeight: 1.6 }}>
               {t('offer_details.alert_message')}
             </Typography>
           </Box>
-          <IconButton size="small" onClick={() => setShowAlert(false)} sx={{ color: '#7A4100' }}>
+          <IconButton size="small" onClick={() => setShowAlert(false)} sx={{ color: '#7A4100', flexShrink: 0 }}>
             <Iconify icon="eva:close-fill" width={18} />
           </IconButton>
         </Box>
@@ -209,7 +210,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
       <Card
         sx={{
           borderRadius: 3,
-          p: 3,
+          p: { xs: 2, md: 3 },
           boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
           border: '1px solid #F4F6F8',
         }}
@@ -367,7 +368,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
               {t('offer_details.cards.delivery')}
             </Typography>
           </Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#006838' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#006838', wordBreak: 'break-word' }}>
             {offer.deliveryFee === 0 ? t('details.offers.free_delivery') : formatMoney(offer.deliveryFee)}
           </Typography>
         </Card>
@@ -381,7 +382,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
               {t('offer_details.cards.total')}
             </Typography>
           </Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#212B36' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#212B36', wordBreak: 'break-word' }}>
             {formatMoney(offer.subtotal)}
           </Typography>
         </Card>
@@ -395,7 +396,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
               {t('offer_details.cards.tax')}
             </Typography>
           </Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#212B36' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#212B36', wordBreak: 'break-word' }}>
             {formatMoney(offer.grandTotal)}
           </Typography>
         </Card>
@@ -423,7 +424,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
               {t('offer_details.cards.offer_date')}
             </Typography>
           </Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#212B36' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#212B36', wordBreak: 'break-word' }}>
             {formatDate(offer.submissionTime)}
           </Typography>
         </Card>

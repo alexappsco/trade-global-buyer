@@ -18,7 +18,16 @@ export default function TableSkeleton({ tableHead, rowCount = 5, enableActions =
       {Array.from({ length: rowCount }).map((_, rowIndex) => (
         <TableRow key={rowIndex} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           {tableHead.map((col, colIndex) => (
-            <TableCell key={col.id || colIndex} align={col.align || 'left'} sx={{ py: 2 }}>
+            <TableCell
+              key={col.id || colIndex}
+              align={col.align || 'left'}
+              sx={{
+                py: 2,
+                ...(col.hideOnMobile && {
+                  display: { xs: 'none', md: 'table-cell' },
+                }),
+              }}
+            >
               <Box
                 sx={{
                   display: 'flex',

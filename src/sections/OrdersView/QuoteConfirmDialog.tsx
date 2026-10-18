@@ -29,9 +29,8 @@ export default function QuoteConfirmDialog({
           elevation: 0,
           sx: {
             borderRadius: "14px",
-            width: "100%",
+            width: { xs: "calc(100% - 32px)", sm: 480 },
             maxWidth: 480,
-            m: 2,
           },
         },
       }}
@@ -81,7 +80,7 @@ export default function QuoteConfirmDialog({
         </Typography>
 
         {/* Actions */}
-        <Stack direction="row" spacing={2} sx={{ mt: 0.5, width: "100%" }}>
+        <Stack direction="row" spacing={2} sx={{ mt: 0.5, width: "100%", flexWrap: "wrap", gap: 1 }}>
           <Button
             onClick={onCancel}
             variant="outlined"

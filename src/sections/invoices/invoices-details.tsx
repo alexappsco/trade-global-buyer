@@ -216,7 +216,7 @@ export default function InvoicesDetailsView({ id }: Props) {
       <Card
         sx={{
           borderRadius: 2,
-          p: { xs: 3, md: 5 },
+          p: { xs: 2, md: 5 },
           boxShadow: '0 1px 3px 0 rgba(0,0,0,0.05)',
           border: '1px solid #F4F6F8',
           bgcolor: '#FFFFFF',
@@ -231,16 +231,18 @@ export default function InvoicesDetailsView({ id }: Props) {
               justifyContent: 'space-between',
               alignItems: 'center',
               mt: 1,
+              flexWrap: 'wrap',
+              gap: 1,
             }}
           >
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#161C24' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#161C24', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
               {t('details.info.issued_at')}:{' '}
               <Box component="span" sx={{ color: '#10754E' }}>
                 {formatDate(invoice.issuedAt)}
               </Box>
             </Typography>
 
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#161C24' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#161C24', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
               {t('details.info.requested_from')}:{' '}
               <Box component="span" sx={{ color: '#10754E' }}>
                 {invoice.buyer?.legalCompanyName || '—'}
@@ -253,14 +255,16 @@ export default function InvoicesDetailsView({ id }: Props) {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 1,
             }}
           >
             {/* Title */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="h6" sx={{ fontWeight: 800, color: '#161C24' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, flexWrap: 'wrap' }}>
+              <Typography variant="h6" sx={{ fontWeight: 800, color: '#161C24', fontSize: { xs: '1rem', md: '1.25rem' } }}>
                 {invoice.invoiceNumber}
               </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 800, color: '#161C24' }}>
+              <Typography variant="h3" sx={{ fontWeight: 800, color: '#161C24', fontSize: { xs: '1.5rem', md: '3rem' } }}>
                 {t('title')}
               </Typography>
             </Box>
@@ -321,11 +325,11 @@ export default function InvoicesDetailsView({ id }: Props) {
         </TableContainer>
 
         {/* Total Amount Row */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
-          <Typography variant="h5" sx={{ fontWeight: 800, color: '#161C24' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4, flexWrap: 'wrap' }}>
+          <Typography variant="h5" sx={{ fontWeight: 800, color: '#161C24', fontSize: { xs: '1.25rem', md: '1.5rem' } }}>
             {t('details.total')}:
           </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 800, color: '#10754E' }}>
+          <Typography variant="h5" sx={{ fontWeight: 800, color: '#10754E', fontSize: { xs: '1.25rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
             {formatAmount(grandTotal)} {currencyText}
           </Typography>
         </Box>
@@ -343,7 +347,7 @@ export default function InvoicesDetailsView({ id }: Props) {
               fontWeight: 700,
               fontSize: '1rem',
               borderRadius: '8px',
-              px: 5,
+              px: { xs: 3, md: 5 },
               py: 1.2,
               boxShadow: 'none',
               gap: 1,
@@ -359,7 +363,7 @@ export default function InvoicesDetailsView({ id }: Props) {
       <Card
         sx={{
           borderRadius: 2,
-          p: 3,
+          p: { xs: 2, md: 3 },
           boxShadow: '0 1px 3px 0 rgba(0,0,0,0.05)',
           border: '1px solid #F4F6F8',
           bgcolor: '#FFFFFF',
@@ -458,13 +462,15 @@ export default function InvoicesDetailsView({ id }: Props) {
           bgcolor: '#EAEFEA',
           borderRadius: 2,
           p: 2,
-          px: 3,
+          px: { xs: 2, md: 3 },
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 1.5,
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 800, color: '#161C24' }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, color: '#161C24', fontSize: { xs: '1rem', md: '1.25rem' }, minWidth: 0 }}>
           {t('details.order_header', { number: invoice.orderNumber })}
         </Typography>
 
@@ -547,7 +553,7 @@ export default function InvoicesDetailsView({ id }: Props) {
       </Card>
 
       {/* Offer Details Section Header */}
-      <Box sx={{ borderRight: '4px solid #10754E', pr: 1.5, my: 1 }}>
+      <Box sx={{ borderInlineEnd: '4px solid #10754E', pr: 1.5, my: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: 800, color: '#161C24' }}>
           {t('details.offer_section_header')}
         </Typography>

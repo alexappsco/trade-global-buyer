@@ -12,6 +12,7 @@ export type headCellType = {
   align?: cellAlignment;
   label?: ReactNode;
   width?: number;
+  hideOnMobile?: boolean;
 };
 export type Action<T> = {
   label: React.ReactNode;

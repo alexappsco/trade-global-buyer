@@ -27,10 +27,10 @@ export default function RecentOrdersTable() {
   const tableHead: headCellType[] = [
     { id: 'id', label: tOrders('table.order_id'), align: cellAlignment.right, width: 100 },
     { id: 'title', label: tOrders('table.order_title'), align: cellAlignment.right },
-    { id: 'category', label: tOrders('table.category'), align: cellAlignment.right },
-    { id: 'classification', label: tOrders('table.classification'), align: cellAlignment.right },
-    { id: 'deliveryDate', label: tOrders('table.delivery_date'), align: cellAlignment.right },
-    { id: 'createdAt', label: tOrders('table.creation_date'), align: cellAlignment.right },
+    { id: 'category', label: tOrders('table.category'), align: cellAlignment.right, hideOnMobile: true },
+    { id: 'classification', label: tOrders('table.classification'), align: cellAlignment.right, hideOnMobile: true },
+    { id: 'deliveryDate', label: tOrders('table.delivery_date'), align: cellAlignment.right, hideOnMobile: true },
+    { id: 'createdAt', label: tOrders('table.creation_date'), align: cellAlignment.right, hideOnMobile: true },
     { id: 'status', label: tOrders('table.status'), align: cellAlignment.center },
   ];
 
@@ -75,6 +75,8 @@ export default function RecentOrdersTable() {
           justifyContent: 'space-between',
           alignItems: 'center',
           mb: 2,
+          flexWrap: 'wrap',
+          gap: 1,
         }}
       >
         {role !== 'supplier' && (
@@ -85,7 +87,7 @@ export default function RecentOrdersTable() {
               bgcolor: '#1B8354',
               '&:hover': { bgcolor: '#146440' },
               borderRadius: 2,
-              px: 3,
+              px: { xs: 2, md: 3 },
               boxShadow: 'none',
               fontWeight: 'bold',
               gap: 1,
@@ -95,7 +97,7 @@ export default function RecentOrdersTable() {
             {tHome('recent_orders.add_new')}
           </Button>
         )}
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1A1A1A', fontSize: { xs: '1rem', md: '1.25rem' } }}>
           {tHome('recent_orders.title')}
         </Typography>
       </Box>

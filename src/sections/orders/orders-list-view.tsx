@@ -317,14 +317,14 @@ export default function OrdersListView() {
   const tableHead = [
     { id: "orderNumber", label: t("table.order_id"), align: cellAlignment.left },
     { id: "title", label: t("table.order_title"), align: cellAlignment.left },
-    { id: "categoryNameEn", label: t("table.category"), align: cellAlignment.left },
+    { id: "categoryNameEn", label: t("table.category"), align: cellAlignment.left, hideOnMobile: true },
     // { id: "classificationNameEn", label: t("table.classification"), align: cellAlignment.left },
-    { id: "deliveryDate", label: t("table.delivery_date"), align: cellAlignment.left },
-    { id: "creationTime", label: t("table.creation_date"), align: cellAlignment.left },
+    { id: "deliveryDate", label: t("table.delivery_date"), align: cellAlignment.left, hideOnMobile: true },
+    { id: "creationTime", label: t("table.creation_date"), align: cellAlignment.left, hideOnMobile: true },
     ...(role === "buyer"
       ? [
-          { id: "offers", label: t("table.offers"), align: cellAlignment.center },
-          { id: "deliveryStatus", label: t("details.info.delivery_status"), align: cellAlignment.center },
+          { id: "offers", label: t("table.offers"), align: cellAlignment.center, hideOnMobile: true },
+          { id: "deliveryStatus", label: t("details.info.delivery_status"), align: cellAlignment.center, hideOnMobile: true },
         ]
       : []),
     { id: "status", label: t("table.status"), align: cellAlignment.center },

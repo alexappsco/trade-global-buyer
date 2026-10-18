@@ -224,7 +224,7 @@ export default function EditProfile() {
               >
                 <Box
                   sx={{
-                    height: 140,
+                    height: { xs: 120, sm: 140 },
                     backgroundImage: coverPreview
                       ? `url("${coverPreview}")`
                       : 'url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop")',
@@ -252,8 +252,8 @@ export default function EditProfile() {
                       <Avatar
                         src={avatarPreview}
                         sx={{
-                          width: 96,
-                          height: 96,
+                          width: { xs: 80, sm: 96 },
+                          height: { xs: 80, sm: 96 },
                           bgcolor: '#2C5E4B',
                           border: '4px solid #ffffff',
                           fontSize: '1.8rem',

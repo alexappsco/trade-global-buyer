@@ -109,14 +109,15 @@ export function AuthBanner({
         justifyContent: "center",
         textAlign: "center",
         px: 2,
-        py: 4,
+        pt: { xs: 8, md: 4 },
+        pb: 4,
       }}
     >
-      <Typography variant="h4" sx={{ fontWeight: 800, color: "#171717" }}>
+      <Typography variant="h4" sx={{ fontWeight: 800, color: "#171717", fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.125rem' } }}>
         {title}
       </Typography>
       {subtitle && (
-        <Typography variant="body2" sx={{ color: "#6B7280", mt: 1, maxWidth: 520 }}>
+        <Typography variant="body2" sx={{ color: "#6B7280", mt: 1, maxWidth: { xs: '100%', sm: 520 } }}>
           {subtitle}
         </Typography>
       )}
@@ -257,14 +258,15 @@ export function MarketingCard() {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-          gap: 1,
+          gridTemplateColumns: { xs: "repeat(3, minmax(0, 1fr))" },
+          gap: { xs: 0.5, sm: 1 },
           textAlign: "center",
+          width: "100%",
         }}
       >
         {stats.map((stat, index) => (
           <Box key={`${stat.label}-${index}`}>
-            <Typography sx={{ fontSize: { xs: 26, md: 30 }, fontWeight: 800, color: "#6B7280" }}>
+            <Typography sx={{ fontSize: { xs: 20, sm: 26, md: 30 }, fontWeight: 800, color: "#6B7280" }}>
               <StatValue value={stat.value} />
             </Typography>
             <Typography

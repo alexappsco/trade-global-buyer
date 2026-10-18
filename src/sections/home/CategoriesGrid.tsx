@@ -44,7 +44,7 @@ export default function CategoriesGrid() {
 
       <Grid container spacing={2}>
         {categories.map((cat) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={cat.titleKey}>
+          <Grid size={{ xs: 6, sm: 6, md: 3 }} key={cat.titleKey}>
             <Card
               elevation={0}
               sx={{
@@ -54,7 +54,7 @@ export default function CategoriesGrid() {
                 boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
               }}
             >
-              <CardMedia component="img" height="140" image={cat.image} alt={cat.titleKey} />
+              <CardMedia component="img" sx={{ height: { xs: 100, sm: 140 }, objectFit: 'cover' }} image={cat.image} alt={cat.titleKey} />
               <CardContent sx={{ textAlign: 'right', pb: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#1A1A1A', mb: 0.5 }}>
                   {t(`categories.items.${cat.titleKey}`)}

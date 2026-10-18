@@ -237,10 +237,12 @@ export default function ProfileView() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 1,
+                    flexWrap: 'wrap',
                     bgcolor: 'rgba(0,0,0,0.35)',
                     opacity: 0,
                     transition: 'opacity 0.2s',
                     '&:hover': { opacity: 1 },
+                    '@media (hover: none)': { opacity: 1 },
                   }}
                 >
                   {profile.coverImageUrl && (
@@ -355,6 +357,7 @@ export default function ProfileView() {
                         opacity: 0,
                         transition: 'opacity 0.2s',
                         '&:hover': { opacity: 1 },
+                        '@media (hover: none)': { opacity: 1 },
                       }}
                     >
                       {profile.profileImageUrl && (

@@ -55,6 +55,7 @@ export default function ApexChart({
       <Box
         sx={{
           width: width ?? "100%",
+          maxWidth: "100%",
           minHeight: chartHeight,
         }}
       />
@@ -62,11 +63,13 @@ export default function ApexChart({
   }
 
   return (
-    <ReactApexChart
-      options={safeOptions}
-      height={height}
-      width={width}
-      {...rest}
-    />
+    <Box sx={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
+      <ReactApexChart
+        options={safeOptions}
+        height={height}
+        width={width}
+        {...rest}
+      />
+    </Box>
   );
 }

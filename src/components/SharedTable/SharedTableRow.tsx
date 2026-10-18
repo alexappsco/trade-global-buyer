@@ -33,7 +33,18 @@ function SharedTableRow<T extends { id: string }>({
           const headCell = tableHead.find((h) => h.id === x);
           const align = headCell?.align || 'left';
           return (
-            <TableCell key={index} align={align} sx={{ p: dense ? '6px 16px' : '9px 16px', whiteSpace: 'nowrap', borderBottom: 'none' }}>
+            <TableCell
+              key={index}
+              align={align}
+              sx={{
+                p: dense ? '6px 16px' : '9px 16px',
+                whiteSpace: 'nowrap',
+                borderBottom: 'none',
+                ...(headCell?.hideOnMobile && {
+                  display: { xs: 'none', md: 'table-cell' },
+                }),
+              }}
+            >
               {customRender && x in customRender ? customRender[x]!(row) : String((row as Record<string, unknown>)[x as string] ?? '')}
             </TableCell>
           );

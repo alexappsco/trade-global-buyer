@@ -82,7 +82,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
               '100%': { transform: 'scale(1)', opacity: 1 },
             },
             minWidth: { xs: 250, sm: 270 },
-            maxWidth: 520,
+            maxWidth: { xs: "calc(100vw - 48px)", sm: 520 },
             borderRadius: '50px',
             px: '5px',
             py: '7px',
