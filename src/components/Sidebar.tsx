@@ -156,7 +156,6 @@ const isVisible = (item: SidebarItem) => {
         width: "100%",
         boxSizing: "border-box",
         p: { xs: 1.5, sm: 2 },
-        pt: { xs: "calc(env(safe-area-inset-top) + 8px)", sm: 2 },
         pb: { xs: "calc(env(safe-area-inset-bottom) + 8px)", sm: 2 },
         height: "100%",
         bgcolor: "#FFFFFF",
@@ -165,7 +164,7 @@ const isVisible = (item: SidebarItem) => {
         gap: 1,
       }}
     >
-      <List disablePadding sx={{ flex: 1, pt: { xs: 1, sm: 0 }, overflow: "auto", ...scrollbar() }}>
+      <List disablePadding sx={{ flex: 1, overflow: "auto", ...scrollbar() }}>
         {sidebarItems.filter(isVisible).map((item) => {
           const active = isActive(item.path);
 
@@ -292,9 +291,8 @@ const isVisible = (item: SidebarItem) => {
           boxSizing: "border-box",
           borderLeft: "none",
           borderRight: "none",
-          top: { md: "64px" },
-          height: { md: "calc(100vh - 64px)" },
-          ...(mdUp ? {} : { height: "100dvh", top: 0, pt: "env(safe-area-inset-top)" }),
+          top: "64px",
+          height: { xs: "calc(100dvh - 64px)", md: "calc(100vh - 64px)" },
           ...scrollbar(),
         },
       }}

@@ -100,7 +100,16 @@ export default function Header({ onMenuClick }: HeaderProps) {
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 4 }, flexWrap: "wrap", gap: 1 }}>
+      <Toolbar
+        sx={{
+          minHeight: 64,
+          height: 64,
+          justifyContent: "space-between",
+          px: { xs: 2, md: 4 },
+          flexWrap: "nowrap",
+          gap: 1,
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton
             edge="start"
