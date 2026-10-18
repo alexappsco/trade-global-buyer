@@ -32,7 +32,7 @@ export default function QuotationsListView() {
   // Data state
   const [offers, setOffers] = useState<QuotationOffer[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,9 +55,13 @@ export default function QuotationsListView() {
     };
   }, [searchQuery]);
 
-  // Fetch data
+  // Fetch data — re-runs when filters change OR when locale changes (language switch)
   useEffect(() => {
     let cancelled = false;
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) setIsLoading(false);
+    }, 20_000);
+
     const fetchOffers = async () => {
       setIsLoading(true);
       const res = await getQuotationOffers({
@@ -67,6 +71,7 @@ export default function QuotationsListView() {
         maxResultCount: 1000,
         sorting: "creationTime desc",
       });
+      clearTimeout(safetyTimer);
       if (cancelled) return;
       if (res.success && res.data) {
         const data = res.data as any;
@@ -86,8 +91,10 @@ export default function QuotationsListView() {
     fetchOffers();
     return () => {
       cancelled = true;
+      clearTimeout(safetyTimer);
     };
-  }, [debouncedSearch, selectedStatus]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, debouncedSearch, selectedStatus]);
 
   // Status options
   const statusOptions = [

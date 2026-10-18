@@ -205,7 +205,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
   const isAllSelected =
     filteredOffers.length > 0 && selectedRows.length === filteredOffers.length;
 
-  const canConfirmDelivery = role === 'buyer' && order?.deliveryStatus === 'delivered' && !order?.isDelivered;
+  const canConfirmDelivery = role === 'buyer' && !order?.isDelivered && order?.acceptedAt !== null;
 
   if (isLoading) {
     return <Loader variant="section" minHeight={360} label={t('submit_offer.loading')} />;

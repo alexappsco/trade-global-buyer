@@ -225,6 +225,7 @@
     "title": "Orders",
     "reason_order_closed": "This order is no longer open for submitting offers.",
     "reason_pending_delivery": "You must confirm previous pending deliveries first to submit new offers.",
+    "complete_profile_required": "You must complete your profile data first before creating a new order.",
     "add_new": "Add New Order",
     "search": "Search",
     "filter_category": "Category",
@@ -247,11 +248,12 @@
       "pdf_download_error": "Failed to download PDF",
       "actions": "Actions",
       "action_view": "View",
-      "action_close": "Close",
+      "action_close": "Cnacel",
       "action_submit_quote": "Submit Quote"
     },
     "status": {
       "open": "Open",
+      "canceled": "Canceled",
       "closed": "Closed"
     },
     "pagination": {
@@ -374,8 +376,8 @@
       "browse_supplier": "Browse Supplier"
     },
     "dialog": {
-      "confirm_close_order": "You are about to close the order",
-      "success_close_order": "The order has been closed successfully",
+      "confirm_close_order": "You are about to cancel the order",
+      "success_close_order": "The order has been canceled successfully",
       "confirm_delivery": "You are about to confirm delivery of this order",
       "success_confirm_delivery": "Delivery confirmed successfully",
       "confirm_mark_delivered": "You are about to mark this order as delivered",
@@ -594,7 +596,10 @@
         "creation_time": "Creation Time",
         "category": "Category",
         "date": "Date",
-        "status": "Status"
+        "status": "Status",
+        "commission_iban": "Commission IBAN",
+        "copy_iban": "Copy IBAN",
+        "iban_copied": "IBAN copied successfully"
       },
       "table": {
         "item": "Item",
@@ -605,6 +610,13 @@
       "total": "Total",
       "download_pdf": "Download PDF",
       "downloading": "Downloading...",
+      "upload_proof": "Upload Payment Proof",
+      "uploading": "Uploading...",
+      "upload_proof_success": "Payment proof uploaded successfully",
+      "upload_proof_error": "Failed to upload payment proof",
+      "download_proof": "Download Payment Proof",
+      "download_proof_success": "Payment proof downloaded successfully",
+      "download_proof_error": "Failed to download payment proof",
       "order_header": "Order #{number}",
       "view_order": "View Order Details",
       "offer_section_header": "Your Submitted Offer"

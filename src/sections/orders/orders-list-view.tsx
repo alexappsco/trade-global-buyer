@@ -23,10 +23,10 @@ import Iconify from "src/components/iconify";
 import ConfirmationDialog from "src/components/dialog/ConfirmationDialog";
 import { useToast } from "src/components/toast";
 import { useAuth } from "src/contexts/AuthContext";
-import { useQuery } from "src/components/use-query";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 import SharedTable from "src/components/SharedTable/SharedTable";
 import PageHeader from "src/components/PageHeader/PageHeader";
+import { paths } from "src/routes/paths";
 import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
 import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
@@ -163,10 +163,8 @@ export default function OrdersListView() {
   const t = useTranslations("Orders");
   const locale = useLocale();
   const router = useRouter();
-  const { role } = useAuth();
+  const { role, session } = useAuth();
   const toast = useToast();
-  const { set } = useQuery(["page", "limit"]);
-
   // State
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -178,7 +176,7 @@ export default function OrdersListView() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Dropdown Anchors
   const [categoryAnchor, setCategoryAnchor] = useState<null | HTMLElement>(null);
@@ -197,12 +195,6 @@ export default function OrdersListView() {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  // Reset table page on any filter change
-  useEffect(() => {
-    set({ page: null });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, selectedCategoryCode, selectedClassificationCode, selectedStatus, selectedDate]);
-
   // Fetch Catalog
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -214,9 +206,17 @@ export default function OrdersListView() {
     fetchCatalog();
   }, []);
 
-  // Fetch Orders
+  // Fetch Orders — re-runs when filters change OR when locale changes (language switch)
   useEffect(() => {
-    let ignore = false;
+    let cancelled = false;
+
+    // Safety timeout: if request takes longer than 8s, force-stop loading skeleton
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) {
+        setIsLoading(false);
+      }
+    }, 8_000);
+
     const fetchOrders = async () => {
       setIsLoading(true);
       try {
@@ -229,33 +229,44 @@ export default function OrdersListView() {
           skipCount: 0,
           maxResultCount: 1000,
         });
-        if (!ignore) {
-          if (res.success && res.data) {
-            setOrders(res.data.items ?? []);
-            setTotalCount(res.data.totalCount ?? 0);
-          } else {
-            setOrders([]);
-            setTotalCount(0);
-            if (!res.success && res.error) {
-              toast.error(res.error);
-            }
+
+        clearTimeout(safetyTimer);
+        if (cancelled) return;
+
+        if (res.success && res.data) {
+          setOrders(res.data.items ?? []);
+          setTotalCount(res.data.totalCount ?? 0);
+        } else {
+          setOrders([]);
+          setTotalCount(0);
+          if (!res.success && res.error) {
+            toast.error(res.error);
           }
         }
       } catch (err) {
-        if (!ignore) {
-          setOrders([]);
-          setTotalCount(0);
-          toast.error(err instanceof Error ? err.message : t("table.load_error"));
+        clearTimeout(safetyTimer);
+        if (cancelled) return;
+        setOrders([]);
+        setTotalCount(0);
+        const errMsg = err instanceof Error ? err.message : t("table.load_error");
+        if (!errMsg.includes("abort") && !errMsg.includes("AbortError")) {
+          toast.error(errMsg);
         }
       } finally {
-        if (!ignore) {
+        if (!cancelled) {
           setIsLoading(false);
         }
       }
     };
+
     fetchOrders();
-    return () => { ignore = true; };
-  }, [debouncedSearch, selectedCategoryCode, selectedClassificationCode, selectedStatus, selectedDate]);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(safetyTimer);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, debouncedSearch, selectedCategoryCode, selectedClassificationCode, selectedStatus, selectedDate]);
 
   const classifications = useMemo(() => {
     if (!selectedCategoryCode) return [];
@@ -377,7 +388,7 @@ export default function OrdersListView() {
             : { bgcolor: "#FFE9D5", color: "#B71D18" }),
         }}
       >
-        {row.status === "open" ? t("status.open") : t("status.closed")}
+        {row.status === "open" ? t("status.open") : t("status.canceled")}
       </Box>
     ),
     deliveryStatus: (row: Order) => (
@@ -415,7 +426,14 @@ export default function OrdersListView() {
           role === "buyer" ? (
             <Button
               variant="contained"
-              onClick={() => router.push("/orders/create")}
+              onClick={() => {
+                if (session && !session.profileCompleted) {
+                  toast.warning(t("complete_profile_required"));
+                  router.push(paths.profile.view);
+                  return;
+                }
+                router.push("/orders/create");
+              }}
               sx={{
                 bgcolor: "#10754E",
                 color: "white",
@@ -706,7 +724,7 @@ export default function OrdersListView() {
                 }}
                 selected={selectedStatus === "closed"}
               >
-                {t("status.closed")}
+                {t("status.canceled")}
               </MenuItem>
             </Menu>
           </Box>

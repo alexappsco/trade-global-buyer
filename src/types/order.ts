@@ -15,6 +15,8 @@ export type Order = {
   classificationNameEn: string;
   classificationNameAr: string;
   title: string;
+  city: string | null;
+  companyAddress: string | null;
   deliveryDate: string; // datetime string
   status: string;
   deliveryStatus: "pending" | "delivered" | null;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'src/i18n/routing';
 import {
@@ -14,12 +14,18 @@ import {
   TableHead,
   TableContainer,
   Typography,
+  IconButton,
 } from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { useToast } from 'src/components/toast';
 import PageHeader from 'src/components/PageHeader/PageHeader';
 import { Loader } from 'src/components/Loader/Loader';
-import { getInvoiceDetails, downloadInvoicePdf } from 'src/actions/invoices';
+import {
+  getInvoiceDetails,
+  downloadInvoicePdf,
+  uploadInvoicePaymentProof,
+  downloadInvoicePaymentProof,
+} from 'src/actions/invoices';
 import type { InvoiceDetail } from 'src/types/invoice';
 
 interface Props {
@@ -37,6 +43,9 @@ export default function InvoicesDetailsView({ id }: Props) {
   const [invoice, setInvoice] = useState<InvoiceDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
+  const [uploadingProof, setUploadingProof] = useState(false);
+  const [downloadingProof, setDownloadingProof] = useState(false);
+  const proofInputRef = useRef<HTMLInputElement>(null);
 
   const formatDate = (value?: string | null) =>
     value ? new Date(value).toLocaleDateString(locale) : '—';
@@ -88,6 +97,67 @@ export default function InvoicesDetailsView({ id }: Props) {
       toast.error(t('table.pdf_download_error'));
     } finally {
       setDownloading(false);
+    }
+  };
+
+  const handleProofFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setUploadingProof(true);
+    try {
+      const res = await uploadInvoicePaymentProof(id, file);
+      if (res.success && res.data) {
+        setInvoice(res.data);
+        toast.success(t('details.upload_proof_success'));
+      } else {
+        toast.error(('error' in res && res.error) || t('details.upload_proof_error'));
+      }
+    } catch {
+      toast.error(t('details.upload_proof_error'));
+    } finally {
+      setUploadingProof(false);
+    }
+  };
+
+  const handleDownloadProof = async () => {
+    setDownloadingProof(true);
+    try {
+      const res = await downloadInvoicePaymentProof(id);
+      if (!res.success) {
+        toast.error(res.error || t('details.download_proof_error'));
+        return;
+      }
+      const binary = atob(res.data.base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: res.data.contentType });
+      const url = URL.createObjectURL(blob);
+      const extension = res.data.contentType.split('/')[1] || 'png';
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice-${invoice?.invoiceNumber || id}-payment-proof.${extension}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success(t('details.download_proof_success'));
+    } catch {
+      toast.error(t('details.download_proof_error'));
+    } finally {
+      setDownloadingProof(false);
+    }
+  };
+
+  const handleCopyIban = async () => {
+    if (!invoice?.commissionIban) return;
+    try {
+      await navigator.clipboard.writeText(invoice.commissionIban);
+      toast.success(t('details.iban_copied'));
+    } catch {
+      /* clipboard not available */
     }
   };
 
@@ -282,6 +352,103 @@ export default function InvoicesDetailsView({ id }: Props) {
           >
             {downloading ? t('details.downloading') : t('details.download_pdf')}
           </Button>
+        </Box>
+      </Card>
+
+      {/* Commission IBAN & Payment Proof Card */}
+      <Card
+        sx={{
+          borderRadius: 2,
+          p: 3,
+          boxShadow: '0 1px 3px 0 rgba(0,0,0,0.05)',
+          border: '1px solid #F4F6F8',
+          bgcolor: '#FFFFFF',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            justifyContent: 'space-between',
+            alignItems: { xs: 'stretch', md: 'center' },
+            gap: 2,
+          }}
+        >
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+              {t('details.info.commission_iban')}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 800, color: '#161C24', letterSpacing: 0.5, wordBreak: 'break-all' }}
+              >
+                {invoice.commissionIban || '—'}
+              </Typography>
+              {invoice.commissionIban && (
+                <IconButton
+                  size="small"
+                  onClick={handleCopyIban}
+                  title={t('details.copy_iban')}
+                  sx={{ color: '#10754E', '&:hover': { bgcolor: 'rgba(16,117,78,0.08)' } }}
+                >
+                  <Iconify icon="solar:copy-bold" width={18} />
+                </IconButton>
+              )}
+            </Box>
+          </Box>
+
+          <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+            <input
+              ref={proofInputRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleProofFileChange}
+            />
+            <Button
+              variant="contained"
+              onClick={() => proofInputRef.current?.click()}
+              disabled={uploadingProof}
+              startIcon={uploadingProof ? undefined : <Iconify icon="solar:upload-bold" width={18} />}
+              sx={{
+                bgcolor: '#10754E',
+                color: 'white',
+                fontWeight: 700,
+                borderRadius: '8px',
+                px: 3,
+                py: 1,
+                boxShadow: 'none',
+                gap: 1,
+                '&:hover': { bgcolor: '#0B5337', boxShadow: 'none' },
+              }}
+            >
+              {uploadingProof ? t('details.uploading') : t('details.upload_proof')}
+            </Button>
+
+            {invoice.hasPaymentProof && (
+              <Button
+                variant="outlined"
+                onClick={handleDownloadProof}
+                disabled={downloadingProof}
+                startIcon={
+                  downloadingProof ? undefined : <Iconify icon="solar:download-bold" width={18} />
+                }
+                sx={{
+                  borderColor: '#10754E',
+                  color: '#10754E',
+                  fontWeight: 700,
+                  borderRadius: '8px',
+                  px: 3,
+                  py: 1,
+                  gap: 1,
+                  '&:hover': { borderColor: '#0B5337', bgcolor: 'rgba(16,117,78,0.06)' },
+                }}
+              >
+                {downloadingProof ? t('details.downloading') : t('details.download_proof')}
+              </Button>
+            )}
+          </Box>
         </Box>
       </Card>
 

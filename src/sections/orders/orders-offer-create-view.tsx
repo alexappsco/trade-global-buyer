@@ -63,7 +63,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
     };
     fetchOrder();
   }, [id]);
-
+  console.log("response order", order);
   const isSupplier = role === "supplier";
   const canSubmit =
     order !== null &&
@@ -226,7 +226,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr 1fr", sm: "1fr 1fr 1fr" },
+            gridTemplateColumns: { xs: "1fr 1fr", sm: "1fr 1fr 1fr", md: "repeat(5, 1fr)" },
             gap: 3,
             textAlign: "center",
           }}
@@ -253,6 +253,22 @@ export default function OrdersOfferCreateView({ id }: Props) {
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: "0.95rem" }}>
               {locale === "ar" ? order.categoryNameAr : order.categoryNameEn}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+              {t("submit_offer.city")}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: "0.95rem" }}>
+              {order.city || "-"}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+              {t("submit_offer.company_address")}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: "0.95rem" }}>
+              {order.companyAddress || "-"}
             </Typography>
           </Box>
         </Box>

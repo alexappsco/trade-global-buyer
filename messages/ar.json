@@ -225,6 +225,7 @@
     "title": "الطلبات",
     "reason_order_closed": "هذا الطلب لم يعد متاحاً لتلقي العروض.",
     "reason_pending_delivery": "يجب تأكيد استلام الطلبات المعلقة السابقة أولاً لتتمكن من تقديم عروض جديدة.",
+    "complete_profile_required": "يجب إكمال بيانات ملفك الشخصي أولاً قبل إنشاء طلب جديد.",
     "add_new": "اضافة طلب جديد",
     "search": "بحث",
     "filter_category": "الفئة",
@@ -247,11 +248,12 @@
       "pdf_download_error": "فشل تحميل ملف PDF",
       "actions": "اجراءات",
       "action_view": "عرض",
-      "action_close": "إغلاق",
+      "action_close": "إلغاء",
       "action_submit_quote": "تقديم عرض سعر"
     },
     "status": {
       "open": "مفتوح",
+      "canceled": "ملغي",
       "closed": "مغلق"
     },
     "pagination": {
@@ -374,8 +376,8 @@
       "browse_supplier": "تصفح المورد"
     },
     "dialog": {
-      "confirm_close_order": "انت على وشك اغلاق الطلب",
-      "success_close_order": "تم اغلاق الطلب بنجاح",
+      "confirm_close_order": "انت على وشك إلغاء الطلب",
+      "success_close_order": "تم إلغاء الطلب بنجاح",
       "confirm_delivery": "انت على وشك تأكيد توصيل هذا الطلب",
       "success_confirm_delivery": "تم تأكيد التوصيل بنجاح",
       "confirm_mark_delivered": "انت على وشك تسجيل هذا الطلب كموصّل",
@@ -594,7 +596,10 @@
         "creation_time": "تاريخ الإنشاء",
         "category": "الفئة",
         "date": "التاريخ",
-        "status": "الحالة"
+        "status": "الحالة",
+        "commission_iban": "رقم الآيبان الخاص بالعمولة",
+        "copy_iban": "نسخ الآيبان",
+        "iban_copied": "تم نسخ رقم الآيبان بنجاح"
       },
       "table": {
         "item": "الصنف",
@@ -605,6 +610,13 @@
       "total": "الاجمالي",
       "download_pdf": "تحميل PDF",
       "downloading": "جاري التحميل...",
+      "upload_proof": "رفع إيصال التسديد",
+      "uploading": "جاري الرفع...",
+      "upload_proof_success": "تم رفع إيصال التسديد بنجاح",
+      "upload_proof_error": "فشل رفع إيصال التسديد",
+      "download_proof": "تحميل إيصال التسديد",
+      "download_proof_success": "تم تحميل إيصال التسديد بنجاح",
+      "download_proof_error": "فشل تحميل إيصال التسديد",
       "order_header": "الطلب رقم #{number}",
       "view_order": "تصفح تفاصيل المشترين",
       "offer_section_header": "العرض المقدم من خلالك"
