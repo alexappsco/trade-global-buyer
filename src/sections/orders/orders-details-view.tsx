@@ -33,6 +33,7 @@ import { getOrderQuotationOffers } from 'src/actions/quotations';
 import { useAuth } from 'src/contexts/AuthContext';
 import type { Order } from 'src/types/order';
 import type { QuotationOffer } from 'src/types/quotation';
+import { STATUS_STYLES } from './status-styles';
 
 interface Props {
   id: string;
@@ -367,15 +368,21 @@ export default function ConfirmOrderStatus({ id }: Props) {
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.status')}
             </Typography>
-            <Typography
-              variant="subtitle1"
+            <Box
               sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                borderRadius: '8px',
+                px: 1.5,
+                py: 0.5,
+                fontSize: '0.875rem',
                 fontWeight: 700,
-                color: '#006838',
+                bgcolor: STATUS_STYLES[order.status]?.bgcolor ?? '#F4F6F8',
+                color: STATUS_STYLES[order.status]?.color ?? '#6B7280',
               }}
             >
-              {order.status === 'open' ? t('status.open') : t('status.closed')}
-            </Typography>
+              {order.status}
+            </Box>
           </Box>
           {order.offerCount > 0 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
