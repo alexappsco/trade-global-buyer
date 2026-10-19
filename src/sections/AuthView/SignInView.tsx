@@ -101,8 +101,6 @@ export default function SignInView() {
       banner={{
         title: t("signin_title"),
         subtitle: t("signin_subtitle"),
-        linkText: t("go_register"),
-        linkHref: "/auth/register",
       }}
     >
       <Stack spacing={3}>
@@ -175,6 +173,19 @@ export default function SignInView() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Typography
+            variant="caption"
+            sx={{ display: "block", textAlign: "start", mt: 1.5, color: "#6B7280" }}
+          >
+            {t("go_register")}{" "}
+            <Link
+              href="/auth/register"
+              underline="none"
+              sx={{ color: GREEN, fontWeight: 700 }}
+            >
+              {t("register_cta")}
+            </Link>
+          </Typography>
           <Typography
             variant="caption"
             sx={{ display: "block", textAlign: "start", mt: 1, color: "#6B7280" }}
