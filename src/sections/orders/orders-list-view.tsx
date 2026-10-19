@@ -31,6 +31,7 @@ import { Loader } from "src/components/Loader/Loader";
 import { cellAlignment } from "src/components/SharedTable/types";
 import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
 import type { Order, OrderCatalogItem } from "src/types/order";
+import { STATUS_STYLES } from "./status-styles";
 
 function OrdersRowActions({
   row,
@@ -383,12 +384,11 @@ export default function OrdersListView() {
           py: 0.5,
           fontSize: "0.75rem",
           fontWeight: 700,
-          ...(row.status === "open"
-            ? { bgcolor: "#E2ECE9", color: "#006838" }
-            : { bgcolor: "#FFE9D5", color: "#B71D18" }),
+          bgcolor: STATUS_STYLES[row.status]?.bgcolor ?? "#F4F6F8",
+          color: STATUS_STYLES[row.status]?.color ?? "#6B7280",
         }}
       >
-        {row.status === "open" ? t("status.open") : t("status.canceled")}
+        {row.status}
       </Box>
     ),
     deliveryStatus: (row: Order) => (

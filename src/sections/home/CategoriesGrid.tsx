@@ -28,7 +28,7 @@ export default function CategoriesGrid() {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         <Typography
           variant="h6"
           sx={{
@@ -59,7 +59,7 @@ export default function CategoriesGrid() {
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#1A1A1A', mb: 0.5 }}>
                   {t(`categories.items.${cat.titleKey}`)}
                 </Typography>
-                <Button
+                {/* <Button
                   fullWidth
                   variant="contained"
                   sx={{
@@ -74,7 +74,7 @@ export default function CategoriesGrid() {
                   }}
                 >
                   {t('categories.view_section')}
-                </Button>
+                </Button> */}
               </CardContent>
             </Card>
           </Grid>

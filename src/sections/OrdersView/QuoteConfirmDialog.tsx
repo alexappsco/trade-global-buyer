@@ -2,6 +2,7 @@
 
 import { Box, Button, Dialog, DialogContent, Typography, Stack } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import { useTranslations } from "next-intl";
 
 interface QuoteConfirmDialogProps {
   open: boolean;
@@ -14,6 +15,7 @@ export default function QuoteConfirmDialog({
   onConfirm,
   onCancel,
 }: QuoteConfirmDialogProps) {
+  const t = useTranslations("Orders.dialog");
 
   return (
     <Dialog
@@ -76,31 +78,11 @@ export default function QuoteConfirmDialog({
             lineHeight: 1.5,
           }}
         >
-          أنت على وشك ارسال طلبات العروض
+          {t("quote_confirmation_title")}
         </Typography>
 
         {/* Actions */}
         <Stack direction="row" spacing={2} sx={{ mt: 0.5, width: "100%", flexWrap: "wrap", gap: 1 }}>
-          <Button
-            onClick={onCancel}
-            variant="outlined"
-            fullWidth
-            sx={{
-              borderColor: "#E5E7EB",
-              color: "#374151",
-              borderRadius: "8px",
-              py: 1,
-              fontSize: 15,
-              fontWeight: 600,
-              "&:hover": { 
-                borderColor: "#D1D5DB",
-                bgcolor: "#F9FAFB" 
-              },
-            }}
-          >
-            إلغاء
-          </Button>
-          
           <Button
             onClick={onConfirm}
             variant="contained"
@@ -116,7 +98,27 @@ export default function QuoteConfirmDialog({
               "&:hover": { bgcolor: "#0a6645" },
             }}
           >
-            تأكيد
+            {t("quote_confirmation_confirm")}
+          </Button>
+
+          <Button
+            onClick={onCancel}
+            variant="outlined"
+            fullWidth
+            sx={{
+              borderColor: "#E5E7EB",
+              color: "#374151",
+              borderRadius: "8px",
+              py: 1,
+              fontSize: 15,
+              fontWeight: 600,
+              "&:hover": {
+                borderColor: "#D1D5DB",
+                bgcolor: "#F9FAFB"
+              },
+            }}
+          >
+            {t("quote_confirmation_cancel")}
           </Button>
         </Stack>
       </DialogContent>

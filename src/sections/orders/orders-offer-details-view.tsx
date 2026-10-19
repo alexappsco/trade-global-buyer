@@ -29,6 +29,7 @@ import {
   declineQuotationOffer,
 } from 'src/actions/quotations';
 import type { QuotationOffer } from 'src/types/quotation';
+import { STATUS_STYLES } from './status-styles';
 
 interface Props {
   id: string;
@@ -259,12 +260,21 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
               {t('details.info.status')}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 700, color: offer.orderStatus === 'open' ? '#006838' : '#637381' }}
+            <Box
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                borderRadius: '8px',
+                px: 1.5,
+                py: 0.5,
+                fontSize: '0.875rem',
+                fontWeight: 700,
+                bgcolor: STATUS_STYLES[offer.orderStatus]?.bgcolor ?? '#F4F6F8',
+                color: STATUS_STYLES[offer.orderStatus]?.color ?? '#6B7280',
+              }}
             >
-              {offer.orderStatus === 'open' ? t('status.open') : t('status.closed')}
-            </Typography>
+              {offer.orderStatus}
+            </Box>
           </Box>
           <Box>
             <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>

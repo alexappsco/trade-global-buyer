@@ -24,43 +24,69 @@ export default function TablePaginationCustom({
 }: Props & TablePaginationProps) {
   const t = useTranslations();
   return (
-    <Box sx={{ position: 'relative', ...sx }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: { xs: 'wrap', md: 'nowrap' },
+        gap: 1,
+        px: { xs: 1, sm: 2 },
+        py: 0.5,
+        borderTop: '1px solid rgba(145, 158, 171, 0.12)',
+        ...sx,
+      }}
+    >
+      {onChangeDense && (
+        <FormControlLabel
+          label={t('Global.Sections.Table.dense') || 'Dense'}
+          control={<Switch checked={dense} onChange={onChangeDense} size="small" />}
+          sx={{
+            m: 0,
+            display: 'flex',
+            alignItems: 'center',
+            '& .MuiFormControlLabel-label': {
+              fontSize: { xs: '0.75rem', sm: '0.875rem' },
+            },
+          }}
+        />
+      )}
+
       <TablePagination
         {...other}
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
         sx={{
-          borderTopColor: 'transparent',
-          flexWrap: 'wrap',
+          flex: 1,
+          borderTop: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
           '& .MuiTablePagination-toolbar': {
-            flexWrap: 'wrap',
-            gap: 0.5,
-            minHeight: { xs: 40, sm: 52 },
+            minHeight: { xs: 40, sm: 48 },
+            padding: 0,
+            gap: { xs: 0.5, sm: 1 },
+            flexWrap: 'nowrap',
+            display: 'flex',
+            alignItems: 'center',
+          },
+          '& .MuiTablePagination-spacer': {
+            flex: { xs: 0, sm: 'none' },
+            display: { xs: 'none', sm: 'block' },
           },
           '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
             fontSize: { xs: '0.75rem', sm: '0.875rem' },
+            whiteSpace: 'nowrap',
+            m: 0,
           },
           '& .MuiTablePagination-select': {
             fontSize: { xs: '0.75rem', sm: '0.875rem' },
           },
+          '& .MuiTablePagination-actions': {
+            flexShrink: 0,
+          },
         }}
       />
-
-      {onChangeDense && (
-        <FormControlLabel
-          label="Dense"
-          control={<Switch checked={dense} onChange={onChangeDense} size="small" />}
-          sx={{
-            pl: 2,
-            py: 1.5,
-            top: 0,
-            display: { xs: 'none', lg: 'flex' },
-            position: {
-              lg: 'absolute',
-            },
-          }}
-        />
-      )}
     </Box>
   );
 }

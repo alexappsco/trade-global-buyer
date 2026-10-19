@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import PasswordField from "./PasswordField";
 import { useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
@@ -101,8 +101,6 @@ export default function SignInView() {
       banner={{
         title: t("signin_title"),
         subtitle: t("signin_subtitle"),
-        linkText: t("go_register"),
-        linkHref: "/auth/register",
       }}
     >
       <Stack spacing={3}>
@@ -175,19 +173,34 @@ export default function SignInView() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Typography
-            variant="caption"
-            sx={{ display: "block", textAlign: "start", mt: 1, color: "#6B7280" }}
-          >
-            {t("forgot_prefix")}{" "}
-            <Link
-              href="/auth/forgot-password"
-              underline="none"
-              sx={{ color: GREEN, fontWeight: 700 }}
+          <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", textAlign: "start", color: "#9CA3AF" }}
             >
-              {t("forgot_link")}
-            </Link>
-          </Typography>
+              {t("go_register")}{" "}
+              <Box
+                component="a"
+                href="/auth/register"
+                sx={{ color: "#6B7280", fontWeight: 600, textDecoration: "none", "&:hover": { textDecoration: "underline", color: GREEN } }}
+              >
+                {t("register_cta")}
+              </Box>
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", textAlign: "start", color: "#9CA3AF" }}
+            >
+              {t("forgot_prefix")}{" "}
+              <Box
+                component="a"
+                href="/auth/forgot-password"
+                sx={{ color: "#6B7280", fontWeight: 600, textDecoration: "none", "&:hover": { textDecoration: "underline", color: GREEN } }}
+              >
+                {t("forgot_link")}
+              </Box>
+            </Typography>
+          </Stack>
         </Box>
 
         <Button
