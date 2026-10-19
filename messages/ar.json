@@ -4,7 +4,8 @@
       "Table": {
         "rows_per_page": "صفوف لكل صفحة",
         "of": "من",
-        "more_than": "أكثر من"
+        "more_than": "أكثر من",
+        "dense": "تكثيف"
       }
     },
     "Label": {

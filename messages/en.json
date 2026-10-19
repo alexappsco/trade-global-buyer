@@ -4,7 +4,8 @@
       "Table": {
         "rows_per_page": "Rows per page",
         "of": "of",
-        "more_than": "more than"
+        "more_than": "more than",
+        "dense": "Dense"
       }
     },
     "Label": {
