@@ -40,9 +40,6 @@ function SharedTableRow<T extends { id: string }>({
                 p: dense ? '6px 16px' : '9px 16px',
                 whiteSpace: 'nowrap',
                 borderBottom: 'none',
-                ...(headCell?.hideOnMobile && {
-                  display: { xs: 'none', md: 'table-cell' },
-                }),
               }}
             >
               {customRender && x in customRender ? customRender[x]!(row) : String((row as Record<string, unknown>)[x as string] ?? '')}

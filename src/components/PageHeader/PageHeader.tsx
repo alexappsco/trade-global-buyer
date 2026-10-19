@@ -58,16 +58,16 @@ export default function PageHeader({
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: 1.5,
+        gap: { xs: 1, sm: 1.5 },
         bgcolor: '#FFFFFF',
         backgroundImage: 'linear-gradient(180deg, #FFFFFF 0%, #F4F9F6 100%)',
         border: '1px solid #E4ECE7',
-        borderRadius: '14px',
+        borderRadius: { xs: '12px', sm: '14px' },
         boxShadow: '0 1px 2px rgba(16, 117, 78, 0.05)',
-        paddingInlineStart: '20px',
-        paddingInlineEnd: { xs: 1.5, sm: 2.5 },
-        py: 1.25,
-        minHeight: 68,
+        paddingInlineStart: { xs: '14px', sm: '20px' },
+        paddingInlineEnd: { xs: 1.25, sm: 2.5 },
+        py: { xs: 1, sm: 1.25 },
+        minHeight: { xs: 56, sm: 68 },
       }}
     >
       {/* Accent bar */}
@@ -77,20 +77,29 @@ export default function PageHeader({
           insetInlineStart: 0,
           top: 8,
           bottom: 8,
-          width: 4,
+          width: { xs: 3, sm: 4 },
           borderRadius: '0 4px 4px 0',
           bgcolor: '#10754E',
         }}
       />
 
       {/* Left: breadcrumb + title */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.25, sm: 0.5 }, minWidth: 0 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: { xs: 0.25, sm: 0.5 },
+          minWidth: 0,
+          flex: '1 1 auto',
+        }}
+      >
         {/* Breadcrumb */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            flexWrap: 'wrap',
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
             gap: 0.75,
             minHeight: 18,
           }}
@@ -123,56 +132,62 @@ export default function PageHeader({
             </>
           )}
 
-          {crumbs.map((crumb, index) => (
-            <React.Fragment key={index}>
-              {crumb.href ? (
-                <Box
-                  component={Link}
-                  href={crumb.href}
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    color: '#6B7A74',
-                    fontSize: '0.75rem',
-                    fontWeight: 500,
-                    lineHeight: 1.2,
-                    textDecoration: 'none',
-                    whiteSpace: 'nowrap',
-                    cursor: 'pointer',
-                    transition: 'color 0.15s ease',
-                    '&:hover': { color: '#10754E' },
-                  }}
-                >
-                  {crumb.label}
-                </Box>
-              ) : (
-                <Typography
-                  sx={{
-                    color: '#6B7A74',
-                    fontSize: '0.75rem',
-                    fontWeight: 500,
-                    lineHeight: 1.2,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {crumb.label}
-                </Typography>
-              )}
-              {index < crumbs.length - 1 && separator}
-            </React.Fragment>
-          ))}
+          {crumbs.map((crumb, index) => {
+            const isLast = index === crumbs.length - 1;
+            const isMiddle = !isLast && index > 0;
+            return (
+              <React.Fragment key={index}>
+                {crumb.href ? (
+                  <Box
+                    component={Link}
+                    href={crumb.href}
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      color: '#6B7A74',
+                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                      fontWeight: 500,
+                      lineHeight: 1.2,
+                      textDecoration: 'none',
+                      whiteSpace: 'nowrap',
+                      cursor: 'pointer',
+                      transition: 'color 0.15s ease',
+                      ...(isMiddle && { display: { xs: 'none', sm: 'inline-flex' } }),
+                      '&:hover': { color: '#10754E' },
+                    }}
+                  >
+                    {crumb.label}
+                  </Box>
+                ) : (
+                  <Typography
+                    sx={{
+                      color: '#6B7A74',
+                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                      fontWeight: 500,
+                      lineHeight: 1.2,
+                      whiteSpace: 'nowrap',
+                      ...(isMiddle && { display: { xs: 'none', sm: 'block' } }),
+                    }}
+                  >
+                    {crumb.label}
+                  </Typography>
+                )}
+                {!isMiddle && index < crumbs.length - 1 && separator}
+              </React.Fragment>
+            );
+          })}
         </Box>
 
         {/* Title row */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 }, minWidth: 0 }}>
           {back !== null && (
             <IconButton
               onClick={handleBack}
               aria-label={t('back')}
               size="small"
               sx={{
-                width: 34,
-                height: 34,
+                width: { xs: 28, sm: 34 },
+                height: { xs: 28, sm: 34 },
                 flexShrink: 0,
                 borderRadius: '50%',
                 bgcolor: '#10754E',
@@ -186,8 +201,7 @@ export default function PageHeader({
             >
               <Iconify
                 icon="solar:arrow-left-bold"
-                width={17}
-                sx={{ transform: isRtl ? 'rotate(180deg)' : 'none' }}
+                sx={{ width: { xs: 15, sm: 17 }, height: { xs: 15, sm: 17 }, transform: isRtl ? 'rotate(180deg)' : 'none' }}
               />
             </IconButton>
           )}
@@ -195,12 +209,15 @@ export default function PageHeader({
           <Typography
             sx={{
               color: '#13201A',
-              fontSize: { xs: '1rem', sm: '1.125rem' },
+              fontSize: { xs: '0.95rem', sm: '1.125rem' },
               fontWeight: 700,
               lineHeight: 1.3,
-              whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              wordBreak: 'break-word',
               minWidth: 0,
             }}
           >
@@ -211,7 +228,17 @@ export default function PageHeader({
 
       {/* Actions */}
       {action && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            flexWrap: 'wrap',
+            width: { xs: '100%', sm: 'auto' },
+            justifyContent: { xs: 'stretch', sm: 'flex-end' },
+            '& > *': { flex: { xs: '1 1 100%', sm: '0 0 auto' } },
+          }}
+        >
           {action}
         </Box>
       )}
