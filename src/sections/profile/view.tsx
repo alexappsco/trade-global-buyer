@@ -190,12 +190,12 @@ export default function ProfileView() {
       sx={{
         bgcolor: '#F3F6F5',
         minHeight: '100vh',
-        py: 4,
-        px: { xs: 2, lg: 3 },
+        py: { xs: 2, md: 4 },
+        px: { xs: 1, lg: 3 },
       }}
     >
       <Container maxWidth="xl">
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 2, md: 3 }}>
           {/* Header / Hero Card */}
           <Grid size={12}>
             <Card
@@ -293,8 +293,8 @@ export default function ProfileView() {
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={{ xs: 2, sm: 3 }}
                 sx={{ 
-                  px: { xs: 3, md: 4 }, 
-                  pb: 3, 
+                  px: { xs: 2, md: 4 }, 
+                  pb: { xs: 2, md: 3 }, 
                   mt: { xs: -5, md: -6 },
                   position: 'relative',
                   zIndex: 2,
@@ -391,19 +391,39 @@ export default function ProfileView() {
                 </Box>
 
                 {/* Hero text content */}
-                <Box sx={{ flex: 1, pt: { xs: 0, sm: 6, md: 7 } }}>
-                  <Typography variant="h5" sx={{ fontWeight: '800', color: '#1A1A1A' }}>
+                <Box
+                  sx={{
+                    flex: 1,
+                    pt: { xs: 0, sm: 6, md: 7 },
+                    display: 'flex',
+                    flexDirection: { xs: 'row', sm: 'column' },
+                    flexWrap: 'wrap',
+                    alignItems: { xs: 'center', sm: 'flex-start' },
+                    justifyContent: { xs: 'space-between', sm: 'flex-start' },
+                    gap: { xs: 0.75, sm: 0 },
+                    minWidth: 0,
+                  }}
+                >
+                  <Typography variant="h5" sx={{ fontWeight: '800', color: '#1A1A1A', fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>
                     {profile.name}
                   </Typography>
                   <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={{ xs: 0.5, sm: 2 }}
-                    sx={{ color: '#889892', fontSize: '0.8rem', alignItems: { xs: 'flex-start', sm: 'center' }, mt: 0.5 }}
+                    direction="row"
+                    spacing={{ xs: 1, sm: 2 }}
+                    useFlexGap
+                    sx={{
+                      color: '#889892',
+                      fontSize: '0.8rem',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      justifyContent: 'flex-end',
+                      mt: { xs: 0, sm: 0.5 },
+                    }}
                   >
                     {profile.city && (
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <LocationOnOutlinedIcon sx={{ fontSize: 16 }} />
-                        <Typography variant="caption" sx={{ color: '#889892' }}>
+                        <Typography variant="caption" sx={{ color: '#889892', whiteSpace: 'nowrap' }}>
                           {profile.city}
                         </Typography>
                       </Box>
@@ -411,7 +431,7 @@ export default function ProfileView() {
                     {memberYear && (
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
-                        <Typography variant="caption" sx={{ color: '#889892' }}>
+                        <Typography variant="caption" sx={{ color: '#889892', whiteSpace: 'nowrap' }}>
                           {t('member_since', { year: memberYear })}
                         </Typography>
                       </Box>
@@ -428,7 +448,7 @@ export default function ProfileView() {
               elevation={0}
               sx={{
                 borderRadius: 4,
-                p: { xs: 2.5, md: 4 },
+                p: { xs: 2, md: 4 },
                 bgcolor: '#ffffff',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
               }}
@@ -436,7 +456,7 @@ export default function ProfileView() {
               <Stack
                 direction="row"
                 spacing={1}
-                sx={{ mb: 3, alignItems: 'center' }}
+                sx={{ mb: { xs: 2, md: 3 }, alignItems: 'center' }}
               >
                 <Box
                   sx={{
@@ -454,14 +474,14 @@ export default function ProfileView() {
                 </Typography>
               </Stack>
 
-              <Grid container spacing={2}>
+              <Grid container spacing={{ xs: 1.5, sm: 2 }}>
                 {accountData.map((item) => (
-                  <Grid size={{ xs: 12, sm: 6 }} key={item.label}>
+                  <Grid size={{ xs: 6, sm: 6 }} key={item.label}>
                     <Stack
                       direction="row"
-                      spacing={1.5}
+                      spacing={{ xs: 1, sm: 1.5 }}
                       sx={{
-                        p: 2,
+                        p: { xs: 1.25, sm: 2 },
                         borderRadius: 2.5,
                         bgcolor: '#F7F9F8',
                         border: '1px solid #EDF1F0',
@@ -472,7 +492,7 @@ export default function ProfileView() {
                       <Box
                         sx={{
                           bgcolor: '#EAF3EF',
-                          p: 1,
+                          p: { xs: 0.75, sm: 1 },
                           borderRadius: 2,
                           display: 'flex',
                           color: '#1E8057',
@@ -484,13 +504,13 @@ export default function ProfileView() {
                       <Box sx={{ minWidth: 0 }}>
                         <Typography
                           variant="caption"
-                          sx={{ color: '#A0ABA6', display: 'block', mb: 0.3, fontSize: '0.75rem' }}
+                          sx={{ color: '#A0ABA6', display: 'block', mb: 0.3, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                         >
                           {item.label}
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ fontWeight: '700', color: '#262626', fontSize: '0.9rem', wordBreak: 'break-word' }}
+                          sx={{ fontWeight: '700', color: '#262626', fontSize: { xs: '0.8rem', sm: '0.9rem' }, wordBreak: 'break-word' }}
                         >
                           {item.value}
                         </Typography>
@@ -505,7 +525,7 @@ export default function ProfileView() {
                       direction="row"
                       spacing={1.5}
                       sx={{
-                        p: 2,
+                        p: { xs: 1.5, sm: 2 },
                         borderRadius: 2.5,
                         bgcolor: '#F7F9F8',
                         border: '1px solid #EDF1F0',
@@ -564,7 +584,7 @@ export default function ProfileView() {
                 elevation={0}
                 sx={{
                   borderRadius: 4,
-                  p: 3,
+                  p: { xs: 2, sm: 3 },
                   bgcolor: '#ffffff',
                   boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
                 }}
@@ -572,7 +592,7 @@ export default function ProfileView() {
                 <Stack
                   direction="row"
                   spacing={2}
-                  sx={{ mb: 2.5, alignItems: 'center' }}
+                  sx={{ mb: { xs: 2, sm: 2.5 }, alignItems: 'center' }}
                 >
                   <Avatar
                     src={profile.profileImageUrl}
@@ -604,12 +624,12 @@ export default function ProfileView() {
                 elevation={0}
                 sx={{
                   borderRadius: 4,
-                  p: 3,
+                  p: { xs: 2, sm: 3 },
                   bgcolor: '#ffffff',
                   boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
                 }}
               >
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1A1A1A', mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1A1A1A', mb: { xs: 1.5, sm: 2 } }}>
                   {t('quick_actions')}
                 </Typography>
                 <Button
@@ -620,7 +640,7 @@ export default function ProfileView() {
                     bgcolor: '#1E8057',
                     '&:hover': { bgcolor: '#166343' },
                     borderRadius: 2.5,
-                    py: 1.2,
+                    py: { xs: 1, sm: 1.2 },
                     fontSize: '0.9rem',
                     fontWeight: 'bold',
                     boxShadow: 'none',
