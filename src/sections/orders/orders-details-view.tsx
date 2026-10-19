@@ -265,7 +265,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
         title={t('details.title', { id: order.orderNumber })}
         crumbs={[{ label: tSidebar('my_orders'), href: '/orders' }]}
         action={
-          <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', gap: { xs: 0.75, sm: 1.5 }, flexWrap: 'nowrap' }}>
             <Button
               variant="contained"
               disabled={!canConfirmDelivery}
@@ -330,42 +330,40 @@ export default function ConfirmOrderStatus({ id }: Props) {
       >
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: { xs: 2, md: 4 },
+            display: 'grid',
+            gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(5, 1fr)' },
+            gap: { xs: 2, md: 3 },
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ textAlign: 'center', minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.order_id')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '1rem', md: '1.25rem' } }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '0.95rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
               {order.orderNumber}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ textAlign: 'center', minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.created_at')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '1rem', md: '1.25rem' } }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '0.95rem', md: '1.25rem' } }}>
               {new Date(order.creationTime).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ textAlign: 'center', minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.delivery_date')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '1rem', md: '1.25rem' } }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '0.95rem', md: '1.25rem' } }}>
               {new Date(order.deliveryDate).toLocaleDateString(locale)}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ textAlign: 'center', minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.status')}
             </Typography>
             <Box
@@ -375,7 +373,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
                 borderRadius: '8px',
                 px: 1.5,
                 py: 0.5,
-                fontSize: '0.875rem',
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 fontWeight: 700,
                 bgcolor: STATUS_STYLES[order.status]?.bgcolor ?? '#F4F6F8',
                 color: STATUS_STYLES[order.status]?.color ?? '#6B7280',
@@ -385,14 +383,15 @@ export default function ConfirmOrderStatus({ id }: Props) {
             </Box>
           </Box>
           {order.offerCount > 0 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: { xs: 80, sm: 120 } }}>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ textAlign: 'center', minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.delivery_status')}
             </Typography>
             <Typography
               variant="subtitle1"
               sx={{
                 fontWeight: 700,
+                fontSize: { xs: '0.95rem', sm: '1.125rem' },
                 ...(order.isDelivered
                   ? { color: '#006838' }
                   : { color: '#B76E00' }),

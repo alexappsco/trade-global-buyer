@@ -23,9 +23,6 @@ export default function TableSkeleton({ tableHead, rowCount = 5, enableActions =
               align={col.align || 'left'}
               sx={{
                 py: 2,
-                ...(col.hideOnMobile && {
-                  display: { xs: 'none', md: 'table-cell' },
-                }),
               }}
             >
               <Box

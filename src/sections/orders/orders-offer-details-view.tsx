@@ -219,45 +219,45 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' },
-            gap: 3,
+            gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' },
+            gap: { xs: 2, sm: 3 },
             textAlign: 'center',
           }}
         >
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.order_id')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '0.95rem', sm: '1rem' }, wordBreak: 'break-word' }}>
               #{offer.orderNumber}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.created_at')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: '0.95rem' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '0.95rem', sm: '1rem' } }}>
               {formatDate(offer.orderCreationTime)}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.order_title')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: '0.95rem' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '0.95rem', sm: '1rem' }, wordBreak: 'break-word' }}>
               {offer.orderTitle}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.category')}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: '0.95rem' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#212B36', fontSize: { xs: '0.95rem', sm: '1rem' }, wordBreak: 'break-word' }}>
               {locale === 'ar' ? offer.categoryNameAr : offer.categoryNameEn}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.status')}
             </Typography>
             <Box
@@ -267,7 +267,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                 borderRadius: '8px',
                 px: 1.5,
                 py: 0.5,
-                fontSize: '0.875rem',
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 fontWeight: 700,
                 bgcolor: STATUS_STYLES[offer.orderStatus]?.bgcolor ?? '#F4F6F8',
                 color: STATUS_STYLES[offer.orderStatus]?.color ?? '#6B7280',
@@ -276,8 +276,8 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
               {offer.orderStatus}
             </Box>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#637381', mb: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               {t('details.info.delivery_status')}
             </Typography>
             <Box
@@ -291,7 +291,7 @@ export default function OrdersOfferDetailsView({ id, offerId }: Props) {
                 bgcolor: getDeliveryStatusMeta().bg,
                 color: getDeliveryStatusMeta().color,
                 fontWeight: 700,
-                fontSize: '0.875rem',
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
               }}
             >
               <Iconify icon="solar:delivery-bold" width={16} />
