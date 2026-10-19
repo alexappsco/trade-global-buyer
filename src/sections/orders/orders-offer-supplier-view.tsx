@@ -150,7 +150,7 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
         title={t("submit_offer.view_title")}
         crumbs={[{ label: tSidebar("quotation_requests"), href: "/quotation-requests" }]}
         action={
-          <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", gap: { xs: 0.75, sm: 1.5 }, flexWrap: "nowrap" }}>
             <Button
               variant="contained"
               disabled={!canMarkDelivered}
@@ -160,8 +160,8 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
                 color: "white",
                 borderRadius: "8px",
                 fontWeight: 600,
-                px: 2.5,
-                py: 1,
+                px: { xs: 1, sm: 2.5 },
+                py: { xs: 0.4, sm: 1 },
                 textTransform: "none",
                 gap: 1,
                 boxShadow: "none",
@@ -181,8 +181,8 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
                 color: "#10754E",
                 borderRadius: "8px",
                 fontWeight: 600,
-                px: 2.5,
-                py: 1,
+                px: { xs: 1, sm: 2.5 },
+                py: { xs: 0.4, sm: 1 },
                 textTransform: "none",
                 gap: 1,
                 "&:hover": { borderColor: "#0c5b3c", bgcolor: "rgba(16,117,78,0.04)" },

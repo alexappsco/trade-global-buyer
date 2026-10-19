@@ -209,16 +209,14 @@ export default function PageHeader({
           <Typography
             sx={{
               color: '#13201A',
-              fontSize: { xs: '0.95rem', sm: '1.125rem' },
+              fontSize: { xs: '0.9rem', sm: '1.125rem' },
               fontWeight: 700,
               lineHeight: 1.3,
+              whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              wordBreak: 'break-word',
               minWidth: 0,
+              flex: 1,
             }}
           >
             {title}
@@ -232,11 +230,24 @@ export default function PageHeader({
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
-            flexWrap: 'wrap',
-            width: { xs: '100%', sm: 'auto' },
-            justifyContent: { xs: 'stretch', sm: 'flex-end' },
-            '& > *': { flex: { xs: '1 1 100%', sm: '0 0 auto' } },
+            gap: { xs: 0.75, sm: 1 },
+            flexShrink: 0,
+            // Shrink nested buttons on mobile so several can share the title row
+            // (only applies below sm; larger screens keep the page's own styles)
+            '& .MuiButton-root': {
+              minWidth: 0,
+              minHeight: { xs: 32 },
+              fontSize: { xs: '0.75rem' },
+              px: { xs: 1 },
+              py: { xs: 0.4 },
+              whiteSpace: 'nowrap',
+              lineHeight: 1.2,
+            },
+            '& .MuiButton-startIcon': {
+              mr: { xs: 0.4 },
+              ml: 0,
+              '& > svg': { width: { xs: 14 }, height: { xs: 14 } },
+            },
           }}
         >
           {action}

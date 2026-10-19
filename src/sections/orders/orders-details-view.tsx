@@ -265,7 +265,7 @@ export default function ConfirmOrderStatus({ id }: Props) {
         title={t('details.title', { id: order.orderNumber })}
         crumbs={[{ label: tSidebar('my_orders'), href: '/orders' }]}
         action={
-          <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', gap: { xs: 0.75, sm: 1.5 }, flexWrap: 'nowrap' }}>
             <Button
               variant="contained"
               disabled={!canConfirmDelivery}
