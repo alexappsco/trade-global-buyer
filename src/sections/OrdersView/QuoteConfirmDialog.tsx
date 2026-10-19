@@ -81,6 +81,25 @@ export default function QuoteConfirmDialog({
 
         {/* Actions */}
         <Stack direction="row" spacing={2} sx={{ mt: 0.5, width: "100%", flexWrap: "wrap", gap: 1 }}>
+          
+          <Button
+            onClick={onConfirm}
+            variant="contained"
+            disableElevation
+            fullWidth
+            sx={{
+              bgcolor: "#0F8259",
+              color: "#fff",
+              borderRadius: "8px",
+              py: 1,
+              fontSize: 15,
+              fontWeight: 600,
+              "&:hover": { bgcolor: "#0a6645" },
+            }}
+          >
+            تأكيد
+          </Button>
+          
           <Button
             onClick={onCancel}
             variant="outlined"
@@ -101,23 +120,6 @@ export default function QuoteConfirmDialog({
             إلغاء
           </Button>
           
-          <Button
-            onClick={onConfirm}
-            variant="contained"
-            disableElevation
-            fullWidth
-            sx={{
-              bgcolor: "#0F8259",
-              color: "#fff",
-              borderRadius: "8px",
-              py: 1,
-              fontSize: 15,
-              fontWeight: 600,
-              "&:hover": { bgcolor: "#0a6645" },
-            }}
-          >
-            تأكيد
-          </Button>
         </Stack>
       </DialogContent>
     </Dialog>
