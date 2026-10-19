@@ -14,11 +14,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'src/i18n/routing';
 import { paths } from '@/routes/paths';
 import { useToast } from "src/components/toast";
-
-const statusColors: Record<string, { bg: string; color: string }> = {
-  open: { bg: '#EBF7F2', color: '#1B8354' },
-  closed: { bg: '#FCEAEA', color: '#D94141' },
-};
+import { STATUS_STYLES } from 'src/sections/orders/status-styles';
 
 const RECENT_ORDERS_LIMIT = 5;
 
@@ -91,14 +87,14 @@ export default function RecentOrdersTable() {
     deliveryDate: (row: Order) => new Date(row.deliveryDate).toLocaleDateString(locale),
     creationTime: (row: Order) => new Date(row.creationTime).toLocaleDateString(locale),
     status: (row: Order) => {
-      const styles = statusColors[row.status] ?? statusColors.open;
+      const styles = STATUS_STYLES[row.status] ?? { bgcolor: '#F4F6F8', color: '#6B7280' };
       return (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Chip
-            label={row.status === 'open' ? tOrders('status.open') : tOrders('status.canceled')}
+            label={row.status}
             size="small"
             sx={{
-              bgcolor: styles.bg,
+              bgcolor: styles.bgcolor,
               color: styles.color,
               fontWeight: 'bold',
               borderRadius: 1.5,
