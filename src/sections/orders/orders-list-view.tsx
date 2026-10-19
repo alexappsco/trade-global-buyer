@@ -32,6 +32,18 @@ import { cellAlignment } from "src/components/SharedTable/types";
 import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
 import type { Order, OrderCatalogItem } from "src/types/order";
 
+const STATUS_STYLES: Record<string, { bgcolor: string; color: string }> = {
+  Oopened: { bgcolor: "#E2ECE9", color: "#006838" },
+  "مفتوح": { bgcolor: "#E2ECE9", color: "#006838" },
+  open: { bgcolor: "#E2ECE9", color: "#006838" },
+  "in-progress": { bgcolor: "#FFF4E5", color: "#B76E00" },
+  "قيد التنفيذ": { bgcolor: "#FFF4E5", color: "#B76E00" },
+  completed: { bgcolor: "#E7F0FF", color: "#1D6FF2" },
+  "مكتمل": { bgcolor: "#E7F0FF", color: "#1D6FF2" },
+  closed: { bgcolor: "#FFE9D5", color: "#B71D18" },
+  "مغلق": { bgcolor: "#FFE9D5", color: "#B71D18" },
+};
+
 function OrdersRowActions({
   row,
   role,
@@ -383,12 +395,11 @@ export default function OrdersListView() {
           py: 0.5,
           fontSize: "0.75rem",
           fontWeight: 700,
-          ...(row.status === "open"
-            ? { bgcolor: "#E2ECE9", color: "#006838" }
-            : { bgcolor: "#FFE9D5", color: "#B71D18" }),
+          bgcolor: STATUS_STYLES[row.status]?.bgcolor ?? "#F4F6F8",
+          color: STATUS_STYLES[row.status]?.color ?? "#6B7280",
         }}
       >
-        {row.status === "open" ? t("status.open") : t("status.canceled")}
+        {row.status}
       </Box>
     ),
     deliveryStatus: (row: Order) => (
