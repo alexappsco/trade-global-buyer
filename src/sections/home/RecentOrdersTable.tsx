@@ -166,7 +166,7 @@ export default function RecentOrdersTable() {
           loading={isLoading}
           data={orders}
           tableHead={tableHead}
-          actions={actions}
+          actions={role !== 'supplier' ? actions : undefined}
           customRender={customRender}
           count={orders.length}
         />
