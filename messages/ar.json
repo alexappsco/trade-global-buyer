@@ -387,7 +387,10 @@
       "confirm_reject_offer": "انت على وشك رفض هذا العرض",
       "confirm": "تأكيد",
       "cancel": "الغاء",
-      "go_to_orders": "الذهاب الى الطلبات"
+      "go_to_orders": "الذهاب الى الطلبات",
+      "quote_confirmation_title": "أنت على وشك إرسال طلبات العروض",
+      "quote_confirmation_confirm": "تأكيد",
+      "quote_confirmation_cancel": "إلغاء"
     }
   },
   "Profile": {

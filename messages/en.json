@@ -387,7 +387,10 @@
       "confirm_reject_offer": "You are about to reject this offer",
       "confirm": "Confirm",
       "cancel": "Cancel",
-      "go_to_orders": "Go to Orders"
+      "go_to_orders": "Go to Orders",
+      "quote_confirmation_title": "You are about to send quote requests",
+      "quote_confirmation_confirm": "Confirm",
+      "quote_confirmation_cancel": "Cancel"
     }
   },
   "Profile": {
