@@ -90,7 +90,8 @@ export default function PageHeader({
           flexDirection: 'column',
           gap: { xs: 0.25, sm: 0.5 },
           minWidth: 0,
-          flex: '1 1 auto',
+          // basis 0 on mobile prevents flex-wrap from pushing actions to a second row
+          flex: { xs: '1 1 0', sm: '1 1 auto' },
         }}
       >
         {/* Breadcrumb */}

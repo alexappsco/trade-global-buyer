@@ -207,59 +207,59 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(3, 1fr)" },
-            gap: 3,
+            gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(4, 1fr)" },
+            gap: { xs: 2, sm: 3 },
             textAlign: "center",
           }}
         >
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
               {t("details.info.order_id")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: { xs: "0.95rem", sm: "1rem" }, wordBreak: "break-word" }}>
               #{offer.orderNumber}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
               {t("details.info.order_title")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: "0.95rem" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: { xs: "0.95rem", sm: "1rem" }, wordBreak: "break-word" }}>
               {offer.orderTitle}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
               {t("details.info.category")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: "0.95rem" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: { xs: "0.95rem", sm: "1rem" }, wordBreak: "break-word" }}>
               {locale === "ar" ? offer.categoryNameAr : offer.categoryNameEn}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
               {t("details.info.delivery_date")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: "0.95rem" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: { xs: "0.95rem", sm: "1rem" } }}>
               {formatDate(offer.deliveryDate)}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
               {t("submit_offer.offer_date")}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: "0.95rem" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#212B36", fontSize: { xs: "0.95rem", sm: "1rem" } }}>
               {formatDate(offer.submissionTime)}
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
               {t("submit_offer.offer_status")}
             </Typography>
             <StatusBadge status={offer.status} locale={locale} />
           </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
+          <Box sx={{ minWidth: 0, gridColumn: { xs: "span 2", sm: "auto" } }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
               {t("details.info.delivery_status")}
             </Typography>
             <Box
@@ -321,11 +321,11 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
             alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: 1.5,
-            mb: 2,
+            gap: { xs: 1, sm: 1.5 },
+            mb: { xs: 1.5, sm: 2 },
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#161C24" }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: "#161C24", fontSize: { xs: "1rem", sm: "1.25rem" } }}>
             {t("submit_offer.buyer_details")}
           </Typography>
           {canBrowseBuyer && (
@@ -340,10 +340,12 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
                 color: "white",
                 borderRadius: "8px",
                 fontWeight: 600,
-                px: 2,
-                py: 0.75,
+                minHeight: { xs: 32 },
+                fontSize: { xs: "0.75rem" },
+                px: { xs: 1.25, sm: 2 },
+                py: { xs: 0.4, sm: 0.75 },
                 textTransform: "none",
-                gap: 1,
+                gap: 0.75,
                 boxShadow: "none",
                 "&:hover": { bgcolor: "#0c5b3c", boxShadow: "none" },
               }}
@@ -357,33 +359,38 @@ export default function OrdersOfferSupplierView({ id, offerId }: Props) {
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
-            gap: 2,
+            gap: { xs: 1, sm: 2 },
           }}
         >
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
-              {t("submit_offer.company")}
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 600, color: "#212B36" }}>
-              {offer.counterparty?.legalCompanyName || "—"}
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
-              {t("submit_offer.city")}
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 600, color: "#212B36" }}>
-              {offer.counterparty?.city || "—"}
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "#637381", mb: 1 }}>
-              {t("submit_offer.company_address")}
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 600, color: "#212B36" }}>
-              {offer.counterparty?.companyAddress || "—"}
-            </Typography>
-          </Box>
+          {[
+            { label: t("submit_offer.company"), value: offer.counterparty?.legalCompanyName },
+            { label: t("submit_offer.city"), value: offer.counterparty?.city },
+            { label: t("submit_offer.company_address"), value: offer.counterparty?.companyAddress },
+          ].map((field) => (
+            <Box
+              key={field.label}
+              sx={{
+                minWidth: 0,
+                bgcolor: { xs: "#F7F9F8", sm: "transparent" },
+                border: { xs: "1px solid #EDF2EF", sm: "none" },
+                borderRadius: { xs: 2, sm: 0 },
+                p: { xs: 1.25, sm: 0 },
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 700, color: "#637381", mb: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+              >
+                {field.label}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: 600, color: "#212B36", fontSize: { xs: "0.9rem", sm: "1rem" }, wordBreak: "break-word" }}
+              >
+                {field.value || "—"}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       </Card>
 
