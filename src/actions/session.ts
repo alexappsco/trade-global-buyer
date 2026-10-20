@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { createHash } from "node:crypto";
 import type { SessionMeta, UserSession } from "src/types/auth";
 import {
   logoutAction,
@@ -128,9 +129,28 @@ export async function updateAuthSessionMeta(patch: SessionMetaPatch): Promise<vo
   store.set(SESSION_META_COOKIE, JSON.stringify(next), buildCookieOptions(meta.refreshTokenExpireAt));
 }
 
-let inFlightRefresh: Promise<UserSession | null> | null = null;
+type RefreshResponse = Awaited<ReturnType<typeof refreshTokenAction>>;
+const refreshRequests = new Map<string, Promise<RefreshResponse>>();
 
-async function performRefresh(force: boolean): Promise<UserSession | null> {
+function refreshSessionToken(token: string): Promise<RefreshResponse> {
+  const key = createHash("sha256").update(token).digest("hex");
+  const existing = refreshRequests.get(key);
+  if (existing) return existing;
+
+  const request = refreshTokenAction(token);
+  refreshRequests.set(key, request);
+  const remove = () => {
+    if (refreshRequests.get(key) === request) refreshRequests.delete(key);
+  };
+  void request.then((result) => {
+    // Briefly retain a successful rotation for requests carrying the old cookie.
+    if (result.success && result.data) setTimeout(remove, 5000).unref();
+    else remove();
+  }, remove);
+  return request;
+}
+
+export async function refreshAuthSession(force = false): Promise<UserSession | null> {
   const session = await getAuthSession();
   if (!session) return null;
 
@@ -144,7 +164,9 @@ async function performRefresh(force: boolean): Promise<UserSession | null> {
   }
 
   try {
-    const nextRes = await refreshTokenAction(session.refreshToken);
+    // Each caller must write cookies in its own request context, even when
+    // the backend rotation was shared with another request from this session.
+    const nextRes = await refreshSessionToken(session.refreshToken);
     if (!nextRes.success || !nextRes.data) {
       const status = nextRes.status;
       // Only a definitive auth rejection invalidates the session. Transient
@@ -160,21 +182,6 @@ async function performRefresh(force: boolean): Promise<UserSession | null> {
     // Network/exception — keep the session for a later retry.
     return null;
   }
-}
-
-/**
- * Refresh the access token when needed (or forcefully after a 401).
- * Concurrent calls within the same process share a single request to avoid
- * invalidating each other when the backend rotates refresh tokens.
- */
-export async function refreshAuthSession(force = false): Promise<UserSession | null> {
-  if (inFlightRefresh) return inFlightRefresh;
-
-  inFlightRefresh = performRefresh(force).finally(() => {
-    inFlightRefresh = null;
-  });
-
-  return inFlightRefresh;
 }
 
 /**
