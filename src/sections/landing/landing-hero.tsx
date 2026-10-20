@@ -12,7 +12,17 @@ export default function LandingHero() {
   const t = useTranslations('Landing');
 
   return (
-    <Box id="hero" sx={{ bgcolor: '#1A1B22', color: '#fff' }}>
+    <Box
+      id="hero"
+      sx={{
+        color: '#fff',
+        backgroundImage:
+          'linear-gradient(rgba(26, 27, 34, 0.75), rgba(26, 27, 34, 0.55)), url(/costFRQ-Riyadh.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       {/* Custom styles to keep the graphic cards fixed regardless of text direction */}
       <style>{`
         #hero-card-1 { right: 4% !important; left: auto !important; }

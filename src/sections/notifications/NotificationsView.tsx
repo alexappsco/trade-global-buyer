@@ -19,7 +19,7 @@ import { useTranslations, useLocale } from "next-intl";
 import EmptyContent from "src/components/empty-content";
 import { useToast } from "src/components/toast";
 import Iconify from "src/components/iconify";
-import type { AppNotification, NotificationType } from "src/types/notification";
+import type { AppNotification } from "src/types/notification";
 import {
   getNotifications,
   getNotificationUnreadCount,
@@ -27,42 +27,13 @@ import {
   markAllNotificationsRead,
   dismissNotification,
 } from "src/actions/notifications";
+import { useNotifications } from "src/contexts/NotificationsContext";
+import {
+  getNotificationTypeConfig as getTypeConfig,
+  notificationTimeAgo as timeAgo,
+} from "src/utils/notification-config";
 
 const PAGE_SIZE = 10;
-
-// ─── Icon / color map per notification type ───────────────────────────────────
-const TYPE_CONFIG: Record<
-  NotificationType | "default",
-  { icon: string; bg: string; color: string }
-> = {
-  quotation_offer_received:     { icon: "solar:inbox-archive-bold-duotone",    bg: "#E3F2FD", color: "#1565C0" },
-  quotation_offer_accepted:     { icon: "solar:check-circle-bold-duotone",     bg: "#E8F5E9", color: "#2E7D32" },
-  quotation_offer_declined:     { icon: "solar:close-circle-bold-duotone",     bg: "#FFEBEE", color: "#C62828" },
-  quotation_offer_auto_declined:{ icon: "solar:clock-circle-bold-duotone",     bg: "#FFF3E0", color: "#E65100" },
-  quotation_offer_closed:       { icon: "solar:lock-bold-duotone",             bg: "#F3E5F5", color: "#6A1B9A" },
-  support_status_changed:       { icon: "solar:headphones-round-sound-bold-duotone", bg: "#E8EAF6", color: "#3949AB" },
-  support_reply_added:          { icon: "solar:chat-round-dots-bold-duotone",  bg: "#E0F7FA", color: "#00695C" },
-  default:                      { icon: "solar:bell-bold-duotone",             bg: "#F5F5F5", color: "#616161" },
-};
-
-function getTypeConfig(type: string) {
-  return TYPE_CONFIG[type as NotificationType] ?? TYPE_CONFIG.default;
-}
-
-function timeAgo(iso: string, locale: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return locale === "ar" ? "الآن" : "Just now";
-  if (mins < 60)
-    return locale === "ar" ? `منذ ${mins} د` : `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24)
-    return locale === "ar" ? `منذ ${hrs} س` : `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  if (days < 7)
-    return locale === "ar" ? `منذ ${days} أيام` : `${days}d ago`;
-  return new Intl.DateTimeFormat(locale, { month: "short", day: "numeric" }).format(new Date(iso));
-}
 
 // ─── Single notification card ─────────────────────────────────────────────────
 function NotificationCard({
@@ -208,11 +179,7 @@ export default function NotificationsView() {
   const [page, setPage] = useState(1);
   const [tab, setTab] = useState<"all" | "unread">("all");
 
-  const dispatchUnread = (count: number) => {
-    window.dispatchEvent(
-      new CustomEvent("notification-unread-changed", { detail: { count } })
-    );
-  };
+  const { refresh, refreshTick } = useNotifications();
 
   useEffect(() => {
     let cancelled = false;
@@ -237,20 +204,15 @@ export default function NotificationsView() {
     };
     run();
     return () => { cancelled = true; };
-  }, [page]);
+  }, [page, refreshTick]);
 
   const handleDismiss = async (id: string) => {
-    const target = allNotifications.find((n) => n.id === id);
     const res = await dismissNotification(id);
     if (!res.success) { toast.error(res.error); return; }
     setAllNotifications((prev) => prev.filter((item) => item.id !== id));
     setTotalCount((c) => c - 1);
-    if (target && !target.isRead) {
-      const next = Math.max(0, unreadCount - 1);
-      setUnreadCount(next);
-      dispatchUnread(next);
-    }
     toast.success(t("dismissed"));
+    void refresh();
   };
 
   const handleMarkRead = async (notification: AppNotification) => {
@@ -260,9 +222,7 @@ export default function NotificationsView() {
     setAllNotifications((prev) =>
       prev.map((item) => (item.id === notification.id ? { ...item, isRead: true } : item))
     );
-    const next = Math.max(0, unreadCount - 1);
-    setUnreadCount(next);
-    dispatchUnread(next);
+    void refresh();
   };
 
   const handleMarkAllRead = async () => {
@@ -272,8 +232,7 @@ export default function NotificationsView() {
     setIsMarkingAll(false);
     if (!res.success) { toast.error(res.error); return; }
     setAllNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
-    setUnreadCount(0);
-    dispatchUnread(0);
+    void refresh();
   };
 
   const displayed = tab === "unread"

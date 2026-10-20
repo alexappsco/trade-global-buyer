@@ -475,7 +475,10 @@
     "empty": "No notifications",
     "mark_all_read": "Mark all as read",
     "marking": "Marking...",
-    "unread_count": "{count} unread"
+    "unread_count": "{count} unread",
+    "view_all": "View all notifications",
+    "live": "Live",
+    "connecting": "Connecting..."
   },
   "Auth": {
     "signin_title": "Sign In",

@@ -371,15 +371,10 @@ export default function CreateQuoteRequestView() {
   useEffect(() => {
     const fetchCatalog = async () => {
       try {
-        console.log("[Catalog] Calling getOrdersCatalog server action...");
+        
         const res = await getOrdersCatalog();
-        console.log("[Catalog] Full response:", JSON.stringify(res, null, 2));
-        console.log("[Catalog] success:", res.success);
-        console.log("[Catalog] data:", res.data);
-        console.log("[Catalog] status:", (res as any).status);
         if (res.success && res.data) {
           const catalogData = Array.isArray(res.data) ? res.data : (res.data as any).data || [];
-          console.log("[Catalog] Setting catalog items:", catalogData.length, "items");
           setCatalog(catalogData);
         } else {
           const errorMsg = 'error' in res ? (res as any).error : (res as any).message || "Failed to load catalog";

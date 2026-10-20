@@ -274,21 +274,6 @@ export default function OrdersOfferCreateView({ id }: Props) {
         </Box>
       </Card>
 
-      {!canSubmit ? (
-        <Box
-          sx={{
-            bgcolor: "#FFF9E6",
-            border: "1px solid #FFE699",
-            borderRadius: 2,
-            p: { xs: 2, md: 3 },
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="body1" sx={{ fontWeight: 700, color: "#7A4100" }}>
-            {t("submit_offer.not_open")}
-          </Typography>
-        </Box>
-      ) : (
         <>
           {/* Items Table */}
           <Card
@@ -482,7 +467,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
             </Button>
           </Box>
         </>
-      )}
+
 
       {/* Confirm Dialog */}
       <ConfirmationDialog

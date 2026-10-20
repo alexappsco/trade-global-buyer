@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:proxy": "node --test scripts/test-proxy.mjs",
+    "setup:local-https": "node scripts/export-local-api-cert.mjs"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -14,6 +16,7 @@
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.4.0",
     "@iconify/react": "^6.0.2",
+    "@microsoft/signalr": "^10.0.11",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "@mui/system": "^9.0.1",

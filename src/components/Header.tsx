@@ -8,6 +8,7 @@ import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import Iconify from "src/components/iconify";
+import HeaderNotifications from "src/components/HeaderNotifications";
 import { useAuth } from "src/contexts/AuthContext";
 import { localesSettings, LocaleType, allLocales } from "src/i18n/config-locale";
 import {
@@ -159,6 +160,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
             </Typography>
             <ExpandMoreRoundedIcon sx={{ fontSize: 15, color: "#9DA4AE" }} />
           </Box>
+
+          <HeaderNotifications />
 
           <Divider
             orientation="vertical"

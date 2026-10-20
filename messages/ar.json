@@ -475,7 +475,10 @@
     "empty": "لا توجد إشعارات",
     "mark_all_read": "تحديد الكل كمقروء",
     "marking": "جاري التحديد...",
-    "unread_count": "غير مقروء: {count}"
+    "unread_count": "غير مقروء: {count}",
+    "view_all": "عرض كل الإشعارات",
+    "live": "مباشر",
+    "connecting": "جاري الاتصال..."
   },
   "Auth": {
     "signin_title": "تسجيل دخول",
