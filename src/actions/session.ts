@@ -192,6 +192,30 @@ export async function ensureAuthSessionFresh(): Promise<boolean> {
   return Boolean(await getAuthSession());
 }
 
+/**
+ * Returns a valid access token for the SignalR realtime hub.
+ *
+ * Tokens normally live only in httpOnly cookies, but the browser SignalR
+ * client must send the token itself (`accessTokenFactory`), so this server
+ * action hands the current (auto-refreshed) token to the client for the sole
+ * purpose of opening the realtime connection.
+ */
+export async function getRealtimeAccessToken(): Promise<
+  { success: true; token: string } | { success: false; error: string }
+> {
+  let session = await getAuthSession();
+  if (!session) return { success: false, error: "unauthenticated" };
+
+  if (!session.accessToken || isTokenExpired(session.accessTokenExpireAt)) {
+    session = await refreshAuthSession(false);
+    if (!session || !session.accessToken) {
+      return { success: false, error: "token_refresh_failed" };
+    }
+  }
+
+  return { success: true, token: session.accessToken };
+}
+
 // ----------------------------------------------------------------------
 
 export type LoginOtpResult = {

@@ -12,6 +12,7 @@ import { notFound } from "next/navigation";
 import { routing } from "src/i18n/routing";
 import { plexArabic } from "src/theme/typography";
 import { AuthProvider } from "src/contexts/AuthContext";
+import { NotificationsProvider } from "src/contexts/NotificationsContext";
 import { getPublicSession } from "src/actions/session";
 import AppLocalizationProvider from "src/components/AppLocalizationProvider";
 
@@ -70,7 +71,9 @@ export default async function LocaleLayout({
               <NextIntlClientProvider messages={messages}>
                 <AppLocalizationProvider>
                   <AuthProvider initialSession={initialSession}>
-                    <DashboardLayout>{children}</DashboardLayout>
+                    <NotificationsProvider>
+                      <DashboardLayout>{children}</DashboardLayout>
+                    </NotificationsProvider>
                   </AuthProvider>
                 </AppLocalizationProvider>
               </NextIntlClientProvider>
