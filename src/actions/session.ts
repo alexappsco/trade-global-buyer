@@ -207,14 +207,14 @@ export async function ensureAuthSessionFresh(): Promise<boolean> {
  * action hands the current (auto-refreshed) token to the client for the sole
  * purpose of opening the realtime connection.
  */
-export async function getRealtimeAccessToken(): Promise<
+export async function getRealtimeAccessToken(force = false): Promise<
   { success: true; token: string } | { success: false; error: string }
 > {
   let session = await getAuthSession();
   if (!session) return { success: false, error: "unauthenticated" };
 
-  if (!session.accessToken || isTokenExpired(session.accessTokenExpireAt)) {
-    session = await refreshAuthSession(false);
+  if (force || !session.accessToken || isTokenExpired(session.accessTokenExpireAt)) {
+    session = await refreshAuthSession(force);
     if (!session || !session.accessToken) {
       return { success: false, error: "token_refresh_failed" };
     }

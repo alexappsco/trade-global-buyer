@@ -17,7 +17,7 @@ import {
   HubConnectionState,
   LogLevel,
 } from "@microsoft/signalr";
-import { REALTIME_HUB_PATH, getRealtimeApiOrigin } from "src/config-global";
+import { getRealtimeApiOrigin } from "src/config-global";
 import { useAuth } from "src/contexts/AuthContext";
 import {
   getNotifications,
@@ -32,11 +32,12 @@ import type { AppNotification } from "src/types/notification";
 export const UNREAD_CHANGED_EVENT = "notification-unread-changed";
 
 const PREVIEW_COUNT = 8;
-const MAX_RETRY_DELAY_MS = 30_000;
+const INITIAL_RETRY_DELAY_MS = 2000;
+const MAX_RETRY_DELAY_MS = 30000;
 
-type ConnectionState = "idle" | "connecting" | "connected" | "reconnecting";
+export type ConnectionState = "idle" | "connecting" | "connected" | "reconnecting";
 
-interface NotificationsContextType {
+export interface NotificationsContextType {
   unreadCount: number;
   recentNotifications: AppNotification[];
   totalCount: number;
@@ -50,14 +51,13 @@ interface NotificationsContextType {
   dismiss: (id: string) => Promise<boolean>;
 }
 
-const NotificationsContext = createContext<NotificationsContextType | undefined>(
-  undefined
-);
+const NotificationsContext = createContext<NotificationsContextType | undefined>(undefined);
 
 export function NotificationsProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated, session } = useAuth();
-  // Remount on logout/account change so cached data and pending requests cannot
-  // be reused by the next account in this browser tab.
+
+  // Remount when session changes so cached notifications and active connections
+  // belong strictly to the authenticated user.
   return (
     <SessionNotificationsProvider key={isAuthenticated ? session?.id : "signed-out"}>
       {children}
@@ -66,7 +66,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
 }
 
 function SessionNotificationsProvider({ children }: { children: ReactNode }) {
-  const { isAuthenticated, session, syncSession } = useAuth();
+  const { isAuthenticated, syncSession } = useAuth();
 
   const [unreadCount, setUnreadCount] = useState(0);
   const [recentNotifications, setRecentNotifications] = useState<AppNotification[]>([]);
@@ -79,8 +79,12 @@ function SessionNotificationsProvider({ children }: { children: ReactNode }) {
   const pendingRef = useRef(false);
   const refreshRef = useRef<() => Promise<void>>(async () => {});
   const activeRef = useRef(false);
+  const connectionRef = useRef<HubConnection | null>(null);
 
-  /** Coalesced refresh: concurrent calls collapse; events during a fetch queue one follow-up. */
+  /**
+   * Coalesced refresh: concurrent calls collapse into one;
+   * events arriving during an in-flight fetch schedule one follow-up.
+   */
   const refresh = useCallback(async () => {
     if (!isAuthenticated || !activeRef.current) return;
     if (fetchingRef.current) {
@@ -89,11 +93,13 @@ function SessionNotificationsProvider({ children }: { children: ReactNode }) {
     }
     fetchingRef.current = true;
     setIsLoading(true);
+
     try {
       const [listRes, countRes] = await Promise.all([
         getNotifications({ skipCount: 0, maxResultCount: PREVIEW_COUNT }),
         getNotificationUnreadCount(),
       ]);
+
       if (!activeRef.current) return;
 
       if (listRes.success && listRes.data) {
@@ -105,16 +111,16 @@ function SessionNotificationsProvider({ children }: { children: ReactNode }) {
       }
 
       if (listRes.success) setRefreshTick((tick) => tick + 1);
-      if (countRes.success && countRes.data) window.dispatchEvent(
-        new CustomEvent(UNREAD_CHANGED_EVENT, {
-          detail: {
-            count: countRes.data.unreadCount,
-          },
-        })
-      );
+
+      if (countRes.success && countRes.data) {
+        window.dispatchEvent(
+          new CustomEvent(UNREAD_CHANGED_EVENT, {
+            detail: { count: countRes.data.unreadCount },
+          })
+        );
+      }
     } catch {
-      // A failed server action must not break the connection event handler.
-      // Keep the last successful data and recover on the next refresh.
+      // Keep existing cached data if a network request fails.
     } finally {
       if (activeRef.current) setIsLoading(false);
       fetchingRef.current = false;
@@ -133,63 +139,53 @@ function SessionNotificationsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     activeRef.current = true;
-    // REST remains available even if no realtime transport can connect.
-    const timer = setTimeout(() => { void refresh(); }, 0);
+    const timer = setTimeout(() => {
+      void refresh();
+    }, 0);
     return () => {
       activeRef.current = false;
       clearTimeout(timer);
     };
   }, [refresh]);
 
-  // ── SignalR connection lifecycle ────────────────────────────────────────
-  //
-  // Transport strategy:
-  // 1. WebSockets DIRECTLY against the API (`wss://…/hubs/notifications`,
-  //    skipNegotiation) — WebSockets are not subject to CORS, so no proxy
-  //    and no CORS headers are needed.
-  // 2. If WebSockets cannot start (e.g. a proxy blocks the upgrade), fall
-  //    back to long polling through the same-origin Next.js proxy
-  //    (src/proxy.ts). Long polling is plain request/response HTTP, so it
-  //    passes through proxies reliably (SSE does not — streams get buffered
-  //    or cut, which kills the SignalR handshake).
+  // ── SignalR Realtime Connection ─────────────────────────────────────────
   useEffect(() => {
-    if (!isAuthenticated || !session?.id) return;
+    if (!isAuthenticated) return;
 
     let disposed = false;
     let retryTimer: ReturnType<typeof setTimeout> | undefined;
-    let mode: "websocket" | "longpolling" = "websocket";
     let failureCount = 0;
-    let connection: HubConnection | null = null;
 
     const fetchAccessToken = async (): Promise<string> => {
       if (disposed) throw new Error("Connection disposed");
       const res = await getRealtimeAccessToken();
       if (disposed) throw new Error("Connection disposed");
-      if (res.success) return res.token;
-      // Definitive refresh rejection clears the cookies. Reflect that in the
-      // auth provider, which unmounts this connection and stops retrying.
+
+      if (res.success) {
+        return res.token;
+      }
+
+      // If token refresh failed definitively, sync session to handle logout/redirect.
       await syncSession();
       throw new Error(res.error);
     };
 
-    const buildConnection = (useWebSocket: boolean): HubConnection => {
-      const url = useWebSocket
-        ? `${getRealtimeApiOrigin()}/hubs/notifications`
-        : REALTIME_HUB_PATH;
-      const options = useWebSocket
-        ? {
-            transport: HttpTransportType.WebSockets,
-            skipNegotiation: true,
-            accessTokenFactory: fetchAccessToken,
-          }
-        : {
-            transport: HttpTransportType.LongPolling,
-            accessTokenFactory: fetchAccessToken,
-          };
+    const buildConnection = (): HubConnection => {
+      const hubUrl = `${getRealtimeApiOrigin()}/hubs/notifications`;
+
       return new HubConnectionBuilder()
-        .withUrl(url, options)
-        .withAutomaticReconnect()
-        .configureLogging(LogLevel.Warning)
+        .withUrl(hubUrl, {
+          transport: HttpTransportType.WebSockets,
+          skipNegotiation: true,
+          accessTokenFactory: fetchAccessToken,
+        })
+        .withAutomaticReconnect({
+          nextRetryDelayInMilliseconds: (retryContext) => {
+            const delays = [0, 2000, 5000, 10000, 30000];
+            return delays[retryContext.previousRetryCount] ?? MAX_RETRY_DELAY_MS;
+          },
+        })
+        .configureLogging(LogLevel.None)
         .build();
     };
 
@@ -197,90 +193,114 @@ function SessionNotificationsProvider({ children }: { children: ReactNode }) {
       if (disposed) return;
       if (retryTimer) clearTimeout(retryTimer);
       setConnectionState("reconnecting");
-      const delay = Math.min(MAX_RETRY_DELAY_MS, 1000 * 2 ** failureCount);
+
+      const delay = Math.min(
+        MAX_RETRY_DELAY_MS,
+        INITIAL_RETRY_DELAY_MS * 2 ** Math.max(0, failureCount - 1)
+      );
+
       retryTimer = setTimeout(() => {
         void startConnection();
       }, delay);
     };
 
     const wireConnection = (conn: HubConnection) => {
-      // The live event is only a change signal — always reload list + count via REST.
+      // Backend notifies of any change (created, read, deleted).
       conn.on("NotificationsChanged", () => {
-        if (disposed || conn !== connection) return;
+        if (disposed || conn !== connectionRef.current) return;
         void refresh();
       });
-      conn.onreconnecting(() => {
-        if (!disposed && conn === connection) setConnectionState("reconnecting");
+
+      // Automatic reconnection lifecycle:
+      // Note: error is undefined when the server cleanly closes an idle connection
+      // or rotates tokens. This is normal SignalR behavior and not an application error.
+      conn.onreconnecting((error) => {
+        if (disposed || conn !== connectionRef.current) return;
+        setConnectionState("reconnecting");
+        if (process.env.NODE_ENV === "development" && error) {
+          console.warn("[SignalR] Connection interrupted, reconnecting...", error.message);
+        }
       });
+
       conn.onreconnected(() => {
-        if (disposed || conn !== connection) return;
+        if (disposed || conn !== connectionRef.current) return;
         setConnectionState("connected");
-        // Events are not replayed — reload everything after reconnecting.
+        failureCount = 0;
         void refresh();
       });
-      conn.onclose(() => {
-        if (disposed || conn !== connection) return;
-        // Automatic retries were exhausted (or the token expired) — restart
-        // manually for as long as the user stays signed in.
+
+      conn.onclose((error) => {
+        if (disposed || conn !== connectionRef.current) return;
+        setConnectionState("idle");
+        if (process.env.NODE_ENV === "development" && error) {
+          console.warn("[SignalR] Connection closed, scheduling retry...", error.message);
+        }
         scheduleRestart();
       });
     };
 
     const startConnection = async () => {
       if (disposed) return;
-      if (!connection) {
-        connection = buildConnection(mode === "websocket");
-        wireConnection(connection);
+
+      if (!connectionRef.current) {
+        connectionRef.current = buildConnection();
+        wireConnection(connectionRef.current);
       }
-      const conn = connection;
+
+      const conn = connectionRef.current;
+      if (conn.state !== HubConnectionState.Disconnected) return;
+
       try {
-        setConnectionState(
-          conn.state === HubConnectionState.Reconnecting ? "reconnecting" : "connecting"
-        );
+        setConnectionState("connecting");
         await conn.start();
-        if (disposed || conn !== connection) return;
+        if (disposed || conn !== connectionRef.current) return;
+
         failureCount = 0;
         setConnectionState("connected");
         void refresh();
-      } catch {
-        if (disposed || conn !== connection) return;
+      } catch (err) {
+        if (disposed || conn !== connectionRef.current) return;
         failureCount += 1;
-        // WebSockets failed twice in a row — switch to long polling via proxy.
-        if (mode === "websocket" && failureCount >= 2) {
-          mode = "longpolling";
-          failureCount = 0;
-          connection = null;
-          try {
-            await conn.stop();
-          } catch {
-            /* ignore */
-          }
+
+        if (err instanceof Error && err.message === "token_refresh_failed") {
+          await syncSession();
+          return;
         }
+
         scheduleRestart();
       }
     };
 
-    // Allow React's development setup/cleanup cycle to finish before starting
-    // network work, avoiding a start immediately interrupted by stop().
-    const startTimer = setTimeout(() => { void startConnection(); }, 0);
+    // Delay start slightly to let React development mount/cleanup cycle stabilize
+    const startTimer = setTimeout(() => {
+      void startConnection();
+    }, 50);
 
     return () => {
       disposed = true;
       clearTimeout(startTimer);
       if (retryTimer) clearTimeout(retryTimer);
-      if (connection && connection.state !== HubConnectionState.Disconnected) {
-        void connection.stop().catch(() => {});
+
+      const conn = connectionRef.current;
+      connectionRef.current = null;
+
+      if (conn && conn.state !== HubConnectionState.Disconnected) {
+        void conn.stop().catch(() => {});
       }
       setConnectionState("idle");
     };
-  }, [isAuthenticated, session?.id, refresh, syncSession]);
+  }, [isAuthenticated, refresh, syncSession]);
 
-  // ── Refresh when the tab returns to the foreground (missed events) ──────
+  // ── Re-sync when tab returns to the foreground ──────────────────────────
   useEffect(() => {
     if (!isAuthenticated) return;
+
     const onFocus = () => {
-      if (document.visibilityState === "visible") void refresh();
+      if (document.visibilityState === "visible") {
+        void refresh();
+      }
     };
+
     document.addEventListener("visibilitychange", onFocus);
     window.addEventListener("focus", onFocus);
     return () => {
@@ -289,30 +309,49 @@ function SessionNotificationsProvider({ children }: { children: ReactNode }) {
     };
   }, [isAuthenticated, refresh]);
 
-  // ── Actions (refresh from REST after every successful mutation) ─────────
+  // ── Optimistic Actions ──────────────────────────────────────────────────
   const markRead = useCallback(
     async (id: string) => {
+      // Optimistic update
+      setRecentNotifications((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, isRead: true, readAt: new Date().toISOString() } : item))
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+
       const res = await markNotificationRead(id);
-      if (!res.success) return false;
       void refresh();
-      return true;
+      return res.success;
     },
     [refresh]
   );
 
   const markAllRead = useCallback(async () => {
+    // Optimistic update
+    setRecentNotifications((prev) =>
+      prev.map((item) => ({ ...item, isRead: true, readAt: new Date().toISOString() }))
+    );
+    setUnreadCount(0);
+
     const res = await markAllNotificationsRead();
-    if (!res.success) return false;
     void refresh();
-    return true;
+    return res.success;
   }, [refresh]);
 
   const dismiss = useCallback(
     async (id: string) => {
+      // Optimistic update
+      setRecentNotifications((prev) => {
+        const target = prev.find((item) => item.id === id);
+        if (target && !target.isRead) {
+          setUnreadCount((c) => Math.max(0, c - 1));
+        }
+        return prev.filter((item) => item.id !== id);
+      });
+      setTotalCount((prev) => Math.max(0, prev - 1));
+
       const res = await dismissNotification(id);
-      if (!res.success) return false;
       void refresh();
-      return true;
+      return res.success;
     },
     [refresh]
   );
