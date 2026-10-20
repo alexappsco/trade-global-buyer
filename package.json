@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:proxy": "node --test scripts/test-proxy.mjs",
     "setup:local-https": "node scripts/export-local-api-cert.mjs"
   },
   "dependencies": {

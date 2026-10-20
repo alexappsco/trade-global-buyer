@@ -27,6 +27,13 @@ reloading. Read/dismiss changes should also update another tab of the same user.
 Refresh coordination is process-local; a deployment with multiple Next.js
 workers needs shared session/rotation coordination across those workers.
 
+All additional SignalR Hubs should use `/hubs/<name>`. Proxy matching explicitly
+includes this namespace (including names with dots) before locale routing. The
+operator installs shared Nginx settings once for this entire namespace, so new
+Hubs need no server routing edits. Each Hub still needs its own backend mapping,
+authorization rules and client event handlers. CORS changes are needed only for
+new frontend origins. Run `npm run test:proxy` to verify matching and rewrites.
+
 ## Getting Started
 
 First, run the development server:
