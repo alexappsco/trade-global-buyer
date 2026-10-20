@@ -48,10 +48,10 @@ function OrdersRowActions({
 
   if (role === "supplier") {
     const canSubmit =
-      row.status === "open" && !row.isOwnOrder && row.canSubmitQuotation;
+      row.status === "opened" || row.status === "مفتوح" && !row.isOwnOrder && row.canSubmitQuotation;
 
     let reason: string | null = null;
-    if (row.status !== "open") {
+    if (row.status !== "opened" && row.status !== "مفتوح") {
       reason = t("reason_order_closed");
     } else if (!row.isOwnOrder && (row.hasPendingDelivery || !row.canSubmitQuotation)) {
       reason = t("reason_pending_delivery");
@@ -89,7 +89,6 @@ function OrdersRowActions({
     );
 
     if (!reason) return submitButton;
-
     return (
       <Tooltip title={reason}>
         <span style={{ display: "inline-block" }}>{submitButton}</span>
