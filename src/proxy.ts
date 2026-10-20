@@ -9,8 +9,8 @@ const intlMiddleware = createMiddleware(routing);
 
 export function proxy(request: NextRequest) {
   // Proxy SignalR hub requests to the API (same-origin for the browser, so no
-  // CORS is required). The SignalR client uses SSE/long-polling transports,
-  // which are plain HTTP and pass through this rewrite reliably.
+  // CORS is required). The current client uses this for Long Polling;
+  // direct WebSockets connect to the API origin.
   if (request.nextUrl.pathname.startsWith('/hubs/')) {
     const target = new URL(
       `${request.nextUrl.pathname}${request.nextUrl.search}`,
@@ -27,6 +27,8 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    // Include every hub path, even names containing dots excluded below.
+    '/hubs/:path*',
     /*
      * Match all request paths except for:
      * - api (API routes)
