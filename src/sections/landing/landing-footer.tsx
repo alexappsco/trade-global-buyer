@@ -45,8 +45,8 @@ export default function LandingFooter() {
         >
           <Box
             component="img"
-            src="/landing/logo.png"
-            alt="TradeGlobal Logo"
+            src="/frq_logo.svg"
+            alt="COST FRQ Logo"
             sx={{ height: { xs: 48, md: 60 }, width: 'auto', objectFit: 'contain' }}
           />
 
@@ -170,7 +170,7 @@ export default function LandingFooter() {
           sx={{ justifyContent: 'space-between', alignItems: 'center' }}
         >
           <Typography variant="caption" sx={{ color: '#8E8E93' }}>
-            © 2026 Trade Global. All rights reserved.
+            © 2026 COST FRQ. All rights reserved.
           </Typography>
         </Stack>
       </Container>

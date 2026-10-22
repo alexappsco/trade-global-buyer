@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -15,6 +15,7 @@ import {
   AppBar,
   Avatar,
   Box,
+  Collapse,
   Divider,
   IconButton,
   Menu,
@@ -65,6 +66,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null);
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
+  const [langOpen, setLangOpen] = useState(false);
+
+  useEffect(() => {
+    if (!avatarAnchorEl) setLangOpen(false);
+  }, [avatarAnchorEl]);
 
   const handleLangOpen = (e: React.MouseEvent<HTMLElement>) => {
     setLangAnchorEl(e.currentTarget);
@@ -87,6 +93,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const changeLanguage = (newLocale: string) => {
     handleLangClose();
+    setAvatarAnchorEl(null);
     router.replace(pathname, { locale: newLocale });
   };
 
@@ -122,9 +129,9 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
           <Box
             component="img"
-            src="/logo_2.png"
-            alt="Trade Global"
-            sx={{ height: { xs: 40, md: 66 }, marginInlineStart: { xs: 0, md: "60px" } }}
+            src="/frq_logo.svg"
+            alt="COST FRQ"
+            sx={{ height: { xs: 34, md: 48 }, marginInlineStart: { xs: 0, md: "60px" } }}
           />
         </Box>
 
@@ -132,7 +139,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <Box
             onClick={handleLangOpen}
             sx={{
-              display: "flex",
+              display: { xs: "none", md: "flex" },
               alignItems: "center",
               gap: 0.75,
               px: 1.25,
@@ -286,6 +293,79 @@ export default function Header({ onMenuClick }: HeaderProps) {
               {formatDisplayPhone(session?.phoneNumber)}
             </Typography>
           </Box>
+        </Box>
+
+        <Box sx={{ display: { xs: "block", md: "none" } }}>
+          <MenuItem
+            onClick={() => setLangOpen((v) => !v)}
+            sx={{
+              mx: 1,
+              my: 0.75,
+              borderRadius: "8px",
+              color: "#161C24",
+              "&:hover": { bgcolor: "rgba(0, 0, 0, 0.06)" },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 40, color: "#1B8354" }}>
+              <Iconify icon="solar:global-linear" width={22} />
+            </ListItemIcon>
+            <ListItemText
+              slotProps={{ primary: { sx: { fontSize: 14, fontWeight: 600 } } }}
+            >
+              {t("language")}
+            </ListItemText>
+            <ExpandMoreRoundedIcon
+              sx={{
+                fontSize: 20,
+                color: "#9DA4AE",
+                transition: "transform 0.2s ease",
+                transform: langOpen ? "rotate(180deg)" : "none",
+              }}
+            />
+          </MenuItem>
+
+          <Collapse in={langOpen} timeout="auto" unmountOnExit>
+            {allLocales.map((loc) => (
+              <MenuItem
+                key={loc.value}
+                selected={loc.value === locale}
+                onClick={() => changeLanguage(loc.value)}
+                sx={{
+                  mx: 1,
+                  my: 0.75,
+                  ml: 3,
+                  borderRadius: "8px",
+                  color: "#161C24",
+                  "&.Mui-selected": {
+                    bgcolor: "rgba(27, 131, 84, 0.08)",
+                  },
+                  "&:hover": { bgcolor: "rgba(27, 131, 84, 0.08)" },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <Iconify icon={loc.icon} width={22} />
+                </ListItemIcon>
+                <ListItemText
+                  slotProps={{
+                    primary: {
+                      sx: {
+                        fontSize: 14,
+                        fontWeight: loc.value === locale ? 700 : 500,
+                        color: loc.value === locale ? "#1B8354" : "#161C24",
+                      },
+                    },
+                  }}
+                >
+                  {loc.label}
+                </ListItemText>
+                {loc.value === locale && (
+                  <Iconify icon="solar:check-circle-bold" width={18} sx={{ color: "#1B8354" }} />
+                )}
+              </MenuItem>
+            ))}
+          </Collapse>
+
+          <Divider sx={{ mx: 1.5, my: 0.25 }} />
         </Box>
 
         <MenuItem

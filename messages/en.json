@@ -124,7 +124,7 @@
     },
     "platform": {
       "why_title": "Why",
-      "why_brand": "Trade Global",
+      "why_brand": "COST FRQ",
       "why_description": "We offer you an integrated and innovative platform to manage all procurement processes with reliability, speed, and high efficiency, ensuring the best results for your business.",
       "cards": {
         "procurement": {
@@ -481,6 +481,7 @@
     "connecting": "Connecting..."
   },
   "Auth": {
+    "language": "Language",
     "signin_title": "Sign In",
     "signin_subtitle": "Join the region's most trusted trade network.",
     "go_register": "Don't have an account?",
@@ -631,85 +632,85 @@
   },
   "Metadata": {
     "Home": {
-      "title": "Home - Trade Global",
-      "description": "Trade Global Buyer Dashboard - Manage your orders, invoices, and procurement activities"
+      "title": "Home - COST FRQ",
+      "description": "COST FRQ Buyer Dashboard - Manage your orders, invoices, and procurement activities"
     },
     "Login": {
-      "title": "Sign In - Trade Global",
-      "description": "Sign in to your Trade Global Buyer account"
+      "title": "Sign In - COST FRQ",
+      "description": "Sign in to your COST FRQ Buyer account"
     },
     "Register": {
-      "title": "Register - Trade Global",
-      "description": "Create a new Trade Global Buyer account"
+      "title": "Register - COST FRQ",
+      "description": "Create a new COST FRQ Buyer account"
     },
     "Otp": {
-      "title": "Verify OTP - Trade Global",
+      "title": "Verify OTP - COST FRQ",
       "description": "Verify your identity with a one-time password"
     },
     "ForgotPassword": {
-      "title": "Forgot Password - Trade Global",
-      "description": "Reset your Trade Global Buyer account password"
+      "title": "Forgot Password - COST FRQ",
+      "description": "Reset your COST FRQ Buyer account password"
     },
     "CompleteProfile": {
-      "title": "Complete Profile - Trade Global",
-      "description": "Complete your Trade Global Buyer profile setup"
+      "title": "Complete Profile - COST FRQ",
+      "description": "Complete your COST FRQ Buyer profile setup"
     },
     "ChangePassword": {
-      "title": "Change Password - Trade Global",
-      "description": "Set a new password for your Trade Global account"
+      "title": "Change Password - COST FRQ",
+      "description": "Set a new password for your COST FRQ account"
     },
     "EditProfile": {
-      "title": "Edit Profile - Trade Global",
-      "description": "Update your Trade Global Buyer profile information"
+      "title": "Edit Profile - COST FRQ",
+      "description": "Update your COST FRQ Buyer profile information"
     },
     "Invoices": {
-      "title": "Invoices - Trade Global",
+      "title": "Invoices - COST FRQ",
       "description": "View and manage your invoices"
     },
     "InvoiceDetail": {
-      "title": "Invoice Details - Trade Global",
+      "title": "Invoice Details - COST FRQ",
       "description": "View invoice details"
     },
     "Notifications": {
-      "title": "Notifications - Trade Global",
+      "title": "Notifications - COST FRQ",
       "description": "View your notifications"
     },
     "Orders": {
-      "title": "Orders - Trade Global",
+      "title": "Orders - COST FRQ",
       "description": "View and manage your orders"
     },
     "OrderDetail": {
-      "title": "Order Details - Trade Global",
+      "title": "Order Details - COST FRQ",
       "description": "View order details and offers"
     },
     "OrderOffer": {
-      "title": "Order Offer Details - Trade Global",
+      "title": "Order Offer Details - COST FRQ",
       "description": "View order offer details"
     },
     "SubmitOffer": {
-      "title": "Submit Offer - Trade Global",
+      "title": "Submit Offer - COST FRQ",
       "description": "Submit a price offer on an order"
     },
     "CreateOrder": {
-      "title": "Create Order - Trade Global",
+      "title": "Create Order - COST FRQ",
       "description": "Create a new order"
     },
     "Profile": {
-      "title": "Profile - Trade Global",
+      "title": "Profile - COST FRQ",
       "description": "View your profile"
     },
     "CounterpartyProfile": {
-      "buyerTitle": "Buyer Details - Trade Global",
+      "buyerTitle": "Buyer Details - COST FRQ",
       "buyerDescription": "View buyer profile details",
-      "supplierTitle": "Supplier Details - Trade Global",
+      "supplierTitle": "Supplier Details - COST FRQ",
       "supplierDescription": "View supplier profile details"
     },
     "QuotationRequests": {
-      "title": "Quotation Requests - Trade Global",
+      "title": "Quotation Requests - COST FRQ",
       "description": "View and manage your quotation requests"
     },
     "Support": {
-      "title": "Support - Trade Global",
+      "title": "Support - COST FRQ",
       "description": "Get help and submit support tickets"
     }
   },

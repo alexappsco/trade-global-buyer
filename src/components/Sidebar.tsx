@@ -164,7 +164,7 @@ const isVisible = (item: SidebarItem) => {
         gap: 1,
       }}
     >
-      <List disablePadding sx={{ flex: 1, overflow: "auto", ...scrollbar() }}>
+      <List disablePadding sx={{ flex: 1, minHeight: 0, overflow: "auto", ...scrollbar() }}>
         {sidebarItems.filter(isVisible).map((item) => {
           const active = isActive(item.path);
 
@@ -243,6 +243,7 @@ const isVisible = (item: SidebarItem) => {
       {role && (
         <Box
           sx={{
+            flexShrink: 0,
             display: "flex",
             alignItems: "center",
             gap: 1.25,

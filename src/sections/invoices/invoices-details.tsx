@@ -272,7 +272,7 @@ export default function InvoicesDetailsView({ id }: Props) {
             {/* <Box
               component="img"
               src="/logo.png"
-              alt="TradeGlobal Logo"
+              alt="COST-frq Logo"
               sx={{ height: 48, objectFit: 'contain' }}
             /> */}
           </Box>

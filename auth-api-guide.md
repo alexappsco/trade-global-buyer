@@ -110,7 +110,7 @@ Request:
 ```json
 {
   "completionToken": "opaque-single-use-token",
-  "legalCompanyName": "Trade Global LLC",
+  "legalCompanyName": "COST FRQ LLC",
   "phoneNumber": "+201002003000",
   "email": "buyer@example.com",
   "sector": "Import and Export",
@@ -406,7 +406,7 @@ Response:
   "phoneNumber": "+201002003000",
   "role": "Buyer",
   "accountType": "Company",
-  "legalCompanyName": "Trade Global LLC",
+  "legalCompanyName": "COST FRQ LLC",
   "sector": "Import and Export",
   "taxNumber": "TAX-12345",
   "commercialRecord": "CR-98765",
