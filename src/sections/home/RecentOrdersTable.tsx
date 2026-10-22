@@ -18,7 +18,15 @@ import { STATUS_STYLES } from 'src/sections/orders/status-styles';
 
 const RECENT_ORDERS_LIMIT = 5;
 
-export default function RecentOrdersTable() {
+interface RecentOrdersTableProps {
+  orders?: Order[];
+  loading?: boolean;
+}
+
+export default function RecentOrdersTable({
+  orders: propOrders,
+  loading: propLoading,
+}: RecentOrdersTableProps = {}) {
   const tHome = useTranslations('Home');
   const tOrders = useTranslations('Orders');
   const locale = useLocale();
@@ -26,14 +34,19 @@ export default function RecentOrdersTable() {
   const { role, session } = useAuth();
   const toast = useToast();
 
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const isControlled = propOrders !== undefined || propLoading !== undefined;
+  const [internalOrders, setInternalOrders] = useState<Order[]>([]);
+  const [internalLoading, setInternalLoading] = useState(true);
+
+  const orders = isControlled ? propOrders ?? [] : internalOrders;
+  const isLoading = isControlled ? Boolean(propLoading) : internalLoading;
 
   useEffect(() => {
+    if (isControlled) return;
     let cancelled = false;
 
     const fetchRecentOrders = async () => {
-      setIsLoading(true);
+      setInternalLoading(true);
       try {
         const res = await getOrders({
           skipCount: 0,
@@ -41,23 +54,23 @@ export default function RecentOrdersTable() {
         });
         if (cancelled) return;
         if (res.success && res.data) {
-          setOrders(res.data.items ?? []);
+          setInternalOrders(res.data.items ?? []);
         } else {
-          setOrders([]);
+          setInternalOrders([]);
           if (!res.success && res.error) {
             toast.error(res.error);
           }
         }
       } catch (err) {
         if (cancelled) return;
-        setOrders([]);
+        setInternalOrders([]);
         const errMsg = err instanceof Error ? err.message : tOrders('table.load_error');
         if (!errMsg.includes('abort') && !errMsg.includes('AbortError')) {
           toast.error(errMsg);
         }
       } finally {
         if (!cancelled) {
-          setIsLoading(false);
+          setInternalLoading(false);
         }
       }
     };
@@ -68,7 +81,7 @@ export default function RecentOrdersTable() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]);
+  }, [isControlled, locale]);
 
   const tableHead: headCellType[] = [
     { id: 'orderNumber', label: tOrders('table.order_id'), align: cellAlignment.right, width: 100 },

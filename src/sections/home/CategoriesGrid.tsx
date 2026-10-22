@@ -21,18 +21,31 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperCore } from 'swiper';
 import 'swiper/css';
 
-export default function CategoriesGrid() {
+interface CategoriesGridProps {
+  categories?: OrderCatalogItem[];
+  loading?: boolean;
+}
+
+export default function CategoriesGrid({
+  categories: propCategories,
+  loading: propLoading,
+}: CategoriesGridProps = {}) {
   const t = useTranslations('Home');
   const locale = useLocale();
   const isRtl = locale === 'ar';
 
-  const [categories, setCategories] = useState<OrderCatalogItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const isControlled = propCategories !== undefined || propLoading !== undefined;
+  const [internalCategories, setInternalCategories] = useState<OrderCatalogItem[]>([]);
+  const [internalLoading, setInternalLoading] = useState(true);
+
+  const categories = isControlled ? propCategories ?? [] : internalCategories;
+  const loading = isControlled ? Boolean(propLoading) : internalLoading;
 
   const [swiper, setSwiper] = useState<SwiperCore | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
+  const autoSwipeDoneRef = React.useRef(false);
 
   const updateSwiperState = useCallback((s: SwiperCore) => {
     setIsBeginning(s.isBeginning);
@@ -41,6 +54,7 @@ export default function CategoriesGrid() {
   }, []);
 
   useEffect(() => {
+    if (isControlled) return;
     let active = true;
 
     const fetchCategories = async () => {
@@ -48,13 +62,13 @@ export default function CategoriesGrid() {
         const res = await getOrdersCatalog();
         if (active && res.success && res.data) {
           const list = Array.isArray(res.data) ? res.data : [];
-          setCategories(list);
+          setInternalCategories(list);
         }
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       } finally {
         if (active) {
-          setLoading(false);
+          setInternalLoading(false);
         }
       }
     };
@@ -64,7 +78,31 @@ export default function CategoriesGrid() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [isControlled]);
+
+  // Auto-swipe teaser: once swiper is ready and categories are loaded, nudge forward then back
+  useEffect(() => {
+    if (!swiper || loading || isLocked || autoSwipeDoneRef.current) return;
+    // Nothing to slide if already at the end
+    if (swiper.isEnd) return;
+
+    autoSwipeDoneRef.current = true;
+
+    // slideNext moves to the next index — Swiper handles RTL direction internally
+    const t1 = setTimeout(() => {
+      swiper.slideNext(550);
+      // After the forward slide completes, slide back
+      const t2 = setTimeout(() => {
+        swiper.slidePrev(450);
+      }, 900);
+      // Store t2 ref for cleanup (closure captures it)
+      return t2; // not used for cleanup but keeps linter happy
+    }, 800);
+
+    return () => {
+      clearTimeout(t1);
+    };
+  }, [swiper, loading, isLocked]);
 
   // Left button logic (visually points Left: <)
   // In RTL, moving to the left means advancing forward (slideNext).
@@ -94,11 +132,11 @@ export default function CategoriesGrid() {
 
   const navButtonSx = {
     position: 'absolute' as const,
-    top: '46%',
+    top: '50%',
     transform: 'translateY(-50%)',
     zIndex: 10,
-    width: 42,
-    height: 42,
+    width: 38,
+    height: 38,
     borderRadius: '50%',
     bgcolor: 'rgba(255, 255, 255, 0.96)',
     color: '#1B8354',
@@ -172,16 +210,16 @@ export default function CategoriesGrid() {
                 <Skeleton
                   variant="rectangular"
                   sx={{
-                    height: { xs: 100, sm: 140 },
+                    height: { xs: 130, sm: 165 },
                     bgcolor: '#edf3f0',
                   }}
                   animation="wave"
                 />
-                <CardContent sx={{ pb: 2, px: 2 }}>
+                <CardContent sx={{ py: 1.5, px: 2, '&:last-child': { pb: 1.5 } }}>
                   <Skeleton
                     variant="text"
                     width="65%"
-                    height={22}
+                    height={18}
                     animation="wave"
                     sx={{ bgcolor: '#e2ece7' }}
                   />
@@ -226,7 +264,7 @@ export default function CategoriesGrid() {
               left: { xs: 2, sm: -18 },
             }}
           >
-            <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
+            <ChevronLeftRoundedIcon sx={{ fontSize: 22 }} />
           </IconButton>
 
           <Swiper
@@ -269,7 +307,7 @@ export default function CategoriesGrid() {
                     '&:hover': {
                       borderColor: 'rgba(27, 131, 84, 0.25)',
                       boxShadow: '0 6px 22px rgba(27, 131, 84, 0.1)',
-                      transform: 'translateY(-4px)',
+                      transform: 'translateY(-3px)',
                     },
                     '&:hover .category-image': {
                       transform: 'scale(1.06)',
@@ -279,7 +317,7 @@ export default function CategoriesGrid() {
                   <Box
                     sx={{
                       overflow: 'hidden',
-                      height: { xs: 100, sm: 140 },
+                      height: { xs: 130, sm: 165 },
                       position: 'relative',
                       bgcolor: '#f1f5f9',
                       display: 'flex',
@@ -312,7 +350,7 @@ export default function CategoriesGrid() {
                           background: 'linear-gradient(135deg, #e8f5f0 0%, #f8fafc 100%)',
                         }}
                       >
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path
                             d="M4 16L8.58579 11.4142C9.36683 10.6332 10.6332 10.6332 11.4142 11.4142L16 16M14 14L15.5858 12.4142C16.3668 11.6332 17.6332 11.6332 18.4142 12.4142L20 14M14 8H14.01M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z"
                             stroke="#1B8354"
@@ -324,13 +362,14 @@ export default function CategoriesGrid() {
                       </Box>
                     )}
                   </Box>
-                  <CardContent sx={{ textAlign: locale === 'ar' ? 'right' : 'left', pb: 2, px: 2 }}>
+                  <CardContent sx={{ textAlign: locale === 'ar' ? 'right' : 'left', py: 1.5, px: 2, '&:last-child': { pb: 1.5 } }}>
                     <Typography
                       variant="subtitle2"
                       sx={{
                         fontWeight: 'bold',
+                        fontSize: { xs: '0.8rem', sm: '0.85rem' },
                         color: '#1A1A1A',
-                        mb: 0.5,
+                        lineHeight: 1.3,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
@@ -355,7 +394,7 @@ export default function CategoriesGrid() {
               right: { xs: 2, sm: -18 },
             }}
           >
-            <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
+            <ChevronRightRoundedIcon sx={{ fontSize: 22 }} />
           </IconButton>
         </Box>
       </Box>
