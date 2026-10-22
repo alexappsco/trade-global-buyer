@@ -27,9 +27,11 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslations } from "next-intl";
 import { useToast } from "src/components/toast";
+import { useAuth } from "src/contexts/AuthContext";
 import PageHeader from "src/components/PageHeader/PageHeader";
 import DatePickerField from "src/components/DatePickerField/DatePickerField";
 import { useRouter } from "src/i18n/routing";
+import { Loader } from "src/components/Loader/Loader";
 import * as Yup from "yup";
 const GREEN = "#1E8E59";
 const GREEN_HOVER = "#17734A";
@@ -616,9 +618,28 @@ export default function CreateQuoteRequestView({
   const t = useTranslations("CreateQuoteRequest");
   const tSidebar = useTranslations("Sidebar");
   const tAuth = useTranslations("Auth");
+  const tOrders = useTranslations("Orders");
   const locale = useLocale();
   const toast = useToast();
   const router = useRouter();
+  const { session } = useAuth();
+
+  // ── Centralized guard: profile must be complete to create an order ──
+  const hasRedirectedRef = useRef(false);
+
+  useEffect(() => {
+    if (session && !session.profileCompleted && !hasRedirectedRef.current) {
+      hasRedirectedRef.current = true;
+      toast.warning(tOrders("complete_profile_required"));
+      router.replace("/profile");
+      const timer = setTimeout(() => {
+        if (typeof window !== "undefined" && window.location.pathname.includes("/orders/create")) {
+          window.location.replace(`/${locale}/profile`);
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [session, router, locale, tOrders, toast]);
   const searchParams = useSearchParams();
   const categoryCodeParam = searchParams?.get("categoryCode") || initialCategoryCode || "";
   const categoryNameParam = searchParams?.get("categoryName") || initialCategoryName || "";
@@ -823,6 +844,22 @@ export default function CreateQuoteRequestView({
   const handleCancel = () => {
     router.push("/orders");
   };
+
+  // Block rendering until session is hydrated, and if profile is incomplete
+  if (!session || !session.profileCompleted) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+        }}
+      >
+        <Loader />
+      </Box>
+    );
+  }
 
   return (
     <Box>

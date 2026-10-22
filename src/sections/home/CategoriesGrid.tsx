@@ -20,6 +20,7 @@ import { useRouter } from 'src/i18n/routing';
 import { useToast } from 'src/components/toast';
 import { getOrdersCatalog } from 'src/actions/orders';
 import type { OrderCatalogItem } from 'src/types/order';
+import { useCreateOrderGuard } from 'src/hooks/use-create-order-guard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperCore } from 'swiper';
 import 'swiper/css';
@@ -39,6 +40,7 @@ export default function CategoriesGrid({
   const { role } = useAuth();
   const router = useRouter();
   const toast = useToast();
+  const { navigateToCreateOrder } = useCreateOrderGuard();
   const isBuyer = role === 'buyer';
 
   const isControlled = propCategories !== undefined || propLoading !== undefined;
@@ -57,12 +59,11 @@ export default function CategoriesGrid({
   const handleCategoryClick = (cat: OrderCatalogItem) => {
     if (role !== 'buyer') return;
     const catName = (locale === 'ar' ? cat.nameAr : cat.nameEn) || cat.code;
-    const params = new URLSearchParams({
+    navigateToCreateOrder({
       categoryCode: cat.code,
       categoryName: catName,
-      ...(cat.imageUrl ? { categoryImg: cat.imageUrl } : {}),
+      categoryImg: cat.imageUrl || undefined,
     });
-    router.push(`/orders/create?${params.toString()}`);
   };
 
   const updateSwiperState = useCallback((s: SwiperCore) => {
