@@ -1,12 +1,19 @@
 'use client';
 
-import React from 'react';
-import { Box, Container } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Container, Grow } from '@mui/material';
 import StatsCards from './StatsCards';
 import CategoriesGrid from './CategoriesGrid';
 import RecentOrdersTable from './RecentOrdersTable';
 
 export default function HomePage() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Box
       sx={{
@@ -17,14 +24,26 @@ export default function HomePage() {
       }}
     >
       <Container maxWidth="xl">
-        {/* Top Summary Metric Cards */}
-        <StatsCards />
+        <Grow in={visible} timeout={600}>
+          <Box>
+            {/* Top Summary Metric Cards */}
+            <StatsCards />
+          </Box>
+        </Grow>
 
-        {/* Middle Section Categories */}
-        <CategoriesGrid />
+        <Grow in={visible} timeout={700}>
+          <Box>
+            {/* Middle Section Categories */}
+            <CategoriesGrid />
+          </Box>
+        </Grow>
 
-        {/* Bottom Section Orders Data Table */}
-        <RecentOrdersTable />
+        <Grow in={visible} timeout={800}>
+          <Box>
+            {/* Bottom Section Orders Data Table */}
+            <RecentOrdersTable />
+          </Box>
+        </Grow>
       </Container>
     </Box>
   );
