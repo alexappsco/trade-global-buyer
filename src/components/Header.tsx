@@ -88,7 +88,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const handleLogout = async () => {
     setAvatarAnchorEl(null);
     await logout();
-    window.location.replace(`/${locale}/auth/login`);
+    window.location.replace(`/${locale}`);
   };
 
   const changeLanguage = (newLocale: string) => {
