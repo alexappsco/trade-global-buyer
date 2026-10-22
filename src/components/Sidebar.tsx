@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Link, usePathname } from "src/i18n/routing";
+import { Link, usePathname, useRouter } from "src/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { scrollbar } from "src/theme/css";
 import SvgColor from "src/components/svg-color";
+import Iconify from "src/components/iconify";
+import { allLocales } from "src/i18n/config-locale";
 import { useAuth } from "src/contexts/AuthContext";
 import { getNotificationUnreadCount } from "src/actions/notifications";
 import {
@@ -98,7 +100,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const isRtl = locale === "ar";
   const anchor = isRtl ? "right" : "left";
   const { role } = useAuth();
+  const router = useRouter();
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const changeLanguage = (newLocale: string) => {
+    router.replace(pathname, { locale: newLocale });
+  };
 
   useEffect(() => {
     const fetchUnread = async () => {
@@ -164,7 +171,7 @@ const isVisible = (item: SidebarItem) => {
         gap: 1,
       }}
     >
-      <List disablePadding sx={{ flex: 1, overflow: "auto", ...scrollbar() }}>
+      <List disablePadding sx={{ flex: 1, minHeight: 0, overflow: "auto", ...scrollbar() }}>
         {sidebarItems.filter(isVisible).map((item) => {
           const active = isActive(item.path);
 
@@ -240,38 +247,100 @@ const isVisible = (item: SidebarItem) => {
         })}
       </List>
 
-      {role && (
+      <Box
+        sx={{
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          pt: 1,
+          borderTop: "1px solid #E0E0E0",
+        }}
+      >
         <Box
           sx={{
-            display: "flex",
+            display: { xs: "flex", md: "none" },
             alignItems: "center",
-            gap: 1.25,
-            p: { xs: 1.25, sm: 1.5 },
-            mt: "auto",
+            justifyContent: "space-between",
+            gap: 1,
+            px: 1.25,
+            py: 1,
             borderRadius: 2,
-            bgcolor: role === "buyer" ? "rgba(27,131,84,0.06)" : "rgba(124,58,237,0.06)",
-            border: "1px solid",
-            borderColor: role === "buyer" ? "rgba(27,131,84,0.15)" : "rgba(124,58,237,0.15)",
-            direction: isRtl ? "rtl" : "ltr",
+            bgcolor: "#FFFFFF",
+            border: "1px solid #E6EFEA",
           }}
         >
-          <ShieldRoundedIcon
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+            <Iconify icon="solar:global-linear" width={20} sx={{ color: "#1B8354" }} />
+            <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#161C24" }}>
+              {t("language")}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            {allLocales.map((loc) => {
+              const active = loc.value === locale;
+              return (
+                <Box
+                  key={loc.value}
+                  onClick={() => changeLanguage(loc.value)}
+                  sx={{
+                    px: 1,
+                    py: 0.4,
+                    borderRadius: "999px",
+                    fontSize: 11.5,
+                    fontWeight: 700,
+                    lineHeight: 1.2,
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                    border: "1px solid",
+                    bgcolor: active ? "#1B8354" : "transparent",
+                    borderColor: active ? "#1B8354" : "#E0E0E0",
+                    color: active ? "#FFFFFF" : "#637381",
+                    transition: "all 0.15s ease",
+                    "&:hover": {
+                      bgcolor: active ? "#1B8354" : "rgba(27,131,84,0.08)",
+                    },
+                  }}
+                >
+                  {loc.label}
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+
+        {role && (
+          <Box
             sx={{
-              fontSize: 20,
-              color: role === "buyer" ? "#1B8354" : "#7C3AED",
-            }}
-          />
-          <Typography
-            sx={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: role === "buyer" ? "#1B8354" : "#7C3AED",
+              display: "flex",
+              alignItems: "center",
+              gap: 1.25,
+              p: { xs: 1.25, sm: 1.5 },
+              borderRadius: 2,
+              bgcolor: role === "buyer" ? "rgba(27,131,84,0.06)" : "rgba(124,58,237,0.06)",
+              border: "1px solid",
+              borderColor: role === "buyer" ? "rgba(27,131,84,0.15)" : "rgba(124,58,237,0.15)",
+              direction: isRtl ? "rtl" : "ltr",
             }}
           >
-            {t(`role.${role}`)}
-          </Typography>
-        </Box>
-      )}
+            <ShieldRoundedIcon
+              sx={{
+                fontSize: 20,
+                color: role === "buyer" ? "#1B8354" : "#7C3AED",
+              }}
+            />
+            <Typography
+              sx={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: role === "buyer" ? "#1B8354" : "#7C3AED",
+              }}
+            >
+              {t(`role.${role}`)}
+            </Typography>
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 

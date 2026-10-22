@@ -46,7 +46,7 @@ export default function LandingFooter() {
           <Box
             component="img"
             src="/frq_logo.svg"
-            alt="TradeGlobal Logo"
+            alt="COST FRQ Logo"
             sx={{ height: { xs: 48, md: 60 }, width: 'auto', objectFit: 'contain' }}
           />
 

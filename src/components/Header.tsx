@@ -132,7 +132,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <Box
             onClick={handleLangOpen}
             sx={{
-              display: "flex",
+              display: { xs: "none", md: "flex" },
               alignItems: "center",
               gap: 0.75,
               px: 1.25,

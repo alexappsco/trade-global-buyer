@@ -36,6 +36,7 @@
     "support": "Support",
     "invoices": "Invoices",
     "quotation_requests": "Quotation Requests",
+    "language": "Language",
     "role": {
       "buyer": "Buyer",
       "supplier": "Supplier"

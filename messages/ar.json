@@ -36,6 +36,7 @@
     "support": "الدعم الفني",
     "invoices": "الفواتير",
     "quotation_requests": "عروض الأسعار",
+    "language": "اللغة",
     "role": {
       "buyer": "مشتري",
       "supplier": "مورد"
