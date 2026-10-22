@@ -22,10 +22,9 @@ jobs:
 
             cd /var/www/tradeglobal-buyer-staging
 
-            git fetch origin development
+            git fetch origin
             git checkout development
-            git reset --hard origin/development
-            git clean -fd
+            git pull origin development
 
             docker compose \
               --env-file .env.staging \
