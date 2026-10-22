@@ -36,7 +36,6 @@
     "support": "الدعم الفني",
     "invoices": "الفواتير",
     "quotation_requests": "عروض الأسعار",
-    "language": "اللغة",
     "role": {
       "buyer": "مشتري",
       "supplier": "مورد"
@@ -482,6 +481,7 @@
     "connecting": "جاري الاتصال..."
   },
   "Auth": {
+    "language": "اللغة",
     "signin_title": "تسجيل دخول",
     "signin_subtitle": "انضم إلى شبكة التجارة الأكثر موثوقية في المنطقة.",
     "go_register": "ليس لديك حساب",

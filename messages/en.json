@@ -36,7 +36,6 @@
     "support": "Support",
     "invoices": "Invoices",
     "quotation_requests": "Quotation Requests",
-    "language": "Language",
     "role": {
       "buyer": "Buyer",
       "supplier": "Supplier"
@@ -482,6 +481,7 @@
     "connecting": "Connecting..."
   },
   "Auth": {
+    "language": "Language",
     "signin_title": "Sign In",
     "signin_subtitle": "Join the region's most trusted trade network.",
     "go_register": "Don't have an account?",
