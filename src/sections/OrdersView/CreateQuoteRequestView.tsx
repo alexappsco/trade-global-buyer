@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import QuoteSuccessDialog from "./QuoteSuccessDialog";
 import QuoteConfirmDialog from "./QuoteConfirmDialog";
 import {
@@ -74,9 +75,9 @@ const createItem = (): ItemRow => ({
   details: "",
 });
 
-const createBlock = (): RequestBlock => ({
+const createBlock = (categoryCode = ""): RequestBlock => ({
   id: createId(),
-  categoryCode: "",
+  categoryCode,
   title: "",
   deliveryDate: "",
   items: [createItem()],
@@ -172,6 +173,7 @@ function RequestFormBlock({
             options={catalog}
             getOptionLabel={(option) => locale === "ar" ? option.nameAr : option.nameEn}
             value={catalog.find((c) => c.code === block.categoryCode) || null}
+            isOptionEqualToValue={(option, value) => option?.code === value?.code}
             onChange={(_, newValue) => updateField("categoryCode", newValue ? newValue.code : "")}
             fullWidth
             size="small"
@@ -355,18 +357,40 @@ function RequestFormBlock({
   );
 }
 
-export default function CreateQuoteRequestView() {
+interface CreateQuoteRequestViewProps {
+  initialCategoryCode?: string;
+}
+
+export default function CreateQuoteRequestView({ initialCategoryCode }: CreateQuoteRequestViewProps = {}) {
   const t = useTranslations("CreateQuoteRequest");
   const tSidebar = useTranslations("Sidebar");
   const tAuth = useTranslations("Auth");
   const toast = useToast();
   const router = useRouter();
-  const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
+  const searchParams = useSearchParams();
+  const categoryCodeParam = searchParams?.get("categoryCode") || initialCategoryCode || "";
+
+  const [requests, setRequests] = useState<RequestBlock[]>(() => [
+    createBlock(categoryCodeParam),
+  ]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [blockErrors, setBlockErrors] = useState<BlockErrors[]>([{}]);
+
+  useEffect(() => {
+    if (categoryCodeParam) {
+      setRequests((prev) => {
+        if (prev.length > 0 && !prev[0].categoryCode) {
+          return prev.map((block, idx) =>
+            idx === 0 ? { ...block, categoryCode: categoryCodeParam } : block
+          );
+        }
+        return prev;
+      });
+    }
+  }, [categoryCodeParam]);
 
   useEffect(() => {
     const fetchCatalog = async () => {

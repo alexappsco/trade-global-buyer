@@ -15,6 +15,9 @@ import {
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { useTranslations, useLocale } from 'next-intl';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'src/i18n/routing';
+import { useToast } from 'src/components/toast';
 import { getOrdersCatalog } from 'src/actions/orders';
 import type { OrderCatalogItem } from 'src/types/order';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -33,6 +36,10 @@ export default function CategoriesGrid({
   const t = useTranslations('Home');
   const locale = useLocale();
   const isRtl = locale === 'ar';
+  const { role } = useAuth();
+  const router = useRouter();
+  const toast = useToast();
+  const isBuyer = role === 'buyer';
 
   const isControlled = propCategories !== undefined || propLoading !== undefined;
   const [internalCategories, setInternalCategories] = useState<OrderCatalogItem[]>([]);
@@ -46,6 +53,17 @@ export default function CategoriesGrid({
   const [isEnd, setIsEnd] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const autoSwipeDoneRef = React.useRef(false);
+
+  const handleCategoryClick = (cat: OrderCatalogItem) => {
+    if (role !== 'buyer') return;
+    const catName = (locale === 'ar' ? cat.nameAr : cat.nameEn) || cat.code;
+    toast.success(
+      locale === 'ar'
+        ? `تم تحديد الفئة "${catName}"`
+        : `Category "${catName}" selected`
+    );
+    router.push(`/orders/create?categoryCode=${encodeURIComponent(cat.code)}`);
+  };
 
   const updateSwiperState = useCallback((s: SwiperCore) => {
     setIsBeginning(s.isBeginning);
@@ -295,6 +313,7 @@ export default function CategoriesGrid({
               <SwiperSlide key={cat.code}>
                 <Card
                   elevation={0}
+                  onClick={() => handleCategoryClick(cat)}
                   sx={{
                     borderRadius: 3,
                     overflow: 'hidden',
@@ -302,16 +321,16 @@ export default function CategoriesGrid({
                     border: '1px solid rgba(0, 0, 0, 0.04)',
                     boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
                     height: '100%',
-                    cursor: 'pointer',
+                    cursor: isBuyer ? 'pointer' : 'default',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
+                    '&:hover': isBuyer ? {
                       borderColor: 'rgba(27, 131, 84, 0.25)',
                       boxShadow: '0 6px 22px rgba(27, 131, 84, 0.1)',
                       transform: 'translateY(-3px)',
-                    },
-                    '&:hover .category-image': {
+                    } : {},
+                    '&:hover .category-image': isBuyer ? {
                       transform: 'scale(1.06)',
-                    },
+                    } : {},
                   }}
                 >
                   <Box
