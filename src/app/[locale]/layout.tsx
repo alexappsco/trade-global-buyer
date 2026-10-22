@@ -17,8 +17,8 @@ import { getPublicSession } from "src/actions/session";
 import AppLocalizationProvider from "src/components/AppLocalizationProvider";
 
 export const metadata: Metadata = {
-  title: "Trade Global",
-  description: "Trade Global Dashboard",
+  title: "COST FRQ",
+  description: "COST FRQ Dashboard",
   manifest: "/favicon/manifest.webmanifest",
   icons: {
     icon: [

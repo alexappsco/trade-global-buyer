@@ -170,7 +170,7 @@ export default function LandingFooter() {
           sx={{ justifyContent: 'space-between', alignItems: 'center' }}
         >
           <Typography variant="caption" sx={{ color: '#8E8E93' }}>
-            © 2026 Trade Global. All rights reserved.
+            © 2026 COST FRQ. All rights reserved.
           </Typography>
         </Stack>
       </Container>

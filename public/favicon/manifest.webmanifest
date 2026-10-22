@@ -1,7 +1,7 @@
 {
-  "name": "Trade Global",
-  "short_name": "Trade Global",
-  "description": "Trade Global Dashboard",
+  "name": "COST FRQ",
+  "short_name": "COST FRQ",
+  "description": "COST FRQ Dashboard",
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
