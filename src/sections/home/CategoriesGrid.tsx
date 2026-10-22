@@ -57,11 +57,6 @@ export default function CategoriesGrid({
   const handleCategoryClick = (cat: OrderCatalogItem) => {
     if (role !== 'buyer') return;
     const catName = (locale === 'ar' ? cat.nameAr : cat.nameEn) || cat.code;
-    toast.success(
-      locale === 'ar'
-        ? `تم تحديد الفئة "${catName}"`
-        : `Category "${catName}" selected`
-    );
     const params = new URLSearchParams({
       categoryCode: cat.code,
       categoryName: catName,

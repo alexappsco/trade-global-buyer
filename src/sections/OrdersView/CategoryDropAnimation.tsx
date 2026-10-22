@@ -18,25 +18,30 @@ export default function CategoryDropAnimation({
   onComplete,
 }: CategoryDropAnimationProps) {
   const [stage, setStage] = useState<'flying' | 'landed' | 'finished'>('flying');
+  const onCompleteRef = React.useRef(onComplete);
 
   useEffect(() => {
-    // Stage 1: Flying down (0 to 650ms)
-    // Stage 2: Landed with shockwave and particles (650ms to 1250ms)
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  useEffect(() => {
+    // Stage 1: Flying down (0 to 500ms)
+    // Stage 2: Landed with shockwave and particles (500ms to 950ms)
     const tLanded = setTimeout(() => {
       setStage('landed');
-    }, 650);
+    }, 500);
 
-    // Stage 3: Finished, remove overlay
+    // Stage 3: Finished, clean up
     const tFinish = setTimeout(() => {
       setStage('finished');
-      onComplete?.();
-    }, 1300);
+      onCompleteRef.current?.();
+    }, 950);
 
     return () => {
       clearTimeout(tLanded);
       clearTimeout(tFinish);
     };
-  }, [onComplete]);
+  }, []);
 
   if (stage === 'finished') return null;
 
