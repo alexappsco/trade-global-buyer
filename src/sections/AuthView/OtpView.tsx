@@ -52,6 +52,10 @@ export default function OtpView() {
     }
   };
 
+  const hardNavigate = (path: string) => {
+    window.location.replace(path === "/" ? `/${locale}` : `/${locale}${path}`);
+  };
+
   const handleConfirm = async () => {
     const otp = code.join("");
     if (!challengeId || !phoneNumber) {
@@ -86,7 +90,7 @@ export default function OtpView() {
         clearAuthFlow();
         await syncSession();
         toast.success(t("otp_verified"));
-        router.push(res.profileCompleted ? "/" : "/profile");
+        hardNavigate(res.profileCompleted ? "/" : "/profile");
       }
     } catch (err) {
       toast.error(t("otp_failed"));

@@ -85,10 +85,10 @@ export default function Header({ onMenuClick }: HeaderProps) {
     router.push("/landing");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setAvatarAnchorEl(null);
-    logout();
-    router.push("/auth/login");
+    await logout();
+    window.location.replace(`/${locale}`);
   };
 
   const changeLanguage = (newLocale: string) => {
