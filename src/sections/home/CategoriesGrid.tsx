@@ -66,13 +66,6 @@ export default function CategoriesGrid() {
     };
   }, []);
 
-  useEffect(() => {
-    if (swiper) {
-      swiper.update();
-      updateSwiperState(swiper);
-    }
-  }, [categories, swiper, updateSwiperState]);
-
   // Left button logic (visually points Left: <)
   // In RTL, moving to the left means advancing forward (slideNext).
   // In LTR, moving to the left means going backward (slidePrev).

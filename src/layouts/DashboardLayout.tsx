@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, useTheme, Typography } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { usePathname, useRouter } from "src/i18n/routing";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
@@ -17,7 +17,6 @@ function isRootPath(pathnameWithoutLocale: string) {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [checking, setChecking] = useState(true);
   const theme = useTheme();
   const router = useRouter();
   const pathname = usePathname();
@@ -32,21 +31,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     let cancelled = false;
 
     const checkAuth = async () => {
-      if (isAuthPage || isStandaloneLanding || isGuestLanding) {
-        setChecking(false);
+      if (isPublicPage) {
         return;
       }
 
       const authenticated = await refreshSession();
       if (cancelled) return;
 
-      if (authenticated) {
-        setChecking(false);
-        return;
+      if (!authenticated) {
+        resetSession();
+        router.replace("/auth/login");
       }
-
-      resetSession();
-      router.replace("/auth/login");
     };
 
     checkAuth();
@@ -54,28 +49,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => {
       cancelled = true;
     };
-  }, [isAuthPage, isStandaloneLanding, isGuestLanding, refreshSession, resetSession, router]);
+  }, [isPublicPage, refreshSession, resetSession, router]);
 
   if (isPublicPage) {
     return <>{children}</>;
   }
 
-  if (checking) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          bgcolor: "#f9fafb",
-        }}
-      >
-        <Typography variant="body2" sx={{ color: "#9DA4AE" }}>
-          ...
-        </Typography>
-      </Box>
-    );
+  if (!session) {
+    return null;
   }
 
   return (
