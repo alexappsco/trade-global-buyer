@@ -54,6 +54,7 @@ export type OrderCatalogItem = {
   nameEn: string;
   nameAr: string;
   classifications: OrderClassification[];
+  imageUrl?: string | null;
 };
 
 export type CreateOrderItemRequest = {

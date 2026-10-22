@@ -33,6 +33,7 @@
     "react-hook-form": "^7.76.1",
     "simplebar": "^6.3.3",
     "simplebar-react": "^3.3.2",
+    "swiper": "^14.3.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
