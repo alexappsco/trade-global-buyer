@@ -63,7 +63,7 @@ export default function LandingHeader() {
   const handleLogout = async () => {
     setAvatarAnchorEl(null);
     await logout();
-    router.refresh();
+    window.location.replace(`/${locale}/auth/login`);
   };
 
   const isRtl = locale === 'ar';
