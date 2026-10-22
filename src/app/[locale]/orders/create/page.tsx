@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
+import { redirect } from 'src/i18n/routing';
+import { getPublicSession } from 'src/actions/session';
 import CreateQuoteRequestView from "@/sections/OrdersView/CreateQuoteRequestView";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -13,17 +15,27 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export default async function CreateQuoteRequest({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams?: Promise<{ categoryCode?: string; categoryName?: string; categoryImg?: string }>;
 }) {
-  const params = searchParams ? await searchParams : {};
+  const { locale } = await params;
+
+  // ── Server-side guard: profile must be completed ──
+  const session = await getPublicSession();
+  if (session && !session.profileCompleted) {
+    redirect({ href: '/profile', locale });
+  }
+
+  const resolvedSearchParams = searchParams ? await searchParams : {};
   return (
     <Suspense fallback={null}>
       <CreateQuoteRequestView
-        initialCategoryCode={params?.categoryCode}
-        initialCategoryName={params?.categoryName}
-        initialCategoryImg={params?.categoryImg}
+        initialCategoryCode={resolvedSearchParams?.categoryCode}
+        initialCategoryName={resolvedSearchParams?.categoryName}
+        initialCategoryImg={resolvedSearchParams?.categoryImg}
       />
     </Suspense>
   );

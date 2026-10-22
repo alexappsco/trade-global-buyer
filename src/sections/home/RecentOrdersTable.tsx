@@ -12,9 +12,9 @@ import { getOrders } from 'src/actions/orders';
 import type { Order } from 'src/types/order';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'src/i18n/routing';
-import { paths } from '@/routes/paths';
-import { useToast } from "src/components/toast";
+import { useToast } from 'src/components/toast';
 import { STATUS_STYLES } from 'src/sections/orders/status-styles';
+import { useCreateOrderGuard } from 'src/hooks/use-create-order-guard';
 
 const RECENT_ORDERS_LIMIT = 5;
 
@@ -31,8 +31,9 @@ export default function RecentOrdersTable({
   const tOrders = useTranslations('Orders');
   const locale = useLocale();
   const router = useRouter();
-  const { role, session } = useAuth();
+  const { role } = useAuth();
   const toast = useToast();
+  const { navigateToCreateOrder } = useCreateOrderGuard();
 
   const isControlled = propOrders !== undefined || propLoading !== undefined;
   const [internalOrders, setInternalOrders] = useState<Order[]>([]);
@@ -149,14 +150,7 @@ export default function RecentOrdersTable({
         {role !== 'supplier' && (
           <Button
             variant="contained"
-            onClick={() => {
-                if (session && !session.profileCompleted) {
-                  toast.warning(tOrders("complete_profile_required"));
-                  router.push(paths.profile.view);
-                  return;
-                }
-                router.push("/orders/create");
-              }}
+            onClick={() => navigateToCreateOrder()}
             sx={{
               bgcolor: '#1B8354',
               '&:hover': { bgcolor: '#146440' },

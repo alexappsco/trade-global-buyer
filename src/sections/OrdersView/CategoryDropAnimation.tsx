@@ -8,6 +8,7 @@ interface CategoryDropAnimationProps {
   categoryName: string;
   categoryImg?: string;
   isRtl?: boolean;
+  onDrop?: () => void;
   onComplete?: () => void;
 }
 
@@ -15,21 +16,25 @@ export default function CategoryDropAnimation({
   categoryName,
   categoryImg,
   isRtl = true,
+  onDrop,
   onComplete,
 }: CategoryDropAnimationProps) {
   const [stage, setStage] = useState<'flying' | 'landed' | 'finished'>('flying');
+  const onDropRef = React.useRef(onDrop);
   const onCompleteRef = React.useRef(onComplete);
 
   useEffect(() => {
+    onDropRef.current = onDrop;
     onCompleteRef.current = onComplete;
-  }, [onComplete]);
+  }, [onDrop, onComplete]);
 
   useEffect(() => {
-    // Stage 1: Flying down (0 to 500ms)
-    // Stage 2: Landed with shockwave and particles (500ms to 950ms)
+    // Stage 1: Flying down (0 to 450ms)
+    // Stage 2: Moment of impact / landed (450ms)
     const tLanded = setTimeout(() => {
       setStage('landed');
-    }, 500);
+      onDropRef.current?.();
+    }, 450);
 
     // Stage 3: Finished, clean up
     const tFinish = setTimeout(() => {

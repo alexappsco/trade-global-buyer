@@ -32,6 +32,7 @@ import { cellAlignment } from "src/components/SharedTable/types";
 import { getOrders, getOrdersCatalog, closeOrder, downloadQuotationOffersPdf } from "src/actions/orders";
 import type { Order, OrderCatalogItem } from "src/types/order";
 import { STATUS_STYLES } from "./status-styles";
+import { useCreateOrderGuard } from "src/hooks/use-create-order-guard";
 
 function OrdersRowActions({
   row,
@@ -163,8 +164,9 @@ export default function OrdersListView() {
   const t = useTranslations("Orders");
   const locale = useLocale();
   const router = useRouter();
-  const { role, session } = useAuth();
+  const { role } = useAuth();
   const toast = useToast();
+  const { navigateToCreateOrder } = useCreateOrderGuard();
   // State
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -425,14 +427,7 @@ export default function OrdersListView() {
           role === "buyer" ? (
             <Button
               variant="contained"
-              onClick={() => {
-                if (session && !session.profileCompleted) {
-                  toast.warning(t("complete_profile_required"));
-                  router.push(paths.profile.view);
-                  return;
-                }
-                router.push("/orders/create");
-              }}
+              onClick={() => navigateToCreateOrder()}
               sx={{
                 bgcolor: "#10754E",
                 color: "white",
