@@ -62,7 +62,12 @@ export default function CategoriesGrid({
         ? `تم تحديد الفئة "${catName}"`
         : `Category "${catName}" selected`
     );
-    router.push(`/orders/create?categoryCode=${encodeURIComponent(cat.code)}`);
+    const params = new URLSearchParams({
+      categoryCode: cat.code,
+      categoryName: catName,
+      ...(cat.imageUrl ? { categoryImg: cat.imageUrl } : {}),
+    });
+    router.push(`/orders/create?${params.toString()}`);
   };
 
   const updateSwiperState = useCallback((s: SwiperCore) => {

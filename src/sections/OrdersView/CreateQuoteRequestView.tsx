@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import QuoteSuccessDialog from "./QuoteSuccessDialog";
 import QuoteConfirmDialog from "./QuoteConfirmDialog";
+import CategoryDropAnimation from "./CategoryDropAnimation";
 import {
   Box,
   Button,
@@ -117,6 +118,7 @@ function RequestFormBlock({
   canDelete,
   catalog,
   errors,
+  dropAnimation,
 }: {
   block: RequestBlock;
   onChange: (block: RequestBlock) => void;
@@ -124,6 +126,12 @@ function RequestFormBlock({
   canDelete: boolean;
   catalog: OrderCatalogItem[];
   errors: BlockErrors;
+  dropAnimation?: {
+    active: boolean;
+    categoryName: string;
+    categoryImg?: string;
+    onComplete: () => void;
+  };
 }) {
   const t = useTranslations("CreateQuoteRequest");
   const locale = useLocale();
@@ -165,7 +173,49 @@ function RequestFormBlock({
           gap: 2,
         }}
       >
-        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
+        <Stack
+          spacing={0.5}
+          sx={{
+            alignItems: "flex-start",
+            position: "relative",
+            width: "100%",
+            ...(dropAnimation?.active && {
+              animation: "fieldCatchBounce 1.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+              borderRadius: "8px",
+            }),
+            "@keyframes fieldCatchBounce": {
+              "0%": {
+                transform: "scale(1)",
+                boxShadow: "0 0 0 0 rgba(30, 142, 89, 0)",
+              },
+              "55%": {
+                transform: "scale(1)",
+              },
+              "68%": {
+                transform: "scale(0.96) translateY(2px)",
+                boxShadow: "0 0 0 4px rgba(30, 142, 89, 0.35)",
+                backgroundColor: "rgba(30, 142, 89, 0.08)",
+              },
+              "82%": {
+                transform: "scale(1.025) translateY(-1px)",
+                boxShadow: "0 0 0 2px rgba(30, 142, 89, 0.25)",
+              },
+              "100%": {
+                transform: "scale(1)",
+                boxShadow: "0 0 0 0 rgba(30, 142, 89, 0)",
+                backgroundColor: "transparent",
+              },
+            },
+          }}
+        >
+          {dropAnimation?.active && (
+            <CategoryDropAnimation
+              categoryName={dropAnimation.categoryName}
+              categoryImg={dropAnimation.categoryImg}
+              isRtl={locale === "ar"}
+              onComplete={dropAnimation.onComplete}
+            />
+          )}
           <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
             {t("category")}
           </Typography>
@@ -195,7 +245,19 @@ function RequestFormBlock({
                         color: "#16A34A",
                         fontSize: "14px",
                         fontWeight: 400,
-                        "& input": { textAlign: "start", padding: 0 },
+                        "& input": {
+                          textAlign: "start",
+                          padding: 0,
+                          ...(dropAnimation?.active && {
+                            animation: "textRevealOnImpact 1.25s ease forwards",
+                          }),
+                        },
+                        "@keyframes textRevealOnImpact": {
+                          "0%": { opacity: 0, transform: "scale(0.8)" },
+                          "58%": { opacity: 0, transform: "scale(0.8)" },
+                          "68%": { opacity: 1, transform: "scale(1.08)" },
+                          "100%": { opacity: 1, transform: "scale(1)" },
+                        },
                       }
                     }
                   }}
@@ -359,16 +421,27 @@ function RequestFormBlock({
 
 interface CreateQuoteRequestViewProps {
   initialCategoryCode?: string;
+  initialCategoryName?: string;
+  initialCategoryImg?: string;
 }
 
-export default function CreateQuoteRequestView({ initialCategoryCode }: CreateQuoteRequestViewProps = {}) {
+export default function CreateQuoteRequestView({
+  initialCategoryCode,
+  initialCategoryName,
+  initialCategoryImg,
+}: CreateQuoteRequestViewProps = {}) {
   const t = useTranslations("CreateQuoteRequest");
   const tSidebar = useTranslations("Sidebar");
   const tAuth = useTranslations("Auth");
+  const locale = useLocale();
   const toast = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
   const categoryCodeParam = searchParams?.get("categoryCode") || initialCategoryCode || "";
+  const categoryNameParam = searchParams?.get("categoryName") || initialCategoryName || "";
+  const categoryImgParam = searchParams?.get("categoryImg") || initialCategoryImg || "";
+
+  const [animatingDrop, setAnimatingDrop] = useState(() => Boolean(categoryCodeParam));
 
   const [requests, setRequests] = useState<RequestBlock[]>(() => [
     createBlock(categoryCodeParam),
@@ -588,17 +661,34 @@ export default function CreateQuoteRequestView({ initialCategoryCode }: CreateQu
       </Stack>
 
       <Stack spacing={3}>
-        {requests.map((request, idx) => (
-          <RequestFormBlock
-            key={request.id}
-            block={request}
-            onChange={updateRequest}
-            onDelete={() => deleteRequest(request.id)}
-            canDelete={requests.length > 1}
-            catalog={catalog}
-            errors={blockErrors[idx] || {}}
-          />
-        ))}
+        {requests.map((request, idx) => {
+          const resolvedCategoryName =
+            categoryNameParam ||
+            catalog.find((c) => c.code === categoryCodeParam)?.[locale === "ar" ? "nameAr" : "nameEn"] ||
+            categoryCodeParam;
+
+          return (
+            <RequestFormBlock
+              key={request.id}
+              block={request}
+              onChange={updateRequest}
+              onDelete={() => deleteRequest(request.id)}
+              canDelete={requests.length > 1}
+              catalog={catalog}
+              errors={blockErrors[idx] || {}}
+              dropAnimation={
+                idx === 0 && animatingDrop && categoryCodeParam
+                  ? {
+                      active: true,
+                      categoryName: resolvedCategoryName,
+                      categoryImg: categoryImgParam,
+                      onComplete: () => setAnimatingDrop(false),
+                    }
+                  : undefined
+              }
+            />
+          );
+        })}
       </Stack>
 
       <Stack

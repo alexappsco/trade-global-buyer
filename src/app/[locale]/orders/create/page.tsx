@@ -15,12 +15,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function CreateQuoteRequest({
   searchParams,
 }: {
-  searchParams?: Promise<{ categoryCode?: string }>;
+  searchParams?: Promise<{ categoryCode?: string; categoryName?: string; categoryImg?: string }>;
 }) {
   const params = searchParams ? await searchParams : {};
   return (
     <Suspense fallback={null}>
-      <CreateQuoteRequestView initialCategoryCode={params?.categoryCode} />
+      <CreateQuoteRequestView
+        initialCategoryCode={params?.categoryCode}
+        initialCategoryName={params?.categoryName}
+        initialCategoryImg={params?.categoryImg}
+      />
     </Suspense>
   );
 }
