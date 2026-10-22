@@ -17,7 +17,7 @@ export default function LandingHero() {
       sx={{
         color: '#fff',
         backgroundImage:
-          'linear-gradient(rgba(26, 27, 34, 0.75), rgba(26, 27, 34, 0.55)), url(/costFRQ-Riyadh.png)',
+          'linear-gradient(rgba(26, 27, 34, 0.75), rgba(26, 27, 34, 0.55)), url(/costFRQ-Riyadh.webp)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
