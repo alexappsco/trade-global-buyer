@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Grow } from '@mui/material';
+import { Box, Container, Fade } from '@mui/material';
 import StatsCards from './StatsCards';
 import CategoriesGrid from './CategoriesGrid';
 import RecentOrdersTable from './RecentOrdersTable';
@@ -24,26 +24,26 @@ export default function HomePage() {
       }}
     >
       <Container maxWidth="xl">
-        <Grow in={visible} timeout={600}>
+        {/* Top Summary Metric Cards */}
+        <Fade in={visible} timeout={500} style={{ transitionDelay: '50ms' }}>
           <Box>
-            {/* Top Summary Metric Cards */}
             <StatsCards />
           </Box>
-        </Grow>
+        </Fade>
 
-        <Grow in={visible} timeout={700}>
+        {/* Middle Section Categories */}
+        <Fade in={visible} timeout={600} style={{ transitionDelay: '180ms' }}>
           <Box>
-            {/* Middle Section Categories */}
             <CategoriesGrid />
           </Box>
-        </Grow>
+        </Fade>
 
-        <Grow in={visible} timeout={800}>
+        {/* Bottom Section Orders Data Table */}
+        <Fade in={visible} timeout={700} style={{ transitionDelay: '300ms' }}>
           <Box>
-            {/* Bottom Section Orders Data Table */}
             <RecentOrdersTable />
           </Box>
-        </Grow>
+        </Fade>
       </Container>
     </Box>
   );
