@@ -285,6 +285,8 @@ const RequestFormBlock = React.memo(function RequestFormBlock({
     [block, onChange]
   );
 
+  const [isJustDropped, setIsJustDropped] = useState(false);
+
   return (
     <Box
       sx={{
@@ -319,56 +321,143 @@ const RequestFormBlock = React.memo(function RequestFormBlock({
               categoryName={dropAnimation.categoryName}
               categoryImg={dropAnimation.categoryImg}
               isRtl={locale === "ar"}
-              onComplete={dropAnimation.onComplete}
+              onDrop={() => setIsJustDropped(true)}
+              onComplete={() => {
+                setTimeout(() => setIsJustDropped(false), 1400);
+                dropAnimation.onComplete();
+              }}
             />
           )}
-          <Typography sx={{ fontSize: "14px", fontWeight: 700, color: "#111827" }}>
-            {t("category")}
-          </Typography>
-          <Autocomplete
-            options={catalog}
-            getOptionLabel={(option) => locale === "ar" ? option.nameAr : option.nameEn}
-            value={catalog.find((c) => c.code === block.categoryCode) || null}
-            isOptionEqualToValue={(option, value) => option?.code === value?.code}
-            onChange={(_, newValue) => updateField("categoryCode", newValue ? newValue.code : "")}
-            fullWidth
-            size="small"
-            renderInput={(params) => {
-              const { InputProps, ...rest } = params as any;
-              return (
-                <TextField
-                  {...rest}
-                  placeholder={t("category_placeholder")}
-                  variant="standard"
-                  error={Boolean(errors.categoryCode)}
-                  slotProps={{
-                    ...rest.slotProps,
-                    input: {
-                      ...InputProps,
-                      ...rest.slotProps?.input,
-                      disableUnderline: true,
-                      sx: {
-                        color: "#111827",
-                        fontSize: "14px",
-                        fontWeight: 600,
-                        "& input": {
-                          textAlign: "start",
-                          padding: 0,
+
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <Typography sx={{ fontSize: "14px", fontWeight: 700, color: "#111827" }}>
+              {t("category")}
+            </Typography>
+            {isJustDropped && (
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  bgcolor: '#DCFCE7',
+                  border: '1px solid #86EFAC',
+                  color: '#15803D',
+                  px: 1,
+                  py: 0.2,
+                  borderRadius: '12px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  animation: 'badgePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                  '@keyframes badgePop': {
+                    '0%': { transform: 'scale(0.5)', opacity: 0 },
+                    '100%': { transform: 'scale(1)', opacity: 1 },
+                  },
+                }}
+              >
+                {locale === 'ar' ? 'تمت الإضافة ✨' : 'Added ✨'}
+              </Box>
+            )}
+          </Box>
+
+          <Box
+            sx={{
+              width: "100%",
+              bgcolor: "#FFFFFF",
+              border: "1.5px solid",
+              borderColor: isJustDropped
+                ? "#1E8E59"
+                : errors.categoryCode
+                ? "#EF4444"
+                : "#CBD5E1",
+              borderRadius: "8px",
+              px: 1.5,
+              py: "4px",
+              minHeight: "44px",
+              display: "flex",
+              alignItems: "center",
+              transition: "border-color 0.25s ease, box-shadow 0.25s ease",
+              ...(isJustDropped && {
+                animation: "inputDroppedPhysics 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+              }),
+              "&:hover": {
+                borderColor: errors.categoryCode ? "#EF4444" : "#1E8E59",
+              },
+              "&:focus-within": {
+                borderColor: "#1E8E59",
+                boxShadow: "0 0 0 3px rgba(30, 142, 89, 0.15)",
+              },
+              "@keyframes inputDroppedPhysics": {
+                "0%": {
+                  transform: "scale(1) translateY(0)",
+                  boxShadow: "0 0 0 0 rgba(30, 142, 89, 0)",
+                },
+                "22%": {
+                  transform: "scale(0.96, 1.04) translateY(4px)",
+                  boxShadow: "0 0 0 5px rgba(30, 142, 89, 0.45), 0 8px 24px rgba(30, 142, 89, 0.25)",
+                  borderColor: "#1E8E59",
+                  backgroundColor: "rgba(30, 142, 89, 0.06)",
+                },
+                "48%": {
+                  transform: "scale(1.035, 0.97) translateY(-2px)",
+                  boxShadow: "0 0 0 6px rgba(30, 142, 89, 0.3), 0 6px 18px rgba(30, 142, 89, 0.18)",
+                  borderColor: "#1E8E59",
+                },
+                "72%": {
+                  transform: "scale(0.99, 1.01) translateY(1px)",
+                  boxShadow: "0 0 0 3px rgba(30, 142, 89, 0.18)",
+                },
+                "100%": {
+                  transform: "scale(1) translateY(0)",
+                  boxShadow: "0 0 0 2px rgba(30, 142, 89, 0.1)",
+                },
+              },
+            }}
+          >
+            <Autocomplete
+              options={catalog}
+              getOptionLabel={(option) => locale === "ar" ? option.nameAr : option.nameEn}
+              value={catalog.find((c) => c.code === block.categoryCode) || null}
+              isOptionEqualToValue={(option, value) => option?.code === value?.code}
+              onChange={(_, newValue) => updateField("categoryCode", newValue ? newValue.code : "")}
+              fullWidth
+              size="small"
+              renderInput={(params) => {
+                const { InputProps, ...rest } = params as any;
+                return (
+                  <TextField
+                    {...rest}
+                    placeholder={t("category_placeholder")}
+                    variant="standard"
+                    error={Boolean(errors.categoryCode)}
+                    slotProps={{
+                      ...rest.slotProps,
+                      input: {
+                        ...InputProps,
+                        ...rest.slotProps?.input,
+                        disableUnderline: true,
+                        sx: {
                           color: "#111827",
+                          fontSize: "14px",
                           fontWeight: 600,
-                          "&::placeholder": {
-                            color: "#9CA3AF",
-                            opacity: 1,
-                            fontWeight: 400,
+                          "& input": {
+                            textAlign: "start",
+                            padding: 0,
+                            color: "#111827",
+                            fontWeight: 600,
+                            "&::placeholder": {
+                              color: "#9CA3AF",
+                              opacity: 1,
+                              fontWeight: 400,
+                            },
                           },
                         },
                       },
-                    },
-                  }}
-                />
-              );
-            }}
-          />
+                    }}
+                  />
+                );
+              }}
+            />
+          </Box>
           {errors.categoryCode && (
             <Typography sx={{ fontSize: "12px", color: "#EF4444", mt: 0.5 }}>{errors.categoryCode}</Typography>
           )}
@@ -378,29 +467,52 @@ const RequestFormBlock = React.memo(function RequestFormBlock({
           <Typography sx={{ fontSize: "14px", fontWeight: 700, color: "#111827" }}>
             {t("request_title")}
           </Typography>
-          <InputBase
-            value={block.title}
-            onChange={(e) => updateField("title", e.target.value)}
-            placeholder={t("title_placeholder")}
-            error={Boolean(errors.title)}
+          <Box
             sx={{
-              color: errors.title ? "#EF4444" : "#111827",
-              fontSize: "14px",
-              fontWeight: 500,
               width: "100%",
-              "& input": {
-                textAlign: "start",
-                p: 0,
-                color: errors.title ? "#EF4444" : "#111827",
-                fontWeight: 500,
-                "&::placeholder": {
-                  color: "#9CA3AF",
-                  opacity: 1,
-                  fontWeight: 400,
-                },
+              bgcolor: "#FFFFFF",
+              border: "1.5px solid",
+              borderColor: errors.title ? "#EF4444" : "#CBD5E1",
+              borderRadius: "8px",
+              px: 1.5,
+              py: "4px",
+              minHeight: "44px",
+              display: "flex",
+              alignItems: "center",
+              transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+              "&:hover": {
+                borderColor: errors.title ? "#EF4444" : "#94A3B8",
+              },
+              "&:focus-within": {
+                borderColor: "#1E8E59",
+                boxShadow: "0 0 0 3px rgba(30, 142, 89, 0.15)",
               },
             }}
-          />
+          >
+            <InputBase
+              value={block.title}
+              onChange={(e) => updateField("title", e.target.value)}
+              placeholder={t("title_placeholder")}
+              error={Boolean(errors.title)}
+              sx={{
+                color: errors.title ? "#EF4444" : "#111827",
+                fontSize: "14px",
+                fontWeight: 500,
+                width: "100%",
+                "& input": {
+                  textAlign: "start",
+                  p: 0,
+                  color: errors.title ? "#EF4444" : "#111827",
+                  fontWeight: 500,
+                  "&::placeholder": {
+                    color: "#9CA3AF",
+                    opacity: 1,
+                    fontWeight: 400,
+                  },
+                },
+              }}
+            />
+          </Box>
           {errors.title && (
             <Typography sx={{ fontSize: "12px", color: "#EF4444" }}>{errors.title}</Typography>
           )}
