@@ -122,9 +122,9 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
           <Box
             component="img"
-            src="/logo_2.png"
+            src="/frq_logo.svg"
             alt="COST FRQ"
-            sx={{ height: { xs: 40, md: 66 }, marginInlineStart: { xs: 0, md: "60px" } }}
+            sx={{ height: { xs: 34, md: 48 }, marginInlineStart: { xs: 0, md: "60px" } }}
           />
         </Box>
 

@@ -103,7 +103,7 @@ export default function LandingHeader() {
         >
           <Box
             component="img"
-            src="/landing/logo.png"
+            src="/frq_logo.svg"
             alt="TradeGlobal"
             sx={{ height: { xs: 40, md: 50 }, width: 'auto', objectFit: 'contain' }}
           />
@@ -258,7 +258,7 @@ export default function LandingHeader() {
         <Stack sx={{ px: 2.5, py: 2 }}>
           <Box
             component="img"
-            src="/landing/logo.png"
+            src="/frq_logo.svg"
             alt="TradeGlobal"
             sx={{ height: 44, width: 'auto', objectFit: 'contain' }}
           />
