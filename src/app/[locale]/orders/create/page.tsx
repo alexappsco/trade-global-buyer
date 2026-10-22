@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import CreateQuoteRequestView from "@/sections/OrdersView/CreateQuoteRequestView";
 
@@ -11,6 +12,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default function CreateQuoteRequest() {
-  return <CreateQuoteRequestView />;
+export default async function CreateQuoteRequest({
+  searchParams,
+}: {
+  searchParams?: Promise<{ categoryCode?: string; categoryName?: string; categoryImg?: string }>;
+}) {
+  const params = searchParams ? await searchParams : {};
+  return (
+    <Suspense fallback={null}>
+      <CreateQuoteRequestView
+        initialCategoryCode={params?.categoryCode}
+        initialCategoryName={params?.categoryName}
+        initialCategoryImg={params?.categoryImg}
+      />
+    </Suspense>
+  );
 }

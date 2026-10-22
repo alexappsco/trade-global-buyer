@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useMemo } from "react";
 import { alpha, useTheme } from "@mui/material/styles";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -24,7 +25,7 @@ export interface DatePickerFieldProps {
   sx?: SxProps<Theme>;
 }
 
-export default function DatePickerField({
+function DatePickerFieldComponent({
   value,
   onChange,
   error = false,
@@ -38,9 +39,19 @@ export default function DatePickerField({
   const theme = useTheme();
   const accent = theme.palette.primary.main;
 
+  const parsedDate = useMemo(() => {
+    if (!value) return null;
+    try {
+      const d = parseISO(value);
+      return Number.isNaN(d.getTime()) ? null : d;
+    } catch {
+      return null;
+    }
+  }, [value]);
+
   return (
     <DatePicker
-      value={value ? parseISO(value) : null}
+      value={parsedDate}
       onChange={(date) =>
         onChange(date && !Number.isNaN(date.getTime()) ? format(date, ISO_FORMAT) : "")
       }
@@ -59,6 +70,7 @@ export default function DatePickerField({
               borderRadius: "8px",
               bgcolor: "background.paper",
               fontSize: "14px",
+              color: "#111827",
             },
             "& .MuiPickersOutlinedInput-notchedOutline": {
               borderColor: "#CBD5E1",
@@ -73,7 +85,11 @@ export default function DatePickerField({
             },
             "& .MuiPickersInputBase-sectionsContainer": {
               py: "8px",
-              color: value ? "text.primary" : "text.disabled",
+              color: value ? "#111827" : "#9CA3AF",
+              fontWeight: value ? 500 : 400,
+            },
+            "& .MuiPickersSectionList-root": {
+              color: value ? "#111827" : "#9CA3AF",
             },
           },
         },
@@ -133,3 +149,6 @@ export default function DatePickerField({
     />
   );
 }
+
+const DatePickerField = React.memo(DatePickerFieldComponent);
+export default DatePickerField;

@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import QuoteSuccessDialog from "./QuoteSuccessDialog";
 import QuoteConfirmDialog from "./QuoteConfirmDialog";
+import CategoryDropAnimation from "./CategoryDropAnimation";
 import {
   Box,
   Button,
@@ -74,9 +76,9 @@ const createItem = (): ItemRow => ({
   details: "",
 });
 
-const createBlock = (): RequestBlock => ({
+const createBlock = (categoryCode = ""): RequestBlock => ({
   id: createId(),
-  categoryCode: "",
+  categoryCode,
   title: "",
   deliveryDate: "",
   items: [createItem()],
@@ -109,40 +111,179 @@ function GreenButton({
   );
 }
 
-function RequestFormBlock({
-  block,
-  onChange,
-  onDelete,
-  canDelete,
-  catalog,
-  errors,
-}: {
+interface ItemTableRowProps {
+  item: ItemRow;
+  error?: ItemErrors;
+  onUpdate: (itemId: string, field: keyof ItemRow, value: string) => void;
+  onRemove: (itemId: string) => void;
+  t: (key: string) => string;
+}
+
+const ItemTableRow = React.memo(function ItemTableRow({
+  item,
+  error = {},
+  onUpdate,
+  onRemove,
+  t,
+}: ItemTableRowProps) {
+  return (
+    <TableRow sx={{ "& td": { borderBottom: "1px solid #E2E8F0" }, "&:last-child td": { borderBottom: "none" } }}>
+      <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+        <InputBase
+          value={item.name}
+          onChange={(e) => onUpdate(item.id, "name", e.target.value)}
+          placeholder={t("item_placeholder")}
+          error={Boolean(error.name)}
+          sx={{
+            color: error.name ? "#EF4444" : "#111827",
+            fontSize: "14px",
+            fontWeight: 500,
+            width: "100%",
+            "& input": {
+              textAlign: "center",
+              p: 0.5,
+              color: error.name ? "#EF4444" : "#111827",
+              fontWeight: 500,
+              "&::placeholder": {
+                color: "#9CA3AF",
+                opacity: 1,
+                fontWeight: 400,
+              },
+            },
+          }}
+        />
+        {error.name && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{error.name}</Typography>}
+      </TableCell>
+      <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+        <InputBase
+          type="text"
+          inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 1 }}
+          value={item.quantity}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val === "" || /^[1-9]\d*$/.test(val)) {
+              onUpdate(item.id, "quantity", val);
+            }
+          }}
+          placeholder="0"
+          error={Boolean(error.quantity)}
+          sx={{
+            color: error.quantity ? "#EF4444" : "#111827",
+            fontSize: "14px",
+            fontWeight: 600,
+            width: "100%",
+            "& input": {
+              textAlign: "center",
+              p: 0.5,
+              color: error.quantity ? "#EF4444" : "#111827",
+              fontWeight: 600,
+              "&::placeholder": {
+                color: "#9CA3AF",
+                opacity: 1,
+                fontWeight: 400,
+              },
+            },
+          }}
+        />
+        {error.quantity && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{error.quantity}</Typography>}
+      </TableCell>
+      <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
+        <InputBase
+          value={item.details}
+          onChange={(e) => onUpdate(item.id, "details", e.target.value)}
+          placeholder={t("details_placeholder")}
+          error={Boolean(error.details)}
+          sx={{
+            color: error.details ? "#EF4444" : "#1F2937",
+            fontSize: "14px",
+            fontWeight: 400,
+            width: "100%",
+            "& input": {
+              textAlign: "center",
+              p: 0.5,
+              color: error.details ? "#EF4444" : "#1F2937",
+              "&::placeholder": {
+                color: "#9CA3AF",
+                opacity: 1,
+              },
+            },
+          }}
+        />
+        {error.details && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{error.details}</Typography>}
+      </TableCell>
+      <TableCell align="center" sx={{ py: 1 }}>
+        <IconButton
+          size="small"
+          onClick={() => onRemove(item.id)}
+          sx={{
+            color: "#EF4444",
+            transition: "all 0.15s ease",
+            "&:hover": { bgcolor: "rgba(239, 68, 68, 0.08)" },
+          }}
+        >
+          <DeleteIcon sx={{ fontSize: "18px" }} />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  );
+});
+
+interface RequestFormBlockProps {
   block: RequestBlock;
   onChange: (block: RequestBlock) => void;
   onDelete: () => void;
   canDelete: boolean;
   catalog: OrderCatalogItem[];
   errors: BlockErrors;
-}) {
+  dropAnimation?: {
+    active: boolean;
+    categoryName: string;
+    categoryImg?: string;
+    onComplete: () => void;
+  };
+}
+
+const RequestFormBlock = React.memo(function RequestFormBlock({
+  block,
+  onChange,
+  onDelete,
+  canDelete,
+  catalog,
+  errors,
+  dropAnimation,
+}: RequestFormBlockProps) {
   const t = useTranslations("CreateQuoteRequest");
   const locale = useLocale();
 
-  const updateField = (field: keyof Omit<RequestBlock, "items">, value: string) =>
-    onChange({ ...block, [field]: value });
+  const updateField = useCallback(
+    (field: keyof Omit<RequestBlock, "items">, value: string) => {
+      onChange({ ...block, [field]: value });
+    },
+    [block, onChange]
+  );
 
-  const addItem = () =>
+  const addItem = useCallback(() => {
     onChange({ ...block, items: [...block.items, createItem()] });
+  }, [block, onChange]);
 
-  const updateItem = (itemId: string, field: keyof ItemRow, value: string) =>
-    onChange({
-      ...block,
-      items: block.items.map((item) =>
-        item.id === itemId ? { ...item, [field]: value } : item,
-      ),
-    });
+  const updateItem = useCallback(
+    (itemId: string, field: keyof ItemRow, value: string) => {
+      onChange({
+        ...block,
+        items: block.items.map((item) =>
+          item.id === itemId ? { ...item, [field]: value } : item
+        ),
+      });
+    },
+    [block, onChange]
+  );
 
-  const removeItem = (itemId: string) =>
-    onChange({ ...block, items: block.items.filter((item) => item.id !== itemId) });
+  const removeItem = useCallback(
+    (itemId: string) => {
+      onChange({ ...block, items: block.items.filter((item) => item.id !== itemId) });
+    },
+    [block, onChange]
+  );
 
   return (
     <Box
@@ -158,20 +299,37 @@ function RequestFormBlock({
           border: "1px solid #CBD5E1",
           borderRadius: "8px",
           mb: "32px",
-          p: { xs: "12px 16px", md: "16px 24px" },
+          p: { xs: "14px 16px", md: "16px 24px" },
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
-          gap: 2,
+          gap: 2.5,
+          bgcolor: "#F8FAFC",
         }}
       >
-        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
-          <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
+        <Stack
+          spacing={0.75}
+          sx={{
+            alignItems: "flex-start",
+            position: "relative",
+            width: "100%",
+          }}
+        >
+          {dropAnimation?.active && (
+            <CategoryDropAnimation
+              categoryName={dropAnimation.categoryName}
+              categoryImg={dropAnimation.categoryImg}
+              isRtl={locale === "ar"}
+              onComplete={dropAnimation.onComplete}
+            />
+          )}
+          <Typography sx={{ fontSize: "14px", fontWeight: 700, color: "#111827" }}>
             {t("category")}
           </Typography>
           <Autocomplete
             options={catalog}
             getOptionLabel={(option) => locale === "ar" ? option.nameAr : option.nameEn}
             value={catalog.find((c) => c.code === block.categoryCode) || null}
+            isOptionEqualToValue={(option, value) => option?.code === value?.code}
             onChange={(_, newValue) => updateField("categoryCode", newValue ? newValue.code : "")}
             fullWidth
             size="small"
@@ -190,12 +348,22 @@ function RequestFormBlock({
                       ...rest.slotProps?.input,
                       disableUnderline: true,
                       sx: {
-                        color: "#16A34A",
+                        color: "#111827",
                         fontSize: "14px",
-                        fontWeight: 400,
-                        "& input": { textAlign: "start", padding: 0 },
-                      }
-                    }
+                        fontWeight: 600,
+                        "& input": {
+                          textAlign: "start",
+                          padding: 0,
+                          color: "#111827",
+                          fontWeight: 600,
+                          "&::placeholder": {
+                            color: "#9CA3AF",
+                            opacity: 1,
+                            fontWeight: 400,
+                          },
+                        },
+                      },
+                    },
                   }}
                 />
               );
@@ -206,8 +374,8 @@ function RequestFormBlock({
           )}
         </Stack>
 
-        <Stack spacing={0.5} sx={{ alignItems: "flex-start" }}>
-          <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
+        <Stack spacing={0.75} sx={{ alignItems: "flex-start", width: "100%" }}>
+          <Typography sx={{ fontSize: "14px", fontWeight: 700, color: "#111827" }}>
             {t("request_title")}
           </Typography>
           <InputBase
@@ -216,11 +384,21 @@ function RequestFormBlock({
             placeholder={t("title_placeholder")}
             error={Boolean(errors.title)}
             sx={{
-              color: errors.title ? "#EF4444" : "#9CA3AF",
+              color: errors.title ? "#EF4444" : "#111827",
               fontSize: "14px",
-              fontWeight: 400,
+              fontWeight: 500,
               width: "100%",
-              "& input": { textAlign: "start", p: 0 }
+              "& input": {
+                textAlign: "start",
+                p: 0,
+                color: errors.title ? "#EF4444" : "#111827",
+                fontWeight: 500,
+                "&::placeholder": {
+                  color: "#9CA3AF",
+                  opacity: 1,
+                  fontWeight: 400,
+                },
+              },
             }}
           />
           {errors.title && (
@@ -228,8 +406,8 @@ function RequestFormBlock({
           )}
         </Stack>
 
-        <Stack spacing={0.5} sx={{ alignItems: "flex-start", width: "100%" }}>
-          <Typography sx={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
+        <Stack spacing={0.75} sx={{ alignItems: "flex-start", width: "100%" }}>
+          <Typography sx={{ fontSize: "14px", fontWeight: 700, color: "#111827" }}>
             {t("delivery_date")}
           </Typography>
           <DatePickerField
@@ -254,59 +432,16 @@ function RequestFormBlock({
             </TableRow>
           </TableHead>
           <TableBody>
-            {block.items.map((item, idx) => {
-              const itemErr = errors.items?.[idx] || {};
-              return (
-                <TableRow key={item.id} sx={{ "& td": { borderBottom: "1px solid #E2E8F0" }, "&:last-child td": { borderBottom: "none" } }}>
-                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
-                    <InputBase
-                      value={item.name}
-                      onChange={(e) => updateItem(item.id, "name", e.target.value)}
-                      placeholder={t("item_placeholder")}
-                      error={Boolean(itemErr.name)}
-                      sx={{ color: itemErr.name ? "#EF4444" : "#16A34A", fontSize: "14px", fontWeight: 500, width: "100%", "& input": { textAlign: "center", p: 0 } }}
-                    />
-                    {itemErr.name && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.name}</Typography>}
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
-                    <InputBase
-                      type="text"
-                      inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 1 }}
-                      value={item.quantity}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === "" || /^[1-9]\d*$/.test(val)) {
-                          updateItem(item.id, "quantity", val);
-                        }
-                      }}
-                      placeholder="0"
-                      error={Boolean(itemErr.quantity)}
-                      sx={{ color: itemErr.quantity ? "#EF4444" : "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
-                    />
-                    {itemErr.quantity && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.quantity}</Typography>}
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderInlineEnd: "1px solid #E2E8F0 !important", py: 1 }}>
-                    <InputBase
-                      value={item.details}
-                      onChange={(e) => updateItem(item.id, "details", e.target.value)}
-                      placeholder={t("details_placeholder")}
-                      error={Boolean(itemErr.details)}
-                      sx={{ color: itemErr.details ? "#EF4444" : "#374151", fontSize: "14px", fontWeight: 400, width: "100%", "& input": { textAlign: "center", p: 0 } }}
-                    />
-                    {itemErr.details && <Typography sx={{ fontSize: "11px", color: "#EF4444", mt: 0.25 }}>{itemErr.details}</Typography>}
-                  </TableCell>
-                  <TableCell align="center" sx={{ py: 1 }}>
-                    <IconButton
-                      size="small"
-                      onClick={() => removeItem(item.id)}
-                      sx={{ color: "#EF4444" }}
-                    >
-                      <DeleteIcon sx={{ fontSize: "18px" }} />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {block.items.map((item, idx) => (
+              <ItemTableRow
+                key={item.id}
+                item={item}
+                error={errors.items?.[idx]}
+                onUpdate={updateItem}
+                onRemove={removeItem}
+                t={t}
+              />
+            ))}
           </TableBody>
         </Table>
       </Box>
@@ -353,20 +488,53 @@ function RequestFormBlock({
       </Box>
     </Box>
   );
+});
+
+interface CreateQuoteRequestViewProps {
+  initialCategoryCode?: string;
+  initialCategoryName?: string;
+  initialCategoryImg?: string;
 }
 
-export default function CreateQuoteRequestView() {
+export default function CreateQuoteRequestView({
+  initialCategoryCode,
+  initialCategoryName,
+  initialCategoryImg,
+}: CreateQuoteRequestViewProps = {}) {
   const t = useTranslations("CreateQuoteRequest");
   const tSidebar = useTranslations("Sidebar");
   const tAuth = useTranslations("Auth");
+  const locale = useLocale();
   const toast = useToast();
   const router = useRouter();
-  const [requests, setRequests] = useState<RequestBlock[]>([createBlock()]);
+  const searchParams = useSearchParams();
+  const categoryCodeParam = searchParams?.get("categoryCode") || initialCategoryCode || "";
+  const categoryNameParam = searchParams?.get("categoryName") || initialCategoryName || "";
+  const categoryImgParam = searchParams?.get("categoryImg") || initialCategoryImg || "";
+
+  const [animatingDrop, setAnimatingDrop] = useState(() => Boolean(categoryCodeParam));
+
+  const [requests, setRequests] = useState<RequestBlock[]>(() => [
+    createBlock(categoryCodeParam),
+  ]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [catalog, setCatalog] = useState<OrderCatalogItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [blockErrors, setBlockErrors] = useState<BlockErrors[]>([{}]);
+
+  useEffect(() => {
+    if (categoryCodeParam) {
+      setRequests((prev) => {
+        if (prev.length > 0 && !prev[0].categoryCode) {
+          return prev.map((block, idx) =>
+            idx === 0 ? { ...block, categoryCode: categoryCodeParam } : block
+          );
+        }
+        return prev;
+      });
+    }
+  }, [categoryCodeParam]);
 
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -390,30 +558,42 @@ export default function CreateQuoteRequestView() {
     fetchCatalog();
   }, []);
 
-  const addRequest = () => {
+  const requestsRef = useRef(requests);
+  useEffect(() => {
+    requestsRef.current = requests;
+  }, [requests]);
+
+  const addRequest = useCallback(() => {
     setRequests((prev) => [...prev, createBlock()]);
     setBlockErrors((prev) => [...prev, {}]);
-  };
+  }, []);
 
-  const updateRequest = (updated: RequestBlock) => {
+  const updateRequest = useCallback((updated: RequestBlock) => {
     setRequests((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
-    // clear errors for the changed block
-    setBlockErrors((prev) =>
-      prev.map((e, i) => (requests[i]?.id === updated.id ? {} : e))
-    );
-  };
+    setBlockErrors((prev) => {
+      const hasAnyError = prev.some((b) => b && (b.categoryCode || b.title || b.deliveryDate || (b.items && b.items.length > 0)));
+      if (!hasAnyError) return prev;
+      const targetIdx = requestsRef.current.findIndex((r) => r.id === updated.id);
+      if (targetIdx === -1 || !prev[targetIdx] || Object.keys(prev[targetIdx]).length === 0) return prev;
+      return prev.map((e, i) => (i === targetIdx ? {} : e));
+    });
+  }, []);
 
-  const deleteRequest = (id: string) => {
-    const idx = requests.findIndex((r) => r.id === id);
+  const deleteRequest = useCallback((id: string) => {
     setRequests((prev) => {
       if (prev.length === 1) return [createBlock()];
       return prev.filter((r) => r.id !== id);
     });
     setBlockErrors((prev) => {
+      const idx = requestsRef.current.findIndex((r) => r.id === id);
       if (prev.length === 1) return [{}];
       return prev.filter((_, i) => i !== idx);
     });
-  };
+  }, []);
+
+  const handleDropComplete = useCallback(() => {
+    setAnimatingDrop(false);
+  }, []);
 
   const buildSchema = () =>
     Yup.array().of(
@@ -564,17 +744,34 @@ export default function CreateQuoteRequestView() {
       </Stack>
 
       <Stack spacing={3}>
-        {requests.map((request, idx) => (
-          <RequestFormBlock
-            key={request.id}
-            block={request}
-            onChange={updateRequest}
-            onDelete={() => deleteRequest(request.id)}
-            canDelete={requests.length > 1}
-            catalog={catalog}
-            errors={blockErrors[idx] || {}}
-          />
-        ))}
+        {requests.map((request, idx) => {
+          const resolvedCategoryName =
+            categoryNameParam ||
+            catalog.find((c) => c.code === categoryCodeParam)?.[locale === "ar" ? "nameAr" : "nameEn"] ||
+            categoryCodeParam;
+
+          return (
+            <RequestFormBlock
+              key={request.id}
+              block={request}
+              onChange={updateRequest}
+              onDelete={() => deleteRequest(request.id)}
+              canDelete={requests.length > 1}
+              catalog={catalog}
+              errors={blockErrors[idx] || {}}
+              dropAnimation={
+                idx === 0 && animatingDrop && categoryCodeParam
+                  ? {
+                      active: true,
+                      categoryName: resolvedCategoryName,
+                      categoryImg: categoryImgParam,
+                      onComplete: handleDropComplete,
+                    }
+                  : undefined
+              }
+            />
+          );
+        })}
       </Stack>
 
       <Stack
