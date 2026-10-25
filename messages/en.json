@@ -355,7 +355,7 @@
       "submit": "Submit Offer",
       "cancel": "Cancel",
       "back": "Back to Orders",
-      "commission_terms": "I acknowledge my commitment to the agreed 2% percentage",
+      "commission_terms": "I acknowledge my commitment to the agreed {rate}% percentage",
       "confirm_title": "You are about to submit your price offer to this order.",
       "confirm_submit": "Submit",
       "success_title": "Offer submitted successfully",
