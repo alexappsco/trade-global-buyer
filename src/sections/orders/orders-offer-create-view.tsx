@@ -71,6 +71,11 @@ export default function OrdersOfferCreateView({ id }: Props) {
     !order.isOwnOrder &&
     !order.hasSubmittedQuotation;
 
+  const commissionPercentage =
+    order?.commissionRate != null
+      ? Number((order.commissionRate * 100).toFixed(2))
+      : 2;
+
   const subtotal = useMemo(() => {
     const itemsTotal = (order?.items ?? []).reduce((sum, item) => {
       const price = Number(unitPrices[item.id]);
@@ -503,7 +508,7 @@ export default function OrdersOfferCreateView({ id }: Props) {
             }}
           />
           <Typography variant="body2" sx={{ fontWeight: 600, color: "#161C24", minWidth: 0 }}>
-            {t("submit_offer.commission_terms")}
+            {t("submit_offer.commission_terms", { rate: commissionPercentage })}
           </Typography>
         </Box>
       </ConfirmationDialog>

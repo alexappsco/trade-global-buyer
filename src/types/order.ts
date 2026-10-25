@@ -35,6 +35,7 @@ export type Order = {
   hasPendingDelivery?: boolean;
   isOwnOrder: boolean;
   isOrderClosed: boolean;
+  commissionRate?: number | null;
   items: OrderItem[];
 };
 
