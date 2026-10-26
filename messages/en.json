@@ -187,6 +187,7 @@
         "title": "Support",
         "terms": "Terms & Conditions",
         "privacy": "Privacy Policy",
+        "platform_policy": "Platform Policy",
         "cookies": "Cookies",
         "faq": "FAQs"
       },
@@ -756,6 +757,18 @@
       "submit_quote": "Submit Quote",
       "view_quote": "View Submitted Offer",
       "cannot_submit": "Cannot Submit"
+    }
+  },
+  "StaticPages": {
+    "last_updated": "Last updated: {date}",
+    "back_to_home": "Home",
+    "error_loading": "Failed to load page content. Please try again.",
+    "retry": "Retry",
+    "tabs": {
+      "about_us": "About Us",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "platform_policy": "Platform Policy"
     }
   }
 }

@@ -25,7 +25,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const isAuthPage = pathnameWithoutLocale.startsWith("/auth");
   const isStandaloneLanding = pathnameWithoutLocale === "/landing";
   const isGuestLanding = !isStandaloneLanding && !session && isRootPath(pathnameWithoutLocale);
-  const isPublicPage = isAuthPage || isStandaloneLanding || isGuestLanding;
+  const staticPageRoutes = [
+    "/about-us",
+    "/terms-and-conditions",
+    "/privacy-policy",
+    "/platform-policy",
+    "/pages",
+  ];
+  const isStaticPage = staticPageRoutes.some(
+    (route) => pathnameWithoutLocale === route || pathnameWithoutLocale.startsWith(`${route}/`)
+  );
+  const isPublicPage = isAuthPage || isStandaloneLanding || isGuestLanding || isStaticPage;
+
 
   useEffect(() => {
     let cancelled = false;

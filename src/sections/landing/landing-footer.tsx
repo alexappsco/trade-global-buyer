@@ -1,3 +1,5 @@
+'use client';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
@@ -8,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import { useTranslations } from 'next-intl';
 
 import Iconify from 'src/components/iconify';
+import { Link } from 'src/i18n/routing';
+import { paths } from 'src/routes/paths';
 
 const socials = [
   { value: 'instagram', icon: 'mdi:instagram', color: '#E1306C' },
@@ -20,6 +24,7 @@ const linkSx = {
   color: '#5F5E5E',
   textDecoration: 'none',
   cursor: 'pointer',
+  display: 'inline-block',
   transition: 'color 0.2s',
   '&:hover': { color: '#108558' },
 } as const;
@@ -79,11 +84,13 @@ export default function LandingFooter() {
               {t('footer.company.title')}
             </Typography>
             <Stack spacing={1.5}>
-              <Box component="a" href="#about" sx={linkSx}>{t('footer.company.about')}</Box>
-              <Box component="a" href="#how-it-works" sx={linkSx}>{t('footer.company.how_it_works')}</Box>
-              <Box component="a" href="#faq" sx={linkSx}>{t('footer.company.contact')}</Box>
-              <Box component="a" href="#features" sx={linkSx}>{t('footer.company.join_supplier')}</Box>
-              <Box component="a" href="#features" sx={linkSx}>{t('footer.company.join_merchant')}</Box>
+              <Link href={paths.pages.aboutUs} style={{ textDecoration: 'none' }}>
+                <Box component="span" sx={linkSx}>{t('footer.company.about')}</Box>
+              </Link>
+              <Box component="a" href="/#how-it-works" sx={linkSx}>{t('footer.company.how_it_works')}</Box>
+              <Box component="a" href="/#faq" sx={linkSx}>{t('footer.company.contact')}</Box>
+              <Box component="a" href="/#features" sx={linkSx}>{t('footer.company.join_supplier')}</Box>
+              <Box component="a" href="/#features" sx={linkSx}>{t('footer.company.join_merchant')}</Box>
             </Stack>
           </Grid>
 
@@ -92,9 +99,9 @@ export default function LandingFooter() {
               {t('footer.services.title')}
             </Typography>
             <Stack spacing={1.5}>
-              <Box component="a" href="#features" sx={linkSx}>{t('footer.services.new_rfq')}</Box>
-              <Box component="a" href="#features" sx={linkSx}>{t('footer.services.receive_quotes')}</Box>
-              <Box component="a" href="#features" sx={linkSx}>{t('footer.services.corporate_requests')}</Box>
+              <Box component="a" href="/#features" sx={linkSx}>{t('footer.services.new_rfq')}</Box>
+              <Box component="a" href="/#features" sx={linkSx}>{t('footer.services.receive_quotes')}</Box>
+              <Box component="a" href="/#features" sx={linkSx}>{t('footer.services.corporate_requests')}</Box>
             </Stack>
           </Grid>
 
@@ -103,10 +110,16 @@ export default function LandingFooter() {
               {t('footer.support.title')}
             </Typography>
             <Stack spacing={1.5}>
-              <Box component="a" href="#faq" sx={linkSx}>{t('footer.support.terms')}</Box>
-              <Box component="a" href="#faq" sx={linkSx}>{t('footer.support.privacy')}</Box>
-              <Box component="a" href="#faq" sx={linkSx}>{t('footer.support.cookies')}</Box>
-              <Box component="a" href="#faq" sx={linkSx}>{t('footer.support.faq')}</Box>
+              <Link href={paths.pages.termsAndConditions} style={{ textDecoration: 'none' }}>
+                <Box component="span" sx={linkSx}>{t('footer.support.terms')}</Box>
+              </Link>
+              <Link href={paths.pages.privacyPolicy} style={{ textDecoration: 'none' }}>
+                <Box component="span" sx={linkSx}>{t('footer.support.privacy')}</Box>
+              </Link>
+              <Link href={paths.pages.platformPolicy} style={{ textDecoration: 'none' }}>
+                <Box component="span" sx={linkSx}>{t('footer.support.platform_policy')}</Box>
+              </Link>
+              <Box component="a" href="/#faq" sx={linkSx}>{t('footer.support.faq')}</Box>
             </Stack>
           </Grid>
 
