@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -32,6 +32,52 @@ const TABS = [
   { slug: 'privacy-policy', href: paths.pages.privacyPolicy, key: 'privacy', icon: 'solar:shield-check-bold-duotone' },
   { slug: 'platform-policy', href: paths.pages.platformPolicy, key: 'platform_policy', icon: 'solar:hand-shake-bold-duotone' },
 ];
+
+function sanitizeAndFormatHtml(rawContent: string, pageTitle: string): string {
+  if (!rawContent) return '';
+
+  let html = rawContent.trim();
+
+  // Basic security sanitization (strip scripts, iframes, inline event handlers)
+  html = html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+    .replace(/on\w+\s*=\s*(["']).*?\1/gi, '')
+    .replace(/on\w+\s*=\s*[^>\s]+/gi, '')
+    .replace(/javascript:/gi, '');
+
+  // Strip duplicate leading <h1> if it simply duplicates the page title
+  const h1Match = html.match(/^\s*<h1[^>]*>(.*?)<\/h1>\s*/i);
+  if (h1Match) {
+    const h1Inner = h1Match[1].replace(/<[^>]+>/g, '').trim().toLowerCase();
+    const cleanTitle = (pageTitle || '').trim().toLowerCase();
+    const isStandardTitle = [
+      'من نحن',
+      'الشروط والأحكام',
+      'سياسة الخصوصية',
+      'سياسات المنصة',
+      'about us',
+      'terms and conditions',
+      'privacy policy',
+      'platform policy',
+    ].includes(h1Inner);
+
+    if (h1Inner === cleanTitle || isStandardTitle) {
+      html = html.replace(/^\s*<h1[^>]*>.*?<\/h1>\s*/i, '');
+    }
+  }
+
+  // If the content does NOT have any HTML tags, wrap lines/paragraphs into HTML tags
+  const hasHtmlTags = /<\/?[a-z][\s\S]*>/i.test(html);
+  if (!hasHtmlTags) {
+    html = html
+      .split(/\n\s*\n/)
+      .map((paragraph) => `<p>${paragraph.replace(/\n/g, '<br />')}</p>`)
+      .join('');
+  }
+
+  return html;
+}
 
 export default function StaticPageView({ slug, initialData }: StaticPageViewProps) {
   const t = useTranslations('StaticPages');
@@ -72,9 +118,14 @@ export default function StaticPageView({ slug, initialData }: StaticPageViewProp
   const fallbackTitle = activeTab ? t(`tabs.${activeTab.key}`) : slug;
   const title = (isRtl ? pageData?.titleAr : pageData?.titleEn) || pageData?.titleAr || pageData?.titleEn || fallbackTitle;
 
-  const content = pageData
+  const rawContent = pageData
     ? (isRtl ? pageData.contentAr : pageData.contentEn) || pageData.contentAr || pageData.contentEn
     : '';
+
+  const htmlContent = useMemo(
+    () => sanitizeAndFormatHtml(rawContent, title),
+    [rawContent, title]
+  );
 
   const formattedDate = (() => {
     if (!pageData?.lastModificationTime) return null;
@@ -204,7 +255,7 @@ export default function StaticPageView({ slug, initialData }: StaticPageViewProp
 
             <Divider sx={{ mb: 4, borderColor: '#F3F4F6' }} />
 
-            {/* Content Body */}
+            {/* Content Body - Rendered HTML */}
             {loading ? (
               <Stack spacing={2}>
                 <Skeleton variant="text" width="100%" height={26} />
@@ -227,20 +278,75 @@ export default function StaticPageView({ slug, initialData }: StaticPageViewProp
                 </Button>
               </Box>
             ) : (
-              <Box sx={{ minHeight: 160 }}>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: '#1F2937',
-                    fontSize: { xs: 16, md: 17 },
-                    lineHeight: 2,
-                    fontWeight: 400,
-                    whiteSpace: 'pre-line',
-                  }}
-                >
-                  {content || '—'}
-                </Typography>
-              </Box>
+              <Box
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+                sx={{
+                  color: '#374151',
+                  fontSize: { xs: 15, md: 16 },
+                  lineHeight: 1.9,
+                  '& h1': {
+                    fontSize: { xs: 22, sm: 26 },
+                    fontWeight: 800,
+                    color: '#111827',
+                    mt: 3,
+                    mb: 2,
+                  },
+                  '& h2': {
+                    fontSize: { xs: 18, sm: 20 },
+                    fontWeight: 700,
+                    color: '#111827',
+                    mt: 3.5,
+                    mb: 1.5,
+                    pb: 0.5,
+                    borderBottom: '1px solid #F3F4F6',
+                  },
+                  '& h3': {
+                    fontSize: { xs: 16, sm: 18 },
+                    fontWeight: 700,
+                    color: '#111827',
+                    mt: 2.5,
+                    mb: 1,
+                  },
+                  '& p': {
+                    color: '#374151',
+                    fontSize: { xs: 15, md: 16 },
+                    lineHeight: 1.9,
+                    mb: 2,
+                  },
+                  '& ul, & ol': {
+                    my: 2,
+                    pl: isRtl ? 0 : 3.5,
+                    pr: isRtl ? 3.5 : 0,
+                    listStylePosition: 'outside',
+                    '& li': {
+                      mb: 1,
+                      color: '#374151',
+                      lineHeight: 1.8,
+                    },
+                  },
+                  '& a': {
+                    color: brandGreen,
+                    textDecoration: 'underline',
+                    fontWeight: 500,
+                    '&:hover': {
+                      color: '#00532c',
+                    },
+                  },
+                  '& strong, & b': {
+                    fontWeight: 700,
+                    color: '#111827',
+                  },
+                  '& blockquote': {
+                    borderLeft: isRtl ? 'none' : `4px solid ${brandGreen}`,
+                    borderRight: isRtl ? `4px solid ${brandGreen}` : 'none',
+                    pl: isRtl ? 0 : 2,
+                    pr: isRtl ? 2 : 0,
+                    my: 2,
+                    color: '#4B5563',
+                    fontStyle: 'italic',
+                  },
+                }}
+              />
             )}
           </Card>
         </Container>
