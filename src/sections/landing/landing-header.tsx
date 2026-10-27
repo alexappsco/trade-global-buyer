@@ -50,8 +50,14 @@ export default function LandingHeader() {
 
   const handleAnchor = (path: string) => {
     setOpenMenu(false);
-    document.getElementById(path.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById(path.slice(1));
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      router.push(`/${path}`);
+    }
   };
+
 
   const handleLogin = () => router.push('/auth/login');
 

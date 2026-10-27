@@ -44,4 +44,9 @@ export const endpoints = {
     pdf: (id: string) => `/invoices/${id}/pdf`,
     paymentProof: (id: string) => `/invoices/${id}/payment-proof`,
   },
+  pages: {
+    bySlug: (slug: string) => `/pages/${slug}`,
+  },
 };
+
+
