@@ -1,15 +1,32 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Skeleton from '@mui/material/Skeleton';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 import Iconify from 'src/components/iconify';
+import { getLandingHero } from 'src/actions/landing';
+import type { LandingHeroLocale } from 'src/types/landing';
 
 export default function LandingHero() {
-  const t = useTranslations('Landing');
+  const locale = useLocale();
+  const [data, setData] = useState<LandingHeroLocale | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getLandingHero().then((res) => {
+      if (res.success && res.data) {
+        const localeKey = locale === 'ar' ? 'ar' : 'en';
+        setData(res.data[localeKey]);
+      }
+      setLoading(false);
+    });
+  }, [locale]);
 
   return (
     <Box
@@ -40,15 +57,26 @@ export default function LandingHero() {
           sx={{ alignItems: 'center' }}
         >
           <Box sx={{ width: { xs: '100%', md: '50%' } }}>
-            <Typography
-              variant="h1"
-              sx={{ fontSize: { xs: 32, md: 48 }, lineHeight: 1.25, color: '#fff', mb: 2 }}
-            >
-              {t('hero.title')}
-            </Typography>
-            <Typography sx={{ color: '#D2D6DB', fontSize: { xs: 16, md: 18 }, lineHeight: 1.8 }}>
-              {t('hero.description')}
-            </Typography>
+            {loading ? (
+              <>
+                <Skeleton variant="text" width="90%" height={60} sx={{ bgcolor: 'rgba(255,255,255,0.1)', mb: 1 }} />
+                <Skeleton variant="text" width="70%" height={60} sx={{ bgcolor: 'rgba(255,255,255,0.1)', mb: 2 }} />
+                <Skeleton variant="text" width="100%" height={24} sx={{ bgcolor: 'rgba(255,255,255,0.08)' }} />
+                <Skeleton variant="text" width="85%" height={24} sx={{ bgcolor: 'rgba(255,255,255,0.08)' }} />
+              </>
+            ) : (
+              <>
+                <Typography
+                  variant="h1"
+                  sx={{ fontSize: { xs: 32, md: 48 }, lineHeight: 1.25, color: '#fff', mb: 2 }}
+                >
+                  {data?.title}
+                </Typography>
+                <Typography sx={{ color: '#D2D6DB', fontSize: { xs: 16, md: 18 }, lineHeight: 1.8 }}>
+                  {data?.description}
+                </Typography>
+              </>
+            )}
           </Box>
 
           <Box
@@ -117,11 +145,11 @@ export default function LandingHero() {
                   }}
                 />
                 <Typography sx={{ color: '#fff', fontWeight: 600 }}>
-                  {t('hero.verified_suppliers')}
+                  {loading ? <Skeleton width={120} sx={{ bgcolor: 'rgba(255,255,255,0.15)' }} /> : data?.verifiedSuppliersTitle}
                 </Typography>
               </Stack>
               <Typography sx={{ color: '#EBEBEB', fontSize: 12, lineHeight: 1.8 }}>
-                {t('hero.verified_desc')}
+                {loading ? <Skeleton width="100%" sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} /> : data?.verifiedSuppliersDescription}
               </Typography>
             </Box>
 
@@ -160,10 +188,10 @@ export default function LandingHero() {
 
               <Box sx={{ textAlign: 'left' }}>
                 <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: 20, lineHeight: 1.2 }}>
-                  +15,000
+                  {loading ? <Skeleton width={80} sx={{ bgcolor: 'rgba(255,255,255,0.15)' }} /> : data?.successfulTradesValue}
                 </Typography>
                 <Typography sx={{ color: '#EBEBEB', fontSize: 11, fontWeight: 500 }}>
-                  {t('hero.successful_trades')}
+                  {loading ? <Skeleton width={120} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} /> : data?.successfulTradesLabel}
                 </Typography>
               </Box>
             </Box>
@@ -172,4 +200,4 @@ export default function LandingHero() {
       </Container>
     </Box>
   );
-}
+}
