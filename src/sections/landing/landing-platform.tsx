@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import {
   Box,
   Stack,
+  Skeleton,
   Accordion,
   Container,
   Typography,
@@ -14,6 +15,8 @@ import {
 import { useTranslations } from 'next-intl';
 
 import Iconify from 'src/components/iconify';
+import { getLandingPartners } from 'src/actions/landing';
+import type { LandingPartnerItem } from 'src/types/landing';
 
 interface CountUpProps {
   value: string;
@@ -78,19 +81,21 @@ function CountUp({ value }: CountUpProps) {
   return <span ref={countRef}>{displayValue}</span>;
 }
 
-const partners = [
-  '/landing/partners/partner-1.jpg',
-  '/landing/partners/partner-2.png',
-  '/landing/partners/partner-3.png',
-  '/landing/partners/partner-4.png',
-  '/landing/partners/partner-5.png',
-  '/landing/partners/partner-6.png',
-  '/landing/partners/partner-7.png',
-  '/landing/partners/partner-8.jpg',
-];
-
 export default function LandingPlatformSections() {
   const t = useTranslations('Landing');
+  const [partners, setPartners] = useState<LandingPartnerItem[]>([]);
+  const [partnersActive, setPartnersActive] = useState(false);
+  const [partnersLoading, setPartnersLoading] = useState(true);
+
+  useEffect(() => {
+    getLandingPartners().then((res) => {
+      if (res.success && res.data) {
+        setPartners(res.data.items);
+        setPartnersActive(res.data.isActive);
+      }
+      setPartnersLoading(false);
+    });
+  }, []);
 
   const valueCards = [
     {
@@ -245,56 +250,47 @@ export default function LandingPlatformSections() {
         </Container>
       </Box>
 
-      <Box id="partners" sx={{ py: { xs: 7, md: 9 }, bgcolor: '#fff', overflow: 'hidden' }}>
-        <Container>
-          <Typography variant="h3" align="center" sx={{ mb: 5, color: '#1A1B22' }}>
-            {t('platform.partners.title')}
-          </Typography>
-        </Container>
+      {/* partners section */}
+      {partnersLoading && (
+        <Box id="partners" sx={{ py: { xs: 7, md: 9 }, bgcolor: '#fff', overflow: 'hidden' }}>
+          <Container>
+            <Skeleton variant="text" width={240} height={48} sx={{ mx: 'auto', mb: 5 }} />
+          </Container>
+          <Box sx={{ display: 'flex', gap: '24px', px: 3 }}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="rectangular"
+                width={170}
+                height={96}
+                sx={{ borderRadius: 2, flexShrink: 0 }}
+              />
+            ))}
+          </Box>
+        </Box>
+      )}
 
-        <Box
-          dir="ltr"
-          sx={{
-            overflow: 'hidden',
-            width: '100%',
-            display: 'flex',
-            position: 'relative',
-            '&:before, &:after': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              width: { xs: 50, md: 120 },
-              zIndex: 2,
-              pointerEvents: 'none',
-            },
-            '&:before': {
-              left: 0,
-              background: 'linear-gradient(to right, #fff, transparent)',
-            },
-            '&:after': {
-              right: 0,
-              background: 'linear-gradient(to left, #fff, transparent)',
-            },
-          }}
-        >
+      {!partnersLoading && partnersActive && partners.length > 0 && (
+        <Box id="partners" sx={{ py: { xs: 7, md: 9 }, bgcolor: '#fff', overflow: 'hidden' }}>
+          <Container>
+            <Typography variant="h3" align="center" sx={{ mb: 5, color: '#1A1B22' }}>
+              {t('platform.partners.title')}
+            </Typography>
+          </Container>
+
           <Box
+            dir="ltr"
             sx={{
               display: 'flex',
+              flexWrap: 'wrap',
               gap: '24px',
-              animation: 'marquee 30s linear infinite',
-              '@keyframes marquee': {
-                '0%': { transform: 'translateX(0px)' },
-                '100%': { transform: 'translateX(-1552px)' },
-              },
-              '&:hover': {
-                animationPlayState: 'paused',
-              },
+              justifyContent: 'center',
+              px: { xs: 2, md: 4 },
             }}
           >
-            {[...partners, ...partners, ...partners, ...partners].map((logo, idx) => (
+            {partners.map((item) => (
               <Box
-                key={`${logo}-${idx}`}
+                key={item.id}
                 sx={{
                   width: 170,
                   height: 96,
@@ -310,15 +306,15 @@ export default function LandingPlatformSections() {
               >
                 <Box
                   component="img"
-                  src={logo}
-                  alt="Customer Logo"
+                  src={item.imageUrl}
+                  alt={item.nameEn}
                   sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                 />
               </Box>
             ))}
           </Box>
         </Box>
-      </Box>
+      )}
 
       <Box id="faq" sx={{ py: { xs: 7, md: 9 }, bgcolor: '#F4F4F4' }}>
         <Container maxWidth="md">

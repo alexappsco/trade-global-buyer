@@ -49,6 +49,7 @@ export const endpoints = {
   },
   landing: {
     hero: '/landing/hero',
+    partners: '/landing/partners',
   },
 };
 
