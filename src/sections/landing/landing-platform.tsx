@@ -228,7 +228,8 @@ export default function LandingPlatformSections() {
         </Container>
       </Box>
 
-      <Box sx={{ py: { xs: 7, md: 9 }, bgcolor: '#fff' }}>
+      {/* hide Deep Industry Experience section */}
+      {/* <Box sx={{ py: { xs: 7, md: 9 }, bgcolor: '#fff' }}>
         <Container>
           <Typography variant="h3" align="center" sx={{ mb: 5, color: '#1A1B22' }}>
             {t('platform.stats.title')}
@@ -248,7 +249,7 @@ export default function LandingPlatformSections() {
             ))}
           </Grid>
         </Container>
-      </Box>
+      </Box> */}
 
       {/* partners section */}
       {partnersLoading && (

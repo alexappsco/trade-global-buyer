@@ -253,7 +253,9 @@ export function MarketingCard() {
         ))}
       </Stack>
 
-      <Box sx={{ height: "1px", bgcolor: "#E5E7EB", my: 3.5 }} />
+        {/* hide section */}
+
+      {/* <Box sx={{ height: "1px", bgcolor: "#E5E7EB", my: 3.5 }} />
 
       <Box
         sx={{
@@ -277,7 +279,8 @@ export function MarketingCard() {
             </Typography>
           </Box>
         ))}
-      </Box>
+      </Box> */}
+
     </Paper>
   );
 }
