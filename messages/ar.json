@@ -731,6 +731,7 @@
     "details_placeholder": "أدخل تفاصيل الصنف",
     "item_placeholder": "أدخل اسم الصنف",
     "add": "إضافة فئة أخرى",
+    "add_item": "إضافة صنف",
     "delete": "حذف",
     "send": "إرسال",
     "sending": "جاري الإرسال...",

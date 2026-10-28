@@ -731,6 +731,7 @@
     "details_placeholder": "Enter item details",
     "item_placeholder": "Enter item name",
     "add": "Add Another Category",
+    "add_item": "Add Item",
     "delete": "Delete",
     "send": "Send",
     "sending": "Sending...",

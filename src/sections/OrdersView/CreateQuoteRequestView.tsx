@@ -577,7 +577,7 @@ const RequestFormBlock = React.memo(function RequestFormBlock({
           }}
         >
           <AddIcon sx={{ fontSize: "16px" }} />
-          {t("add")}
+          {t("add_item")}
         </Button>
         <Button
           onClick={onDelete}
