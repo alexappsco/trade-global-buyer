@@ -152,8 +152,8 @@ export default function LandingHero() {
                 {loading ? <Skeleton width="100%" sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} /> : data?.verifiedSuppliersDescription}
               </Typography>
             </Box>
-            {/* hide successfulTradesValue section */}
-            {/* <Box
+            
+            <Box
               id="hero-card-1"
               dir="ltr"
               sx={{
@@ -194,7 +194,7 @@ export default function LandingHero() {
                   {loading ? <Skeleton width={120} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} /> : data?.successfulTradesLabel}
                 </Typography>
               </Box>
-            </Box> */}
+            </Box>
             
           </Box>
         </Stack>
