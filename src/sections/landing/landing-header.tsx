@@ -19,6 +19,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'src/i18n/routing';
 import { useAuth } from 'src/contexts/AuthContext';
 import Iconify from 'src/components/iconify';
+import { paths } from 'src/routes/paths';
 import LandingLanguagePopover from './landing-language-popover';
 
 function getNameInitials(name?: string): string {
@@ -43,13 +44,18 @@ export default function LandingHeader() {
   const navItems = [
     { title: t('nav.home'), path: '#hero' },
     { title: t('nav.how_it_works'), path: '#how-it-works' },
-    { title: t('nav.about'), path: '#about' },
+    { title: t('nav.about'), path: paths.pages.aboutUs },
     { title: t('nav.partners'), path: '#partners' },
     { title: t('nav.faq'), path: '#faq' },
   ];
 
   const handleAnchor = (path: string) => {
     setOpenMenu(false);
+    if (!path.startsWith('#')) {
+      router.push(path);
+      return;
+    }
+
     const element = document.getElementById(path.slice(1));
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
