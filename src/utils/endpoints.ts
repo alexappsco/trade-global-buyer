@@ -47,6 +47,10 @@ export const endpoints = {
   pages: {
     bySlug: (slug: string) => `/pages/${slug}`,
   },
+  landing: {
+    hero: '/landing/hero',
+    partners: '/landing/partners',
+  },
 };
 
 
