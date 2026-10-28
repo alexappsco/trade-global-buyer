@@ -74,22 +74,22 @@
       "successful_trades": "Successful trading transactions"
     },
     "services": {
-      "title": "Get the best price quote for any product within minutes",
-      "description": "Our platform allows buyers and suppliers to interact directly and transparently to ensure win-win business deals for both parties.",
+      "title": "Get the best price quotes tailored to your needs",
+      "description": "We connect buyers and suppliers through a single platform, making it easy to request and compare price quotes while creating business opportunities for both parties.",
       "trust": {
         "free_registration": "Free registration",
-        "no_hidden_fees": "No hidden fees",
-        "support_24_7": "24/7 technical support"
+        "no_hidden_fees": "No Registration Fees",
+        "support_24_7": "24/7 support"
       },
       "suppliers": {
         "title": "Suppliers",
-        "desc": "Small & medium enterprises",
-        "btn": "Start Selling"
+        "desc": "Companies and Organizations",
+        "btn": "Submit Your Quotes"
       },
       "buyers": {
         "title": "Buyers",
-        "desc": "Large companies",
-        "btn": "Start Buying"
+        "desc": "Companies and individuals",
+        "btn": "Request a Quote"
       }
     },
     "how": {
@@ -484,7 +484,7 @@
   "Auth": {
     "language": "Language",
     "signin_title": "Sign In",
-    "signin_subtitle": "Join the region's most trusted trade network.",
+    "signin_subtitle": "Join Us to Request and Submit Price Quotes.",
     "go_register": "Don't have an account?",
     "go_login": "Already have an account? Sign in",
     "phone": "Phone Number",
@@ -531,11 +531,11 @@
     "save": "Save",
     "cancel_btn": "Cancel",
     "profile_saved": "Data saved successfully",
-    "why_title": "Why Trade Mediation?",
+    "why_title": "Why COST FRQ ?",
     "feature_1_title": "Safety & Reliability",
-    "feature_1_desc": "We guarantee the rights of suppliers and buyers through an advanced financial mediation system and binding commercial contracts.",
-    "feature_2_title": "Regional Expansion",
-    "feature_2_desc": "Reach thousands of potential buyers across the Kingdom and Gulf countries at the click of a button.",
+    "feature_1_desc": "An organized environment for exchanging quote requests and submitting offers, with easy tracking of requests and quotes through the platform.",
+    "feature_2_title": "Expansion and Growth",
+    "feature_2_desc": "Expand your reach to new buyers and suppliers, and build business relationships that support your growth.",
     "stats_label_1": "Verified suppliers",
     "stats_label_2": "Satisfaction rate",
     "stats_label_3": "Satisfaction rate",
@@ -730,7 +730,7 @@
     "item": "Item",
     "details_placeholder": "Enter item details",
     "item_placeholder": "Enter item name",
-    "add": "Add",
+    "add": "Add Another Category",
     "delete": "Delete",
     "send": "Send",
     "sending": "Sending...",
