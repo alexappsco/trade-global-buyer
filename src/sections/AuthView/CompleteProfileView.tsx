@@ -124,7 +124,9 @@ export default function CompleteProfileView({
   const isSupplier = role === "Supplier";
 
   const cities =
-    locale === "ar" ? ["القاهرة", "الرياض", "دبي"] : ["Cairo", "Riyadh", "Dubai"];
+    locale === "ar" ? [ "الرياض"] : [ "Riyadh"];
+  // const cities =
+  //   locale === "ar" ? ["القاهرة", "الرياض", "دبي"] : ["Cairo", "Riyadh", "Dubai"];
 
   const completionToken = authFlow?.completionToken;
   const registeredPhone = authFlow?.phoneNumber ?? "";
