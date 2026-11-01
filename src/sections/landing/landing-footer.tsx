@@ -89,18 +89,23 @@ export default function LandingFooter() {
           >
             <Box
               component="img"
-              src="/public.avif"
+              src="/frq_logo.svg"
               alt="COST FRQ Logo"
               sx={{ height: { xs: 48, md: 60 }, width: 'auto', objectFit: 'contain' }}
             />
           </Box>
 
-          <Typography sx={{ fontWeight: 700, textAlign: 'center', color: '#1A1B22' }}>
-            <Box component="span" sx={{ color: '#8E8E93', fontWeight: 400, mr: 0.75 }}>
-              {t('footer.registration_number')} 
-            </Box>
-            <Box component="span"> 7054959049</Box>
-          </Typography>
+          <Stack spacing={1} sx={{ alignItems: 'center' }}>
+            <Box
+              component="img"
+              src="/public.avif"
+              alt="COST FRQ"
+              sx={{ height: { xs: 40, md: 48 }, width: 'auto', objectFit: 'contain' }}
+            />
+            <Typography sx={{ fontWeight: 700, textAlign: 'center', color: '#1A1B22' }}>
+              7054959049
+            </Typography>
+          </Stack>
 
           <Stack
             direction="row"
