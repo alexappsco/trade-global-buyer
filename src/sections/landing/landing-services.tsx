@@ -313,7 +313,7 @@ export default function LandingServices() {
               >
                 <Box
                   component="img"
-                  src="/landing/services.jpg"
+                  src="/landing/IMG_0254.webp"
                   alt="Services"
                   sx={{
                     width: { sm: 100, md: 136 },
