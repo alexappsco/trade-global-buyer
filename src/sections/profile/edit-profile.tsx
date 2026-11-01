@@ -16,6 +16,7 @@ import {
   Stack,
   Badge,
   Alert,
+  MenuItem,
 } from '@mui/material';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
@@ -65,6 +66,7 @@ export default function EditProfile() {
   const t = useTranslations('Profile');
   const tSidebar = useTranslations('Sidebar');
   const locale = useLocale();
+  const cities = locale === 'ar' ? ['الرياض'] : ['Riyadh'];
   const toast = useToast();
   const { patchSession } = useAuth();
 
@@ -321,6 +323,7 @@ export default function EditProfile() {
                           {t(`fields.${key}`)}
                         </Typography>
                         <TextField
+                          select={key === 'city'}
                           fullWidth
                           size="small"
                           value={form[key]}
@@ -338,7 +341,14 @@ export default function EditProfile() {
                               },
                             },
                           }}
-                        />
+                        >
+                          {key === 'city' &&
+                            cities.map((city) => (
+                              <MenuItem key={city} value={city}>
+                                {city}
+                              </MenuItem>
+                            ))}
+                        </TextField>
                       </Grid>
                     ))}
 
