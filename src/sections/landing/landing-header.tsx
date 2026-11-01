@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
@@ -47,6 +47,23 @@ export default function LandingHeader() {
   const [openMenu, setOpenMenu] = useState(false);
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
 
+  useEffect(() => {
+    if (!isLanding || !window.location.hash) return undefined;
+
+    const targetId = window.location.hash.slice(1);
+    let secondFrameId: number;
+    const frameId = window.requestAnimationFrame(() => {
+      secondFrameId = window.requestAnimationFrame(() => {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      if (secondFrameId) window.cancelAnimationFrame(secondFrameId);
+    };
+  }, [isLanding, pathname]);
+
   const navItems = [
     { title: t('nav.home'), path: '#hero' },
     { title: t('nav.how_it_works'), path: '#how-it-works' },
@@ -79,7 +96,7 @@ export default function LandingHeader() {
       return;
     }
 
-    router.push(`/#${targetId}`);
+    router.push(`/#${targetId}`, { scroll: false });
   };
 
   const handleLogin = () => router.push('/auth/login');
