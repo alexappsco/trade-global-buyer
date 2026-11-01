@@ -16,7 +16,7 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useTranslations, useLocale } from 'next-intl';
 
-import { useRouter } from 'src/i18n/routing';
+import { usePathname, useRouter } from 'src/i18n/routing';
 import { useAuth } from 'src/contexts/AuthContext';
 import Iconify from 'src/components/iconify';
 import { paths } from 'src/routes/paths';
@@ -37,6 +37,12 @@ export default function LandingHeader() {
   const t = useTranslations('Landing');
   const locale = useLocale();
   const router = useRouter();
+  const pathname = usePathname();
+  const pathnameWithoutLocale = pathname?.replace(/^\/(?:ar|en)/, '') ?? '';
+  const isLanding =
+    pathnameWithoutLocale === '' ||
+    pathnameWithoutLocale === '/' ||
+    pathnameWithoutLocale === '/landing';
   const { isAuthenticated, logout, session } = useAuth();
   const [openMenu, setOpenMenu] = useState(false);
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
@@ -56,14 +62,25 @@ export default function LandingHeader() {
       return;
     }
 
-    const element = document.getElementById(path.slice(1));
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      router.push(`/${path}`);
-    }
-  };
+    const targetId = path.slice(1);
 
+    if (isLanding) {
+      if (targetId === 'hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.history.replaceState(null, '', window.location.pathname);
+        return;
+      }
+
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        window.history.replaceState(null, '', `#${targetId}`);
+      }
+      return;
+    }
+
+    router.push(`/#${targetId}`);
+  };
 
   const handleLogin = () => router.push('/auth/login');
 

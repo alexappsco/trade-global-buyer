@@ -271,6 +271,10 @@ export default function LandingPlatformSections() {
         </Box>
       )}
 
+      {!partnersLoading && (!partnersActive || partners.length === 0) && (
+        <Box id="partners" />
+      )}
+
       {!partnersLoading && partnersActive && partners.length > 0 && (
         <Box id="partners" sx={{ py: { xs: 7, md: 9 }, bgcolor: '#fff', overflow: 'hidden' }}>
           <Container>

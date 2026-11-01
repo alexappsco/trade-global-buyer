@@ -178,10 +178,10 @@
       }
     },
     "footer": {
+      "registration_number": "Tax registration number:",
       "subscribe": {
         "title": "Subscribe",
-        "placeholder": "Email Address",
-        "description": "We are here to help, send your email and we will contact you as soon as possible."
+        "description": "We are here to help. Email us and we will contact you as soon as possible."
       },
       "support": {
         "title": "Support",

@@ -14,10 +14,27 @@ import { Link } from 'src/i18n/routing';
 import { paths } from 'src/routes/paths';
 
 const socials = [
-  { value: 'instagram', icon: 'mdi:instagram', color: '#E1306C' },
-  { value: 'linkedin', icon: 'mdi:linkedin', color: '#0077B5' },
-  { value: 'x', icon: 'ri:twitter-x-fill', color: '#000000' },
+  {
+    value: 'x',
+    icon: 'ri:twitter-x-fill',
+    color: '#000000',
+    href: 'https://x.com/costfrq?s=11&t=Vo9v9D_ZXeqHbjiIhM40fA',
+  },
+  {
+    value: 'linkedin',
+    icon: 'mdi:linkedin',
+    color: '#0077B5',
+    href: 'http://www.linkedin.com/in/costfrq-b2b-142624417',
+  },
+  {
+    value: 'tiktok',
+    icon: 'ic:baseline-tiktok',
+    color: '#000000',
+    href: 'https://www.tiktok.com/@costfrq',
+  },
 ];
+
+const contactEmail = 'info@costfrq.sa';
 
 const linkSx = {
   fontSize: 14,
@@ -36,7 +53,13 @@ export default function LandingFooter() {
     const element = document.getElementById(id);
     if (element) {
       e.preventDefault();
-      element.scrollIntoView({ behavior: 'smooth' });
+      if (id === 'hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.history.replaceState(null, '', window.location.pathname);
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' });
+        window.history.replaceState(null, '', `#${id}`);
+      }
     }
   };
 
@@ -54,6 +77,8 @@ export default function LandingFooter() {
             borderBottom: '1px solid #E8ECEB',
             justifyContent: 'space-between',
             alignItems: 'center',
+            flexWrap: 'wrap',
+            px: 4,
           }}
         >
           <Box
@@ -64,20 +89,41 @@ export default function LandingFooter() {
           >
             <Box
               component="img"
-              src="/frq_logo.svg"
+              src="/public.avif"
               alt="COST FRQ Logo"
               sx={{ height: { xs: 48, md: 60 }, width: 'auto', objectFit: 'contain' }}
             />
           </Box>
 
-          <Stack direction="row" spacing={1.5}>
+          <Typography sx={{ fontWeight: 700, textAlign: 'center', color: '#1A1B22' }}>
+            <Box component="span" sx={{ color: '#8E8E93', fontWeight: 400, mr: 0.75 }}>
+              {t('footer.registration_number')} 
+            </Box>
+            <Box component="span"> 7054959049</Box>
+          </Typography>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center'}}
+          >
+            {/* <Box
+              component="a"
+              href={`mailto:${contactEmail}`}
+              aria-label={contactEmail}
+              sx={{ ...linkSx, display: 'inline-flex', alignItems: 'center', gap: 0.5 }}
+            >
+              <Iconify icon="mdi:email-outline" width={20} />
+              {contactEmail}
+            </Box> */}
             {socials.map((social) => (
               <IconButton
                 key={social.value}
                 component="a"
-                href="#"
+                href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={social.value}
                 sx={{
                   width: 44,
                   height: 44,
@@ -103,7 +149,7 @@ export default function LandingFooter() {
                 <Box component="span" sx={linkSx}>{t('footer.company.about')}</Box>
               </Link>
               <Box component="a" href="/#how-it-works" onClick={(e) => handleAnchorClick(e, 'how-it-works')} sx={linkSx}>{t('footer.company.how_it_works')}</Box>
-              <Box component="a" href="/#faq" onClick={(e) => handleAnchorClick(e, 'faq')} sx={linkSx}>{t('footer.company.contact')}</Box>
+              <Box component="a" href={`mailto:${contactEmail}`} sx={linkSx}>{t('footer.company.contact')}</Box>
               <Box component="a" href="/#features" onClick={(e) => handleAnchorClick(e, 'features')} sx={linkSx}>{t('footer.company.join_supplier')}</Box>
               <Box component="a" href="/#features" onClick={(e) => handleAnchorClick(e, 'features')} sx={linkSx}>{t('footer.company.join_merchant')}</Box>
             </Stack>
@@ -152,35 +198,39 @@ export default function LandingFooter() {
               </Typography>
 
               <Box
+                component="a"
+                href={`mailto:${contactEmail}`}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'space-between',
                   bgcolor: '#fff',
                   borderRadius: 1,
-                  overflow: 'hidden',
-                  p: 0.5,
+                  p: 1,
                   mb: 2,
                   border: '1px solid #E2E8F0',
+                  color: '#000',
+                  textDecoration: 'none',
+                  '&:hover': { bgcolor: '#F5F7FA' },
                 }}
               >
+                <Typography component="span" sx={{ px: 0.5, fontSize: 14 }}>
+                  {contactEmail}
+                </Typography>
                 <Box
-                  component="input"
-                  type="email"
-                  placeholder={t('footer.subscribe.placeholder')}
+                  component="span"
+                  aria-hidden="true"
                   sx={{
-                    flex: 1,
-                    border: 'none',
-                    outline: 'none',
-                    px: 1.5,
-                    py: 1,
-                    fontSize: 14,
-                    color: '#000',
-                    '&::placeholder': { color: '#8E8E93' },
+                    display: 'inline-flex',
+                    bgcolor: '#0A84FF',
+                    color: '#fff',
+                    borderRadius: 1,
+                    p: 1,
+                    '&:hover': { bgcolor: '#0066CC' },
                   }}
-                />
-                <IconButton sx={{ bgcolor: '#0A84FF', color: '#fff', borderRadius: 1, p: 1, '&:hover': { bgcolor: '#0066CC' } }}>
+                >
                   <Iconify icon="eva:arrow-forward-fill" width={18} />
-                </IconButton>
+                </Box>
               </Box>
 
               <Typography sx={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: 1.6 }}>
