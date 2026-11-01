@@ -32,6 +32,14 @@ const linkSx = {
 export default function LandingFooter() {
   const t = useTranslations('Landing');
 
+  const handleAnchorClick = (e: React.MouseEvent, id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      e.preventDefault();
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <Box
       component="footer"
@@ -49,11 +57,18 @@ export default function LandingFooter() {
           }}
         >
           <Box
-            component="img"
-            src="/frq_logo.svg"
-            alt="COST FRQ Logo"
-            sx={{ height: { xs: 48, md: 60 }, width: 'auto', objectFit: 'contain' }}
-          />
+            component="a"
+            href="/"
+            onClick={(e) => handleAnchorClick(e, 'hero')}
+            sx={{ display: 'inline-flex', cursor: 'pointer', textDecoration: 'none' }}
+          >
+            <Box
+              component="img"
+              src="/frq_logo.svg"
+              alt="COST FRQ Logo"
+              sx={{ height: { xs: 48, md: 60 }, width: 'auto', objectFit: 'contain' }}
+            />
+          </Box>
 
           <Stack direction="row" spacing={1.5}>
             {socials.map((social) => (
@@ -87,10 +102,10 @@ export default function LandingFooter() {
               <Link href={paths.pages.aboutUs} style={{ textDecoration: 'none' }}>
                 <Box component="span" sx={linkSx}>{t('footer.company.about')}</Box>
               </Link>
-              <Box component="a" href="/#how-it-works" sx={linkSx}>{t('footer.company.how_it_works')}</Box>
-              <Box component="a" href="/#faq" sx={linkSx}>{t('footer.company.contact')}</Box>
-              <Box component="a" href="/#features" sx={linkSx}>{t('footer.company.join_supplier')}</Box>
-              <Box component="a" href="/#features" sx={linkSx}>{t('footer.company.join_merchant')}</Box>
+              <Box component="a" href="/#how-it-works" onClick={(e) => handleAnchorClick(e, 'how-it-works')} sx={linkSx}>{t('footer.company.how_it_works')}</Box>
+              <Box component="a" href="/#faq" onClick={(e) => handleAnchorClick(e, 'faq')} sx={linkSx}>{t('footer.company.contact')}</Box>
+              <Box component="a" href="/#features" onClick={(e) => handleAnchorClick(e, 'features')} sx={linkSx}>{t('footer.company.join_supplier')}</Box>
+              <Box component="a" href="/#features" onClick={(e) => handleAnchorClick(e, 'features')} sx={linkSx}>{t('footer.company.join_merchant')}</Box>
             </Stack>
           </Grid>
 
@@ -99,9 +114,9 @@ export default function LandingFooter() {
               {t('footer.services.title')}
             </Typography>
             <Stack spacing={1.5}>
-              <Box component="a" href="/#features" sx={linkSx}>{t('footer.services.new_rfq')}</Box>
-              <Box component="a" href="/#features" sx={linkSx}>{t('footer.services.receive_quotes')}</Box>
-              <Box component="a" href="/#features" sx={linkSx}>{t('footer.services.corporate_requests')}</Box>
+              <Box component="a" href="/#features" onClick={(e) => handleAnchorClick(e, 'features')} sx={linkSx}>{t('footer.services.new_rfq')}</Box>
+              <Box component="a" href="/#features" onClick={(e) => handleAnchorClick(e, 'features')} sx={linkSx}>{t('footer.services.receive_quotes')}</Box>
+              <Box component="a" href="/#features" onClick={(e) => handleAnchorClick(e, 'features')} sx={linkSx}>{t('footer.services.corporate_requests')}</Box>
             </Stack>
           </Grid>
 
@@ -119,7 +134,7 @@ export default function LandingFooter() {
               <Link href={paths.pages.platformPolicy} style={{ textDecoration: 'none' }}>
                 <Box component="span" sx={linkSx}>{t('footer.support.platform_policy')}</Box>
               </Link>
-              <Box component="a" href="/#faq" sx={linkSx}>{t('footer.support.faq')}</Box>
+              <Box component="a" href="/#faq" onClick={(e) => handleAnchorClick(e, 'faq')} sx={linkSx}>{t('footer.support.faq')}</Box>
             </Stack>
           </Grid>
 

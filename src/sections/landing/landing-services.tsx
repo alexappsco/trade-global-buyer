@@ -32,7 +32,7 @@ export default function LandingServices() {
     }
 
     if (sessionRole === target) {
-      router.push('/');
+      router.push('/dashboard');
       return;
     }
 
@@ -41,7 +41,7 @@ export default function LandingServices() {
 
   const handleGoHome = () => {
     setDialogState((prev) => ({ ...prev, open: false }));
-    router.push('/');
+    router.push('/dashboard');
   };
 
   const handleSwitchRole = async () => {

@@ -41,7 +41,7 @@ const sidebarItems: SidebarItem[] = [
   {
     key: "home",
     icon: "/icons/main.svg",
-    path: "/",
+    path: "/dashboard",
   },
   {
     key: "my_orders",
@@ -139,7 +139,7 @@ const isVisible = (item: SidebarItem) => {
       (pathname.includes("/counterparty-profile") && searchParams.get("from") === "supplier"));
 
   const isActive = (path: string) => {
-    if (path === "/") return pathname === path;
+    if (path === "/dashboard") return pathname === path;
     if (isSupplierContext) {
       if (path === "/quotation-requests") return true;
       if (path === "/orders") return false;

@@ -109,7 +109,7 @@ export default function PageHeader({
             <>
               <Box
                 component={Link}
-                href="/"
+                href="/dashboard"
                 title={t('home')}
                 sx={{
                   display: 'inline-flex',

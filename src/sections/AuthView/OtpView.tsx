@@ -90,7 +90,7 @@ export default function OtpView() {
         clearAuthFlow();
         await syncSession();
         toast.success(t("otp_verified"));
-        hardNavigate(res.profileCompleted ? "/" : "/profile");
+        hardNavigate(res.profileCompleted ? "/dashboard" : "/profile");
       }
     } catch (err) {
       toast.error(t("otp_failed"));

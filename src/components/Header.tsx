@@ -82,7 +82,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const handleGoToLanding = () => {
     setAvatarAnchorEl(null);
-    router.push("/landing");
+    router.push("/");
   };
 
   const handleLogout = async () => {
@@ -131,7 +131,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
             component="img"
             src="/frq_logo.svg"
             alt="COST FRQ"
-            sx={{ height: { xs: 34, md: 48 }, marginInlineStart: { xs: 0, md: "60px" } }}
+            onClick={() => router.push("/dashboard")}
+            sx={{ height: { xs: 34, md: 48 }, marginInlineStart: { xs: 0, md: "60px" }, cursor: "pointer" }}
           />
         </Box>
 

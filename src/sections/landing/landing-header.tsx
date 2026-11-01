@@ -69,7 +69,7 @@ export default function LandingHeader() {
 
   const handleGoToDashboard = () => {
     setAvatarAnchorEl(null);
-    router.push('/');
+    router.push(paths.dashboard);
   };
 
   const handleLogout = async () => {

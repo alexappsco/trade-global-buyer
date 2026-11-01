@@ -1,5 +1,7 @@
 export const paths = {
-  home: '/',
+  home: '/dashboard',
+  dashboard: '/dashboard',
+  landing: '/',
   orders: {
     root: '/orders',
     create: '/orders/create',
@@ -17,4 +19,3 @@ export const paths = {
     platformPolicy: '/platform-policy',
   },
 };
-

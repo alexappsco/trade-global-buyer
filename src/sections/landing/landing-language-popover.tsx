@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useLocale } from 'next-intl';
 
-import { useRouter } from 'src/i18n/routing';
+import { usePathname, useRouter } from 'src/i18n/routing';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
@@ -27,6 +27,7 @@ export default function LandingLanguagePopover() {
   const popover = usePopover();
   const locale = useLocale();
   const router = useRouter();
+  const pathname = usePathname();
 
   const currentLang = allLangs.find((item) => item.value === locale) ?? allLangs[0];
 
@@ -34,7 +35,7 @@ export default function LandingLanguagePopover() {
     popover.onClose();
 
     if (newLang !== locale) {
-      router.replace('/', { locale: newLang });
+      router.replace(pathname, { locale: newLang });
     }
   };
 

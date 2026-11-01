@@ -23,8 +23,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { refreshSession, resetSession, session } = useAuth();
   const pathnameWithoutLocale = pathname?.replace(/^\/(?:ar|en)/, "") ?? "";
   const isAuthPage = pathnameWithoutLocale.startsWith("/auth");
-  const isStandaloneLanding = pathnameWithoutLocale === "/landing";
-  const isGuestLanding = !isStandaloneLanding && !session && isRootPath(pathnameWithoutLocale);
+  const isLandingPage = isRootPath(pathnameWithoutLocale) || pathnameWithoutLocale === "/landing";
   const staticPageRoutes = [
     "/about-us",
     "/terms-and-conditions",
@@ -35,8 +34,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const isStaticPage = staticPageRoutes.some(
     (route) => pathnameWithoutLocale === route || pathnameWithoutLocale.startsWith(`${route}/`)
   );
-  const isPublicPage = isAuthPage || isStandaloneLanding || isGuestLanding || isStaticPage;
-
+  const isPublicPage = isAuthPage || isLandingPage || isStaticPage;
 
   useEffect(() => {
     let cancelled = false;
