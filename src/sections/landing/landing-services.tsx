@@ -274,7 +274,7 @@ export default function LandingServices() {
               >
                 <Box
                   component="img"
-                  src="/landing/services.jpg"
+                  src="/landing/IMG_0254.webp"
                   alt="Services"
                   sx={{
                     width: 60,
