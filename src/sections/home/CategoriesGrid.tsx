@@ -299,12 +299,15 @@ export default function CategoriesGrid({
             loop={false}
             breakpoints={{
               0: {
-                slidesPerView: 2,
+                slidesPerView: 1.15,
               },
               600: {
-                slidesPerView: 3,
+                slidesPerView: 2,
               },
               900: {
+                slidesPerView: 3,
+              },
+              1200: {
                 slidesPerView: 4,
               },
             }}
@@ -329,15 +332,13 @@ export default function CategoriesGrid({
                       boxShadow: '0 6px 22px rgba(27, 131, 84, 0.1)',
                       transform: 'translateY(-3px)',
                     } : {},
-                    '&:hover .category-image': isBuyer ? {
-                      transform: 'scale(1.06)',
-                    } : {},
                   }}
                 >
                   <Box
                     sx={{
                       overflow: 'hidden',
-                      height: { xs: 130, sm: 165 },
+                      width: '100%',
+                      aspectRatio: '1672 / 941',
                       position: 'relative',
                       bgcolor: '#f1f5f9',
                       display: 'flex',
@@ -352,8 +353,7 @@ export default function CategoriesGrid({
                         sx={{
                           height: '100%',
                           width: '100%',
-                          objectFit: 'cover',
-                          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                          objectFit: 'contain',
                         }}
                         image={cat.imageUrl}
                         alt={locale === 'ar' ? cat.nameAr : cat.nameEn}
