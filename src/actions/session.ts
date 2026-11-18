@@ -2,13 +2,15 @@
 
 import { cookies } from "next/headers";
 import { createHash } from "node:crypto";
+import { authRequest } from "src/actions/auth-request";
 import type { SessionMeta, UserSession } from "src/types/auth";
 import {
   logoutAction,
   refreshTokenAction,
   verifyLoginOtpAction,
 } from "src/actions/auth";
-import type { VerifyLoginOtpPayload } from "src/actions/auth";
+import type { LoginPayload, VerifyLoginOtpPayload } from "src/actions/auth";
+import type { LoginResponse, OtpChallenge } from "src/types/auth";
 
 const ACCESS_TOKEN_COOKIE = "accessToken";
 const REFRESH_TOKEN_COOKIE = "refreshToken";
@@ -230,6 +232,50 @@ export type LoginOtpResult = {
   error?: string;
   profileCompleted?: boolean;
 };
+
+export type PasswordLoginResult =
+  | { success: false; error?: string }
+  | { success: true; requiresOtp: true; challenge: OtpChallenge }
+  | { success: true; requiresOtp: false; profileCompleted: boolean };
+
+/**
+ * Logs in and persists tokens server-side when the backend does not require OTP.
+ */
+export async function loginWithPassword(
+  payload: LoginPayload,
+  lang?: string
+): Promise<PasswordLoginResult> {
+  const res = await authRequest<LoginResponse>("/login", payload, lang);
+  if (!res.success || !res.data) {
+    return { success: false, error: res.error };
+  }
+
+  if (res.data.requiresOtp === true) {
+    if (!res.data.challenge?.challengeId) {
+      return { success: false, error: "Login response did not include an OTP challenge" };
+    }
+    return { success: true, requiresOtp: true, challenge: res.data.challenge };
+  }
+
+  if (res.data.requiresOtp !== false) {
+    return { success: false, error: "Login response did not specify whether OTP is required" };
+  }
+
+  const session = res.data.tokens;
+  if (
+    !session?.accessToken ||
+    !session.refreshToken ||
+    !session.id ||
+    !session.role ||
+    !session.accessTokenExpireAt ||
+    !session.refreshTokenExpireAt
+  ) {
+    return { success: false, error: "Login response did not include session tokens" };
+  }
+
+  await saveAuthSession(session);
+  return { success: true, requiresOtp: false, profileCompleted: session.profileCompleted };
+}
 
 /**
  * Verifies the login OTP and persists the session server-side, so the tokens

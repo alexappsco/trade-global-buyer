@@ -10,7 +10,7 @@ import AuthShell from "./AuthShell";
 import { useToast } from "src/components/toast";
 import { Loader } from "src/components/Loader/Loader";
 import { useAuth } from "src/contexts/AuthContext";
-import { loginAction } from "src/actions/auth";
+import { loginWithPassword } from "src/actions/session";
 import { UI_TO_ROLE } from "src/types/auth";
 import * as Yup from "yup";
 import { keyframes } from "@mui/system";
@@ -33,7 +33,7 @@ export default function SignInView() {
   const locale = useLocale();
   const router = useRouter();
   const toast = useToast();
-  const { setAuthFlow } = useAuth();
+  const { setAuthFlow, clearAuthFlow, syncSession } = useAuth();
   const searchParams = useSearchParams();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -75,21 +75,30 @@ export default function SignInView() {
 
     setLoading(true);
     try {
-      const res = await loginAction(
+      const res = await loginWithPassword(
         { role: UI_TO_ROLE[role], phoneNumber: phone, password },
         locale
       );
-      if (!res.success || !res.data) {
+      if (!res.success) {
         toast.error(res.error || t("signin_failed"));
         return;
       }
-      setAuthFlow({
-        mode: "login",
-        challengeId: res.data.challengeId,
-        phoneNumber: phone,
-      });
-      router.push("/auth/otp");
-    } catch (err) {
+      if (res.requiresOtp) {
+        setAuthFlow({
+          mode: "login",
+          challengeId: res.challenge.challengeId,
+          phoneNumber: phone,
+        });
+        router.push("/auth/otp");
+        return;
+      }
+
+      clearAuthFlow();
+      await syncSession();
+      toast.success(t("signin_success"));
+      const destination = res.profileCompleted ? "/dashboard" : "/profile";
+      window.location.replace(`/${locale}${destination}`);
+    } catch {
       toast.error(t("signin_failed"));
     } finally {
       setLoading(false);

@@ -14,6 +14,10 @@ export interface OtpChallenge {
   resendsRemaining: number;
 }
 
+export type LoginResponse =
+  | { requiresOtp: true; challenge: OtpChallenge; tokens?: UserSession }
+  | { requiresOtp: false; tokens: UserSession; challenge?: OtpChallenge };
+
 export interface RegisterResponse {
   id: string;
   phoneNumber: string;

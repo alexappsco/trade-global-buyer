@@ -87,10 +87,6 @@ export interface LoginPayload {
   password: string;
 }
 
-export async function loginAction(payload: LoginPayload, lang?: string) {
-  return authRequest<OtpChallenge>("/login", payload, lang);
-}
-
 export interface VerifyLoginOtpPayload {
   challengeId: string;
   phoneNumber: string;
