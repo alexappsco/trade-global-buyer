@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   Card,
   CardMedia,
@@ -22,6 +22,7 @@ import { getOrdersCatalog } from 'src/actions/orders';
 import type { OrderCatalogItem } from 'src/types/order';
 import { useCreateOrderGuard } from 'src/hooks/use-create-order-guard';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
 import type { Swiper as SwiperCore } from 'swiper';
 import 'swiper/css';
 
@@ -54,7 +55,6 @@ export default function CategoriesGrid({
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
-  const autoSwipeDoneRef = React.useRef(false);
 
   const handleCategoryClick = (cat: OrderCatalogItem) => {
     if (role !== 'buyer') return;
@@ -98,30 +98,6 @@ export default function CategoriesGrid({
       active = false;
     };
   }, [isControlled]);
-
-  // Auto-swipe teaser: once swiper is ready and categories are loaded, nudge forward then back
-  useEffect(() => {
-    if (!swiper || loading || isLocked || autoSwipeDoneRef.current) return;
-    // Nothing to slide if already at the end
-    if (swiper.isEnd) return;
-
-    autoSwipeDoneRef.current = true;
-
-    // slideNext moves to the next index — Swiper handles RTL direction internally
-    const t1 = setTimeout(() => {
-      swiper.slideNext(550);
-      // After the forward slide completes, slide back
-      const t2 = setTimeout(() => {
-        swiper.slidePrev(450);
-      }, 900);
-      // Store t2 ref for cleanup (closure captures it)
-      return t2; // not used for cleanup but keeps linter happy
-    }, 800);
-
-    return () => {
-      clearTimeout(t1);
-    };
-  }, [swiper, loading, isLocked]);
 
   // Left button logic (visually points Left: <)
   // In RTL, moving to the left means advancing forward (slideNext).
@@ -287,6 +263,7 @@ export default function CategoriesGrid({
           </IconButton>
 
           <Swiper
+            modules={[Autoplay]}
             dir={isRtl ? 'rtl' : 'ltr'}
             onSwiper={(s) => {
               setSwiper(s);
@@ -297,6 +274,12 @@ export default function CategoriesGrid({
             onTouchEnd={updateSwiperState}
             spaceBetween={16}
             loop={false}
+            rewind
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            speed={600}
             breakpoints={{
               0: {
                 slidesPerView: 1.15,
