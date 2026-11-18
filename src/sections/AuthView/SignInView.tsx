@@ -190,7 +190,7 @@ export default function SignInView() {
               {t("go_register")}{" "}
               <Box
                 component="a"
-                href="/auth/register"
+                href={role ? `/auth/register?role=${role}` : "/auth/register"}
                 sx={{ color: "#6B7280", fontWeight: 600, textDecoration: "none", "&:hover": { textDecoration: "underline", color: GREEN } }}
               >
                 {t("register_cta")}

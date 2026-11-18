@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import PasswordField from "./PasswordField";
 import { useRouter } from "src/i18n/routing";
@@ -23,7 +24,7 @@ function ToggleTabs({
   onChange,
   options,
 }: {
-  value: EntityTab;
+  value: EntityTab | null;
   onChange: (value: EntityTab) => void;
   options: { value: EntityTab; label: string }[];
 }) {
@@ -98,11 +99,15 @@ function AccountTypeRadio({
 export default function RegisterView() {
   const t = useTranslations("Auth");
   const locale = useLocale();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const toast = useToast();
   const { setAuthFlow } = useAuth();
 
-  const [entity, setEntity] = useState<EntityTab>("buyer");
+  const roleParam = searchParams.get("role");
+  const initialEntity: EntityTab | null =
+    roleParam === "supplier" || roleParam === "buyer" ? roleParam : null;
+  const [entity, setEntity] = useState<EntityTab | null>(initialEntity);
   const [accountType, setAccountType] = useState<AuthAccountType>("Company");
   const [nameOrCompany, setNameOrCompany] = useState("");
   const [phone, setPhone] = useState("");
@@ -119,6 +124,10 @@ export default function RegisterView() {
 
   const handleSubmit = async () => {
     setPhoneError("");
+    if (!entity) {
+      toast.error(t("role_required"));
+      return;
+    }
     if (!nameOrCompany || !password || !confirmPassword) {
       toast.error(t("register_required"));
       return;
