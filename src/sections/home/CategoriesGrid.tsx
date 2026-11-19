@@ -70,6 +70,14 @@ export default function CategoriesGrid({
     setIsBeginning(s.isBeginning);
     setIsEnd(s.isEnd);
     setIsLocked(s.isLocked);
+
+    if (s.params.autoplay && typeof s.params.autoplay !== 'boolean') {
+      if (s.isBeginning) {
+        s.params.autoplay.reverseDirection = false;
+      } else if (s.isEnd) {
+        s.params.autoplay.reverseDirection = true;
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -278,12 +286,11 @@ export default function CategoriesGrid({
             onTouchEnd={updateSwiperState}
             spaceBetween={16}
             loop={false}
-            rewind
             autoplay={{
               delay: 3000,
               disableOnInteraction: false,
             }}
-            speed={1600}
+            speed={2500}
             breakpoints={{
               0: {
                 slidesPerView: 1.15,
