@@ -290,7 +290,7 @@ export default function CategoriesGrid({
               delay: 3000,
               disableOnInteraction: false,
             }}
-            speed={3500}
+            speed={5000}
             breakpoints={{
               0: {
                 slidesPerView: 1.15,
