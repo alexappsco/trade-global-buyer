@@ -233,7 +233,11 @@ export default function CategoriesGrid({
 
   return (
     <Fade in={!loading} timeout={400}>
-      <Box sx={{ mb: 4 }}>
+      <Box
+        sx={{ mb: 4 }}
+        onMouseEnter={() => swiper?.autoplay.stop()}
+        onMouseLeave={() => swiper?.autoplay.start()}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Typography
             variant="h6"
@@ -278,7 +282,6 @@ export default function CategoriesGrid({
             autoplay={{
               delay: 3000,
               disableOnInteraction: false,
-              pauseOnMouseEnter: true,
             }}
             speed={1600}
             breakpoints={{
