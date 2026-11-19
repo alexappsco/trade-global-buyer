@@ -26,6 +26,8 @@ import { Autoplay } from 'swiper/modules';
 import type { Swiper as SwiperCore } from 'swiper';
 import 'swiper/css';
 
+const NAVIGATION_SPEED = 600;
+
 interface CategoriesGridProps {
   categories?: OrderCatalogItem[];
   loading?: boolean;
@@ -113,9 +115,9 @@ export default function CategoriesGrid({
   const handleLeftClick = () => {
     if (!swiper) return;
     if (isRtl) {
-      swiper.slideNext();
+      swiper.slideNext(NAVIGATION_SPEED);
     } else {
-      swiper.slidePrev();
+      swiper.slidePrev(NAVIGATION_SPEED);
     }
   };
   const isLeftDisabled = isLocked || (isRtl ? isEnd : isBeginning);
@@ -126,9 +128,9 @@ export default function CategoriesGrid({
   const handleRightClick = () => {
     if (!swiper) return;
     if (isRtl) {
-      swiper.slidePrev();
+      swiper.slidePrev(NAVIGATION_SPEED);
     } else {
-      swiper.slideNext();
+      swiper.slideNext(NAVIGATION_SPEED);
     }
   };
   const isRightDisabled = isLocked || (isRtl ? isBeginning : isEnd);
