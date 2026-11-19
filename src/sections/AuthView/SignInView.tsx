@@ -163,6 +163,12 @@ export default function SignInView() {
             size="small"
             value={phone}
             placeholder="+966 5 1234 5678"
+            slotProps={{
+              htmlInput: {
+                dir: "ltr",
+                style: { textAlign: locale === "ar" ? "right" : "left" },
+              },
+            }}
             onChange={(e) => {
               setPhone(e.target.value);
               setPhoneError("");
